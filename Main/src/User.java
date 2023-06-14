@@ -13,6 +13,10 @@ public class User {
     protected boolean accountLocked;
 
 
+    static {
+        loadLastAssignedId();
+    }
+
     public User(String name, String roll) {
         this(name, roll, "", "");
     }
@@ -62,9 +66,6 @@ public class User {
         }
     }
 
-    static {
-        loadLastAssignedId();
-    }
 
     public int getId() {
         return id;
