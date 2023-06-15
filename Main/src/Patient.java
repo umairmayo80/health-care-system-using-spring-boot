@@ -17,6 +17,7 @@ public class Patient extends User{
 
 
     public void viewAppointments(List<Appointment> appointments){
+        if(this.appointments.isEmpty() || FileModificationChecker.isFileModified())
         this.appointments = appointments.stream()
                 .filter(appointment -> appointment.getPatientId() == this.getId())
                 .collect(Collectors.toList());
