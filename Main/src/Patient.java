@@ -4,33 +4,18 @@ import java.util.stream.Collectors;
 
 
 public class Patient extends User{
-    private List<Appointment> appointments;
+//    private List<Appointment> appointments;
 
     public Patient(String name, String username, String password) {
         super(name, "patient", username, password);
-        appointments = new ArrayList<>();
+//        appointments = new ArrayList<>();
     }   public Patient(int id, String name, String username, String password) {
         super(id,name, "patient", username, password,false);
-        appointments = new ArrayList<>();
+//        appointments = new ArrayList<>();
     }
 
 
 
-    public void viewAppointments(List<Appointment> appointments){
-        if(this.appointments.isEmpty() || FileModificationChecker.isFileModified())
-        this.appointments = appointments.stream()
-                .filter(appointment -> appointment.getPatientId() == this.getId())
-                .collect(Collectors.toList());
-        for (Appointment appointment : this.appointments) {
-            System.out.println(appointment);
-        }
-    }
-
-    public void addAppointment(Appointment appointment,List<Appointment> appointments){
-        //check if the doctor is available or not
-        appointments.add(appointment);
-        Appointment.saveAppointmentsToFile("appointments.csv",appointments);
-    }
     @Override
     public String toString() {
         return "Patient{" +
@@ -40,7 +25,7 @@ public class Patient extends User{
         ", username='" + super.getUsername() + '\'' +
         ", password='" + super.getPassword() + '\'' +
         ", accountBlocked='" + super.accountLocked + '\'' +
-        "appointments=" + appointments +
+//        "appointments=" + appointments +
         '}';
 }
 
@@ -49,9 +34,8 @@ public class Patient extends User{
 
         System.out.println(patient);
 
-        List<Appointment> appointments = Appointment.loadAppointmentsFromFile("appointments.csv");
 
-        patient.viewAppointments(appointments);
+        PatientService.viewAppointments(patient.getId());
         System.out.println(patient);
     }
 }

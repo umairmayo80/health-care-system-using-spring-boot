@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public class FileModificationChecker {
-    private static List<String> filenames = List.of("users.csv", "lastAssignedId.txt");
-    private static Map<String, Long> loadedLastModifiedInfo;
+    private static final List<String> filenames = List.of("users.csv", "lastAssignedId.txt","appointments.csv","schedule.csv");
+    public static Map<String, Long> loadedLastModifiedInfo = loadLastModifiedInfo();
 
     static {
         loadedLastModifiedInfo = loadLastModifiedInfo();
@@ -72,15 +72,17 @@ public class FileModificationChecker {
 
     public static void main(String[] args) {
 //         List<String> filenames = List.of("users.csv", "lastAssignedId.txt");
-//         saveLastModifiedInfo(filenames);
+         saveLastModifiedInfo(filenames);
 
-        Map<String, Long> loadedLastModifiedInfo = loadLastModifiedInfo();
+//        Map<String, Long>  FileModificationChecker.loadedLastModifiedInfo = loadLastModifiedInfo();
+//        FileModificationChecker.saveLastModifiedInfo(FileModificationChecker.filenames);
+
         System.out.println("Loaded last modified info:");
-        for (Map.Entry<String, Long> entry : loadedLastModifiedInfo.entrySet()) {
+        for (Map.Entry<String, Long> entry : FileModificationChecker.loadedLastModifiedInfo.entrySet()) {
             System.out.println("File: " + entry.getKey() + ", Last Modified: " + entry.getValue());
         }
 
-        System.out.println(isFileModified("lastAssignedId.txt",loadedLastModifiedInfo.get("lastAssignedId.txt")));
+        System.out.println(isFileModified("lastAssignedId.txt",FileModificationChecker.loadedLastModifiedInfo.get("lastAssignedId.txt")));
 
     }
 }

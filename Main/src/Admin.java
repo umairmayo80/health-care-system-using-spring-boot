@@ -54,26 +54,9 @@ public class Admin extends User {
     }
 
     public void viewUsers() {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get("users.csv"));
-            for (String line : lines) {
-                String[] parts = line.split(",");
-                if (parts.length == 6) {
-                    int id = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String username = parts[2];
-                    String password = parts[3];
-                    String roll = parts[4];
-                    boolean accountLocked = Boolean.parseBoolean(parts[5]);
-
-                    User user = new User(id,name, roll, username, password,accountLocked);
-//                    user.setId(id);
-
-                    System.out.println(user.toString());
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading users from the file: " + e.getMessage());
+        List<User> users = UserService.getUsers();
+        for(User user: users){
+            System.out.println(user.toString());
         }
     }
 
