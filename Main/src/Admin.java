@@ -24,7 +24,7 @@ public class Admin extends User {
                 ", roll='" + super.getRoll() + '\'' +
                 ", username='" + super.getUsername() + '\'' +
                 ", password='" + super.getPassword() + '\'' +
-                ", accountStatus='" + super.accountLocked + '\'' +
+                ", accountStatus='" + super.getAccountStatus() + '\'' +
                 '}';
     }
 

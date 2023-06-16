@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Objects;
 
 public class User {
     private static final String ID_FILE_PATH = "lastAssignedId.txt";
@@ -10,7 +11,7 @@ public class User {
     private String username;
     private String password;
 
-    protected boolean accountLocked;
+    private boolean accountLocked;
 
 
     static {
@@ -103,6 +104,9 @@ public class User {
         this.password = password;
     }
 
+    public void setAccountStatus(boolean status){
+        this.accountLocked = status;
+    }
     public boolean getAccountStatus(){
         return accountLocked;
     }
@@ -117,5 +121,23 @@ public class User {
                 ", password='" + password + '\'' +
                 ", accountStatus='" + accountLocked + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                accountLocked == user.accountLocked &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(roll, user.roll) &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, roll, username, password, accountLocked);
     }
 }

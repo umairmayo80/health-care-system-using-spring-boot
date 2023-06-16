@@ -202,6 +202,7 @@ public class Main {
     public static void viewPatients() {
         // Implementation for viewing patients
         System.out.println("View Patients function called");
+        AdminService.viewPatients();
     }
 
     public static void viewDoctors() {

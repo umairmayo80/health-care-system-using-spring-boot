@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSException;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -5,24 +7,19 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AdminService {
 
     private static boolean isUsernameAvailable(String username) {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get("users.csv"));
-            for (String line : lines) {
-                String[] parts = line.split(",");
-                if (parts.length >= 3) {
-                    String existingUsername = parts[2];
+            List<User> userList = UserService.getUsers();
+            for (User user : userList) {
+                    String existingUsername = user.getUsername();
                     if (existingUsername.equals(username)) {
                         return false; // Username already exists
                     }
-                }
             }
-        } catch (IOException e) {
-            System.out.println("Error reading users from the file: " + e.getMessage());
-        }
         return true; // Username is available
     }
 
@@ -42,7 +39,7 @@ public class AdminService {
             }
 
         } else {
-            System.out.println("Username '" + user.getUsername() + "' already exists. Please choose a different username.");
+            System.out.println("Error: Username '" + user.getUsername() + "' already exists. Please choose a different username.");
         }
     }
 
@@ -51,11 +48,58 @@ public class AdminService {
         for(User user: users){
             System.out.println(user.toString());
         }
+    }    public static void viewPatients() {
+        List<User> users = UserService.getUsers();
+        List<User> patients = users.stream()
+                .filter(user -> user.getRoll().equals("patient"))
+                .collect(Collectors.toList());
+
+        for(User patient: patients){
+            System.out.println(patient.toString());
+        }
     }
 
-    public static void setUserAccountStatus(User user,boolean status) {
-        user.accountLocked = status;
-        // Now write code to update the current user in list and then store the complete list on disk
+    public static void setUserAccountStatus(String username,boolean status) {
+
+        Optional<User> targetUser = UserService.getUsers().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
+
+        if(targetUser.isPresent())
+        {
+            User user = targetUser.get();
+            System.out.println(user);
+            // Now write code to update the current user in list and then store the complete list on disk
+            List<User> userList = UserService.getUsers();
+            int targetIndex = userList.indexOf(user);
+            System.out.println(targetIndex);
+            AdminService.viewUsers();
+            userList.remove(targetIndex);
+
+            //update the user account status
+            user.setAccountStatus(status);
+
+            System.out.println("--");
+
+//             add the updated
+            userList.add(targetIndex,targetUser.get());
+            AdminService.viewUsers();
+            return;
+
+
+        }
+
+        System.out.printf("Error: No User found against this the provided '%s' username.\n",username);
+
+    }
+
+    public static void main(String[] args){
+        AdminService.viewPatients();
+
+        AdminService.addUser(UserService.getUsers().get(0));
+
+        AdminService.setUserAccountStatus("admin123000",true);
+        AdminService.setUserAccountStatus("admin123",true);
     }
 
 }

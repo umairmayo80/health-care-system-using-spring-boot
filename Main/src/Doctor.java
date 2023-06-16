@@ -26,7 +26,7 @@ public class Doctor extends User{
                 ", roll='" + super.getRoll() + '\'' +
                 ", username='" + super.getUsername() + '\'' +
                 ", password='" + super.getPassword() + '\'' +
-                ", accountBlocked='" + super.accountLocked + '\'' +
+                ", accountBlocked='" + super.getAccountStatus() + '\'' +
 //        "appointments=" + appointments +
                 '}';
     }
