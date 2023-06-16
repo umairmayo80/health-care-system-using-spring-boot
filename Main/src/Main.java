@@ -8,24 +8,7 @@ public class Main {
     public static void main(String[] args){
         System.out.println("ok");
         displayWelcomeMenu();
-
-//
-//
-//        Admin admin = new Admin("A2","admin123","admin123");
-//        System.out.println(admin);
-//
-//
-//
-//
-//        admin.addUser(admin);
-//
-//        User user = new User(-1,"test user","user","user123","user123",true);
-//
-//        admin.addUser(user);
-//
-//        admin.viewUsers();
-
-
+        
 
     }
 
@@ -63,7 +46,38 @@ public class Main {
     }
 
     public static void login() {
-        System.out.println("=== Login ===");
+        int choice;
+        do{
+        System.out.println("=== Login As ===");
+        System.out.println("1. Admin");
+        System.out.println("2. Patient");
+        System.out.println("3. Doctor");
+        System.out.println("4. Back to Menu");
+        System.out.print("Enter your choice: ");
+        choice = scanner.nextInt();
+        switch (choice) {
+            case 1:
+                adminMenu();
+                break;
+            case 2:
+                patientMenu();
+                break;
+            case 3:
+                doctorMenu();
+                break;
+            case 4:
+                System.out.println("Admin Menu Back");
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
+        }
+    } while (choice != 4);
+
+    }
+
+    public static boolean validateLogin(String userRoll){
+        System.out.printf("=== Login As %s===\n",userRoll);
         System.out.print("Enter username: ");
         String username = scanner.next();
         System.out.print("Enter password: ");
@@ -79,15 +93,17 @@ public class Main {
         {
             currentUser = loginUser.get();
             System.out.println("Login successful!");
+            return true;
+//
+//            // display control menu according to the user roll
+//            if(currentUser.getRoll().equals("admin")){
+//                adminMenu();
+//            }
+        }
 
-            // display control menu according to the user roll
-            if(currentUser.getRoll().equals("admin")){
-                adminMenu();
-            }
-        }
-        else {
-            System.out.println("Invalid username or password. Please try again.");
-        }
+        System.out.println("Invalid username or password. Please try again.");
+        return false;
+        
     }
 
 
@@ -103,7 +119,11 @@ public class Main {
 
 
     public static void adminMenu() {
+        boolean login = validateLogin("Admin");
+        if(!login) return;
         System.out.println("Welcome Admin " + currentUser.getName());
+//        Type cast the User
+//        System.out.println(currentUser);
         int choice;
 
         do {
@@ -116,6 +136,7 @@ public class Main {
             System.out.println("6. Logout");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
+            scanner.nextLine(); //ignore the extra \n
 
             switch (choice) {
                 case 1:
@@ -147,11 +168,35 @@ public class Main {
     public static void addUser() {
         // Implementation for adding a user
         System.out.println("Add User function called");
+
+        System.out.println("Enter user information:");
+        System.out.print("Name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Roll: ");
+        String roll = scanner.nextLine();
+
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+
+        // Create User object with the entered information
+        User user = new User(name, roll, username, password);
+
+        //Save the user to database
+        AdminService.addUser(user);
+
+        System.out.println("User Added Successfully!");
+
     }
 
     public static void viewAllUsers() {
         // Implementation for viewing all users
         System.out.println("View All Users function called");
+
+        AdminService.viewUsers();
     }
 
     public static void viewPatients() {
@@ -167,6 +212,14 @@ public class Main {
     public static void lockUser() {
         // Implementation for locking a user
         System.out.println("Lock User function called");
+    }
+
+
+    public static void doctorMenu(){
+        System.out.println("Doctor menu called");
+    }
+    public static void patientMenu(){
+        System.out.println("Patient menu called");
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
+
     public static List<User> getUsers() {
         List<User> users = new ArrayList<>();
         try {
