@@ -1,11 +1,10 @@
-import org.w3c.dom.ls.LSException;
+package server.service;
+
+import server.domain.User;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,41 +22,20 @@ public class AdminService {
         return true; // Username is available
     }
 
-    public static void addUser(User user) {
+    public static boolean addUser(User user) {
         if (isUsernameAvailable(user.getUsername())) {
 
             List<User> userList = UserService.getUsers();
             userList.add(user);
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("users.csv", false))) {
-                for (User itrUser : userList) {
-                    writer.write(itrUser.getId() + "," + itrUser.getName() + "," + itrUser.getUsername() + "," + itrUser.getPassword() + "," + itrUser.getRoll()
-                            + "," + itrUser.getAccountStatus());
-                    writer.newLine();
-                }
-            } catch (IOException e) {
-                System.out.println("Error adding user to the file: " + e.getMessage());
-            }
+            UserService.saveUsersToDb(userList);
+            return true;
 
         } else {
             System.out.println("Error: Username '" + user.getUsername() + "' already exists. Please choose a different username.");
+            return false;
         }
     }
 
-    public static void viewUsers() {
-        List<User> users = UserService.getUsers();
-        for(User user: users){
-            System.out.println(user.toString());
-        }
-    }    public static void viewPatients() {
-        List<User> users = UserService.getUsers();
-        List<User> patients = users.stream()
-                .filter(user -> user.getRoll().equals("patient"))
-                .collect(Collectors.toList());
-
-        for(User patient: patients){
-            System.out.println(patient.toString());
-        }
-    }
 
     public static void setUserAccountStatus(String username,boolean status) {
 
@@ -73,7 +51,7 @@ public class AdminService {
             List<User> userList = UserService.getUsers();
             int targetIndex = userList.indexOf(user);
             System.out.println(targetIndex);
-            AdminService.viewUsers();
+//            UserService.viewUsers();
             userList.remove(targetIndex);
 
             //update the user account status
@@ -83,18 +61,20 @@ public class AdminService {
 
 //             add the updated
             userList.add(targetIndex,targetUser.get());
-            AdminService.viewUsers();
+//            System.out.println(userList);
+            UserService.saveUsersToDb(userList);
+//            UserService.viewUsers();
             return;
 
 
         }
 
-        System.out.printf("Error: No User found against this the provided '%s' username.\n",username);
+        System.out.printf("Error: No server.domain.User found against this the provided '%s' username.\n",username);
 
     }
 
     public static void main(String[] args){
-        AdminService.viewPatients();
+        UserService.viewPatients();
 
         AdminService.addUser(UserService.getUsers().get(0));
 

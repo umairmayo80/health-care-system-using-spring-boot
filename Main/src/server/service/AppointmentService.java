@@ -1,8 +1,14 @@
+package server.service;
+
+import org.w3c.dom.ls.LSInput;
+import server.domain.Appointment;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AppointmentService {
     private static final String AppointmentsFilePath = "appointments.csv";
@@ -58,7 +64,22 @@ public class AppointmentService {
         return  AppointmentService.appointments;
     }
 
-    public static void addAppointment(Appointment appointment){
+    public static List<Appointment> getAppointmentsByPatientId(int patientId){
+        if(AppointmentService.appointments.isEmpty() ||
+                FileModificationChecker.isFileModified("appointments.csv",
+                        FileModificationChecker.loadedLastModifiedInfo.get("appointments.csv")))
+        {
+            AppointmentService.appointments = AppointmentService.loadAppointmentsFromFile("appointments.csv");
+        }
+        List<Appointment> patientAppointments = AppointmentService.appointments.stream()
+                .filter(appointment -> appointment.getPatientId() == patientId)
+                .collect(Collectors.toList());
+        return  patientAppointments;
+    }
+
+
+
+    public static void addAppointmentEntry(Appointment appointment){
         AppointmentService.appointments = getAppointments();
         AppointmentService.appointments.add(appointment);
         saveAppointmentsToFile();
@@ -69,9 +90,9 @@ public class AppointmentService {
         String filePath = "appointments.csv";
 
 //        // Load appointments from CSV file
-//        List<Appointment> appointments = loadAppointmentsFromFile(filePath);
+//        List<server.domain.Appointment> appointments = loadAppointmentsFromFile(filePath);
 ////
-//        List<Appointment> appointments = AppointmentService.loadAppointmentsFromFile("appointments.csv");
+//        List<server.domain.Appointment> appointments = server.service.AppointmentService.loadAppointmentsFromFile("appointments.csv");
 
         System.out.println("Appointments loaded from the file:");
         for (Appointment appointment : AppointmentService.getAppointments()) {
@@ -83,7 +104,7 @@ public class AppointmentService {
         Appointment newAppointment = new Appointment(-5, 4, LocalDateTime.parse("2023-06-15T09:30:00"));
 
         // Add the new appointment to the list
-        AppointmentService.addAppointment(newAppointment);
+        AppointmentService.addAppointmentEntry(newAppointment);
 
         // Save the updated appointments to the CSV file
 //        saveAppointmentsToFile();

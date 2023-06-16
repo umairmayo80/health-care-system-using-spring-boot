@@ -1,3 +1,5 @@
+package server.domain;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +11,7 @@ public class Appointment {
     private int doctorId;
     private LocalDateTime dateTime;
 
-//    private static List<Appointment> appointmentsList;
+//    private static List<server.domain.Appointment> appointmentsList;
 //
 //    static {
 //        appointmentsList = loadAppointmentsFromFile("appointments.csv");
@@ -56,7 +58,7 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return "Appointment{" +
+        return "server.domain.Appointment{" +
                 "patientId=" + patientId +
                 ", doctorId=" + doctorId +
                 ", dateTime=" + dateTime +

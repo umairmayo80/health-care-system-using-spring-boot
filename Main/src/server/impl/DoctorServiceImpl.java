@@ -1,7 +1,16 @@
+package server.impl;
+import server.domain.Appointment;
+import server.domain.Doctor;
+import server.service.AppointmentService;
+import server.service.DoctorService;
+import server.domain.Schedule;
+import server.service.PatientService;
+import server.service.ScheduleService;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DoctorService {
+public class DoctorServiceImpl implements DoctorService {
 
     public static void addSchedule(Schedule schedule){
         ScheduleService.addScheduleEntry(schedule);
@@ -19,15 +28,15 @@ public class DoctorService {
 
     public static void main(String[] args){
         Doctor doctor = new Doctor(-3,"doctor1","pat123","pat123");
-
+//
         System.out.println(doctor);
-
+//
         PatientService.viewAppointments(doctor.getId());
         System.out.println(doctor);
-
+//
         Schedule newScheduleDoc = new Schedule(doctor.getId(), "2023-02-02",
                 "09:00:00","17:00:00");
-
-        DoctorService.addSchedule(newScheduleDoc);
+        DoctorServiceImpl doctorService = new DoctorServiceImpl();
+        doctorService.addSchedule(newScheduleDoc);
     }
 }

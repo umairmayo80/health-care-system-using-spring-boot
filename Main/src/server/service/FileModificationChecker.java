@@ -1,3 +1,5 @@
+package server.service;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -74,8 +76,8 @@ public class FileModificationChecker {
 //         List<String> filenames = List.of("users.csv", "lastAssignedId.txt");
          saveLastModifiedInfo(filenames);
 
-//        Map<String, Long>  FileModificationChecker.loadedLastModifiedInfo = loadLastModifiedInfo();
-//        FileModificationChecker.saveLastModifiedInfo(FileModificationChecker.filenames);
+//        Map<String, Long>  server.service.FileModificationChecker.loadedLastModifiedInfo = loadLastModifiedInfo();
+//        server.service.FileModificationChecker.saveLastModifiedInfo(server.service.FileModificationChecker.filenames);
 
         System.out.println("Loaded last modified info:");
         for (Map.Entry<String, Long> entry : FileModificationChecker.loadedLastModifiedInfo.entrySet()) {

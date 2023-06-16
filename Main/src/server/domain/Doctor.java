@@ -1,10 +1,9 @@
-import java.time.LocalDate;
-import java.time.LocalTime;
+package server.domain;
 
 
 public class Doctor extends User{
 
-//    private List<Appointment> appointments;
+//    private List<server.domain.Appointment> appointments;
 
     public Doctor(String name, String username, String password) {
         super(name, "doctor", username, password);
@@ -20,7 +19,7 @@ public class Doctor extends User{
 
     @Override
     public String toString() {
-        return "Doctor{" +
+        return "server.domain.Doctor{" +
                 "id=" + super.getId() +
                 ", name='" + super.getName() + '\'' +
                 ", roll='" + super.getRoll() + '\'' +

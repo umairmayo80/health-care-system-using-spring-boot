@@ -1,10 +1,10 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+package server.domain;
 
+
+import server.service.PatientService;
 
 public class Patient extends User{
-//    private List<Appointment> appointments;
+//    private List<server.domain.Appointment> appointments;
 
     public Patient(String name, String username, String password) {
         super(name, "patient", username, password);
@@ -18,7 +18,7 @@ public class Patient extends User{
 
     @Override
     public String toString() {
-        return "Patient{" +
+        return "server.domain.Patient{" +
                 "id=" + super.getId() +
         ", name='" + super.getName() + '\'' +
         ", roll='" + super.getRoll() + '\'' +

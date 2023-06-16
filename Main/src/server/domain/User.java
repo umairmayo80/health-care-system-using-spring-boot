@@ -1,3 +1,5 @@
+package server.domain;
+
 import java.io.*;
 import java.util.Objects;
 
@@ -30,7 +32,7 @@ public class User {
         this.password = password;
         this.accountLocked = false;
     }
-    protected User(int id,String name, String roll, String username, String password,boolean accountLocked) {
+    public User(int id, String name, String roll, String username, String password, boolean accountLocked) {
         this.id = id;
         this.name = name;
         this.roll = roll;
@@ -113,10 +115,10 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "server.domain.User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", roll='" + roll + '\'' +
+                ", role='" + roll + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", accountStatus='" + accountLocked + '\'' +

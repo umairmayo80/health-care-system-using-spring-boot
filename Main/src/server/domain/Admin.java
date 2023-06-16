@@ -1,10 +1,6 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+package server.domain;
+
+import server.service.AdminService;
 
 public class Admin extends User {
 
@@ -18,7 +14,7 @@ public class Admin extends User {
 
     @Override
     public String toString() {
-        return "Admin{" +
+        return "server.domain.Admin{" +
                 "id=" + super.getId() +
                 ", name='" + super.getName() + '\'' +
                 ", roll='" + super.getRoll() + '\'' +

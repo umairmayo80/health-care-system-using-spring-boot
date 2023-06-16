@@ -1,3 +1,5 @@
+package server.domain;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -48,7 +50,7 @@ public class Schedule {
 
     @Override
     public String toString() {
-        return "Schedule{" +
+        return "server.domain.Schedule{" +
                 "userId=" + userId +
                 ", date=" + date +
                 ", startTime=" + startTime +
