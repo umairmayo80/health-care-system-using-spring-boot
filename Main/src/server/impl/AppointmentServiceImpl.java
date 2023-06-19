@@ -1,0 +1,123 @@
+package server.impl;
+
+import server.domain.Appointment;
+import server.service.AppointmentService;
+import server.service.FileModificationChecker;
+
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class AppointmentServiceImpl implements AppointmentService {
+    private List<Appointment> appointments;
+
+    public AppointmentServiceImpl(){
+        this.appointments = new ArrayList<>();
+    }
+    // Load appointments from CSV file
+    public List<Appointment> loadAppointmentsFromFile(String filePath) {
+        List<Appointment> appointments = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] appointmentData = line.split(",");
+                if (appointmentData.length == 3) {
+                    int patientId = Integer.parseInt(appointmentData[0]);
+                    int doctorId = Integer.parseInt(appointmentData[1]);
+                    LocalDateTime dateTime = LocalDateTime.parse(appointmentData[2], DateTimeFormatter.ISO_DATE_TIME);
+
+                    Appointment appointment = new Appointment(patientId, doctorId, dateTime);
+                    appointments.add(appointment);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return appointments;
+    }
+
+    // Save appointments to CSV file
+    public void saveAppointmentsToFile() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(AppointmentsFilePath))) {
+            for (Appointment appointment : getAppointments()) {
+                String line = appointment.getPatientId() + "," + appointment.getDoctorId() + ","
+                        + appointment.getDateTime().format(DateTimeFormatter.ISO_DATE_TIME);
+                bw.write(line);
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Appointment> getAppointments(){
+        if(appointments.isEmpty() ||
+                FileModificationChecker.isFileModified("appointments.csv",
+                        FileModificationChecker.loadedLastModifiedInfo.get("appointments.csv")))
+        {
+            appointments = loadAppointmentsFromFile(AppointmentsFilePath);
+        }
+        return  appointments;
+    }
+
+    public List<Appointment> getAppointmentsByPatientId(int patientId){
+        List<Appointment> appointmentList = getAppointments();
+        List<Appointment> patientAppointments = appointmentList.stream()
+                .filter(appointment -> appointment.getPatientId() == patientId)
+                .collect(Collectors.toList());
+        return  patientAppointments;
+    }
+
+    public List<Appointment> getAppointmentsByDoctorId(int doctorId){
+        List<Appointment> appointmentList = getAppointments();
+        List<Appointment> doctorAppointments = appointmentList.stream()
+                .filter(appointment -> appointment.getDoctorId() == doctorId)
+                .collect(Collectors.toList());
+        return  doctorAppointments;
+    }
+
+
+
+    public void addAppointmentEntry(Appointment appointment){
+        appointments = getAppointments();
+        appointments.add(appointment);
+        saveAppointmentsToFile();
+    }
+
+    public static void main(String[] args)
+    {
+//        String filePath = "appointments.csv";
+//
+////        // Load appointments from CSV file
+////        List<server.domain.Appointment> appointments = loadAppointmentsFromFile(filePath);
+//////
+////        List<server.domain.Appointment> appointments = server.service.AppointmentService.loadAppointmentsFromFile("appointments.csv");
+//
+//        System.out.println("Appointments loaded from the file:");
+//        for (Appointment appointment : server.service.AppointmentService.getAppointments()) {
+//            System.out.println(appointment);
+//        }
+//
+//
+//        // Create a new appointment
+//        Appointment newAppointment = new Appointment(-5, 4, LocalDateTime.parse("2023-06-15T09:30:00"));
+//
+//        // Add the new appointment to the list
+//        server.service.AppointmentService.addAppointmentEntry(newAppointment);
+//
+//        // Save the updated appointments to the CSV file
+////        saveAppointmentsToFile();
+//
+//
+//        System.out.println("Appointments saved to the file.\n" +
+//                "New Appointments File:\n"
+//                + server.service.AppointmentService.getAppointments());
+
+    }
+
+}

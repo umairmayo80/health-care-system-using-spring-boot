@@ -1,5 +1,6 @@
 package server.domain;
 
+import server.context.ServiceContext;
 import server.service.AdminService;
 
 public class Admin extends User {
@@ -26,7 +27,7 @@ public class Admin extends User {
 
 
     public static void main(String[] args){
-        AdminService.addUser(new User(-10,"adminServiceTest","admin","admin12","admin123",false));
+        ServiceContext.getAdminService().addUser(new User(-30,"adminServiceTest","admin","admin12","admin123",false));
 
     }
 }

@@ -1,4 +1,5 @@
 package server.impl;
+import server.context.ServiceContext;
 import server.domain.Appointment;
 import server.domain.Doctor;
 import server.service.*;
@@ -9,12 +10,12 @@ import java.util.stream.Collectors;
 
 public class DoctorServiceImpl implements DoctorService {
 
-    public static void addSchedule(Schedule schedule){
-        ScheduleService.addScheduleEntry(schedule);
+    public void addSchedule(Schedule schedule){
+        ServiceContext.getScheduleService().addScheduleEntry(schedule);
     }
 
-    public static void viewAppointments(int userID) {
-        List<Appointment> appointments = AppointmentService.getAppointments().stream()
+    public void viewAppointments(int userID) {
+        List<Appointment> appointments = ServiceContext.getAppointmentService().getAppointments().stream()
                 .filter(appointment -> appointment.getDoctorId() == userID)
                 .collect(Collectors.toList());
         for (Appointment appointment : appointments) {
@@ -23,17 +24,21 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
-    public static void main(String[] args) throws ScheduleCreationException {
-        Doctor doctor = new Doctor(-3,"doctor1","pat123","pat123");
-//
-        System.out.println(doctor);
-//
-        PatientService.viewAppointments(doctor.getId());
-        System.out.println(doctor);
-//
-        Schedule newScheduleDoc = new Schedule(doctor.getId(), "2023-02-02",
-                "09:00:00","17:00:00");
-        DoctorServiceImpl doctorService = new DoctorServiceImpl();
-        doctorService.addSchedule(newScheduleDoc);
+    public void viewSchedule(int userID){
+        ServiceContext.getScheduleService().getSchedulesByID(userID).forEach(System.out::println);
+    }
+
+    public  void main(String[] args) throws ScheduleCreationException {
+//        Doctor doctor = new Doctor(-3,"doctor1","pat123","pat123");
+////
+//        System.out.println(doctor);
+////
+//        PatientService.viewAppointments(doctor.getId());
+//        System.out.println(doctor);
+////
+//        Schedule newScheduleDoc = new Schedule(doctor.getId(), "2023-02-02",
+//                "09:00:00","17:00:00");
+//        DoctorServiceImpl doctorService = new DoctorServiceImpl();
+//        doctorService.addSchedule(newScheduleDoc);
     }
 }

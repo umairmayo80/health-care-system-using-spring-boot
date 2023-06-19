@@ -1,6 +1,7 @@
 package server.domain;
 
 
+import server.impl.PatientServiceImpl;
 import server.service.PatientService;
 
 public class Patient extends User{
@@ -34,8 +35,8 @@ public class Patient extends User{
 
         System.out.println(patient);
 
-
-        PatientService.viewAppointments(patient.getId());
+        PatientServiceImpl patientService = new PatientServiceImpl();
+        patientService.viewAppointments(patient.getId());
         System.out.println(patient);
     }
 }
