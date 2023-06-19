@@ -11,7 +11,6 @@ import java.util.Optional;
 public class AdminServiceImpl implements AdminService {
 
     private boolean isUsernameAvailable(String username) {
-//            List<User> userList = UserService.getUsers();
         List<User> userList = ServiceContext.getUserService().getUsers();
         for (User user : userList) {
             String existingUsername = user.getUsername();
@@ -47,11 +46,11 @@ public class AdminServiceImpl implements AdminService {
         {
             User user = targetUser.get();
             System.out.println(user);
-            // Now write code to update the current user in list and then store the complete list on disk
+            //code to update the current user in list and then store the complete list on disk
             List<User> userList = ServiceContext.getUserService().getUsers();
             int targetIndex = userList.indexOf(user);
             System.out.println(targetIndex);
-//            UserService.viewUsers();
+
             userList.remove(targetIndex);
 
             //update the user account status
@@ -61,10 +60,10 @@ public class AdminServiceImpl implements AdminService {
 
 //             add the updated
             userList.add(targetIndex,targetUser.get());
-//            System.out.println(userList);
+
             ServiceContext.getUserService().saveUsersToDb(userList);
 
-//            UserService.viewUsers();
+
             return;
 
 

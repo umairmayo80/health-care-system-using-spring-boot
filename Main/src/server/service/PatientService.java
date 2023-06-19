@@ -2,9 +2,6 @@ package server.service;
 
 import server.domain.Appointment;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public interface PatientService {
 

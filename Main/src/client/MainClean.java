@@ -17,7 +17,7 @@ public class MainClean {
     private final UserService userService;
     private final AdminService adminService;
     private final AppointmentService appointmentService;
-    private User currentUser; // private field to hold the current user
+    private User currentUser; // to hold the current user
 
 
     MainClean(){
@@ -32,7 +32,6 @@ public class MainClean {
 
     public static void main(String[] args){
         MainClean cli = new MainClean();
-        System.out.println("ok");
         cli.displayWelcomeMenu();
     }
 
@@ -132,12 +131,10 @@ public class MainClean {
 
 
     public void about() {
-        // Implementation for the about functionality
         System.out.println("About function called");
     }
 
     public void help() {
-        // Implementation for the help functionality
         System.out.println("Help function called");
     }
 
@@ -146,8 +143,6 @@ public class MainClean {
         boolean login = validateLogin("Admin");
         if(!login) return;
         System.out.println("Welcome server.domain.Admin " + currentUser.getName());
-//        Type cast the server.domain.User
-//        System.out.println(currentUser);
         int choice;
 
         do {
@@ -202,7 +197,7 @@ public class MainClean {
 
     public void addUser() {
         // Implementation for adding a user
-        System.out.println("Add server.domain.User function called");
+        System.out.println("Add User function called");
 
         System.out.println("Enter user information:");
         System.out.print("Name: ");
@@ -222,7 +217,7 @@ public class MainClean {
 
         //Save the user to database
         if(adminService.addUser(user)){
-            System.out.println("server.domain.User Added Successfully!");
+            System.out.println("User Added Successfully!");
         }
 
 
@@ -279,8 +274,6 @@ public class MainClean {
         boolean login = validateLogin("Doctor");
         if(!login) return;
         System.out.println("Welcome server.domain.Doctor " + currentUser.getName());
-//        Type cast the server.domain.User
-//        System.out.println(currentUser);
         int choice=0;
 
         do {
@@ -322,8 +315,6 @@ public class MainClean {
         boolean login = validateLogin("Patient");
         if(!login) return;
         System.out.println("Welcome server.domain.Patient " + currentUser.getName());
-//        Type cast the server.domain.User
-//        System.out.println(currentUser);
         int choice=0;
 
         do {
@@ -394,16 +385,12 @@ public class MainClean {
     }
 
     public void viewSchedule() {
-        // Code to view the schedule
-        // Implement the logic to display the schedule to the user
         System.out.println("View schedule function called...");
        doctorService.viewSchedule(currentUser.getId());
 
     }
 
     public void viewDoctorAppointments() {
-        // Code to view the doctor appointments
-        // Implement the logic to retrieve and display the doctor's appointments
         System.out.println("Viewing doctor appointments function called...");
         List<Appointment> appointmentsByDoctorId = appointmentService.getAppointmentsByDoctorId(currentUser.getId());
         System.out.println("patient_id,doctor_id,datetime");
@@ -414,8 +401,6 @@ public class MainClean {
     }
 
     public void newScheduleEntry() {
-        // Code to create a new schedule entry
-        // Implement the logic to prompt the user for input and create a new schedule entry
         System.out.println("Creating new schedule entry function called...");
 
         System.out.println("Enter shift details:");
@@ -436,8 +421,6 @@ public class MainClean {
             doctorService.addSchedule(newSchedule);
         } catch (ScheduleCreationException e) {
             System.out.println("Error creating schedule: " + e.getMessage());
-//            e.printStackTrace();
-            // Handle the exception
         }
 
 

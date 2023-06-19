@@ -1,6 +1,6 @@
 package server.impl;
 import server.domain.Schedule;
-import server.service.FileModificationChecker;
+import server.utilities.FileModificationChecker;
 import server.service.ScheduleCreationException;
 import server.service.ScheduleService;
 

@@ -1,8 +1,6 @@
 package server.impl;
-
 import server.domain.User;
 import server.service.UserService;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,7 +28,6 @@ public class UserServiceImpl implements UserService{
                     boolean accountLocked = Boolean.parseBoolean(parts[5]);
 
                     User user = new User(id,name, roll, username, password,accountLocked);
-//                    user.setId(id);
                     users.add(user);
                 }
             }

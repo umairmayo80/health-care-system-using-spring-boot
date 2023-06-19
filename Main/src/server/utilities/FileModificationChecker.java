@@ -1,5 +1,4 @@
-package server.service;
-
+package server.utilities;
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +6,7 @@ import java.util.Map;
 
 public class FileModificationChecker {
     private static final List<String> filenames = List.of("users.csv", "lastAssignedId.txt","appointments.csv","schedule.csv");
-    public static Map<String, Long> loadedLastModifiedInfo = loadLastModifiedInfo();
+    public static Map<String, Long> loadedLastModifiedInfo;
 
     static {
         loadedLastModifiedInfo = loadLastModifiedInfo();
@@ -73,12 +72,7 @@ public class FileModificationChecker {
     }
 
     public static void main(String[] args) {
-//         List<String> filenames = List.of("users.csv", "lastAssignedId.txt");
          saveLastModifiedInfo(filenames);
-
-//        Map<String, Long>  server.service.FileModificationChecker.loadedLastModifiedInfo = loadLastModifiedInfo();
-//        server.service.FileModificationChecker.saveLastModifiedInfo(server.service.FileModificationChecker.filenames);
-
         System.out.println("Loaded last modified info:");
         for (Map.Entry<String, Long> entry : FileModificationChecker.loadedLastModifiedInfo.entrySet()) {
             System.out.println("File: " + entry.getKey() + ", Last Modified: " + entry.getValue());

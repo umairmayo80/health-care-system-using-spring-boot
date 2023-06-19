@@ -2,7 +2,7 @@ package server.impl;
 
 import server.domain.Appointment;
 import server.service.AppointmentService;
-import server.service.FileModificationChecker;
+import server.utilities.FileModificationChecker;
 
 import java.io.*;
 import java.time.LocalDateTime;
