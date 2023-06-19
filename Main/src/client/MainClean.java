@@ -371,7 +371,11 @@ public class MainClean {
             return;
         }
         Appointment newAppointment = new Appointment(currentUser.getId(),docId,dateTime);
-        patientService.addAppointment(newAppointment);
+        if(patientService.addAppointment(newAppointment)){
+            System.out.println("Appointment successfully created ");
+            return;
+        }
+        System.out.println("No Doctor available at this ");
 
     }
 
@@ -419,6 +423,7 @@ public class MainClean {
             Schedule newSchedule = new Schedule(currentUser.getId(),dateStr,
                     startTimeStr,endTimeStr);
             doctorService.addSchedule(newSchedule);
+            System.out.println("Entry added successfully");
         } catch (ScheduleCreationException e) {
             System.out.println("Error creating schedule: " + e.getMessage());
         }

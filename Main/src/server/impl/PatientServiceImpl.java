@@ -18,10 +18,9 @@ public class PatientServiceImpl implements PatientService {
         }
     }
 
-    public void addAppointment(Appointment appointment){
+    public boolean addAppointment(Appointment appointment){
         //check if the doctor is available or not
         List<server.domain.Schedule> scheduleList = ServiceContext.getScheduleService().getSchedules();
-
         for(server.domain.Schedule schedule: scheduleList){
             if(schedule.getUserId() == appointment.getDoctorId() &&
                     appointment.getDateTime().toLocalDate().equals(schedule.getDate()) &&
@@ -29,13 +28,12 @@ public class PatientServiceImpl implements PatientService {
                             || appointment.getDateTime().toLocalTime().isAfter(schedule.getStartTime())) &&
                     appointment.getDateTime().toLocalTime().isBefore(schedule.getEndTime()))
             {
-                System.out.println("Date time ok");
                 ServiceContext.getAppointmentService().addAppointmentEntry(appointment); //add to appointments list
                 ServiceContext.getAppointmentService().saveAppointmentsToFile(); //save the updated list to disk
-                return;
+                return true;
             }
         }
-        System.out.println("Date time not match");
+        return false;
 
     }
 

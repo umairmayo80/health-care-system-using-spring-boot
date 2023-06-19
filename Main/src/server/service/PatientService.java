@@ -7,5 +7,5 @@ public interface PatientService {
 
     public void viewAppointments(int patient_id);
 
-    public void addAppointment(Appointment appointment);
+    public boolean addAppointment(Appointment appointment);
 }
