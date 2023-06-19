@@ -68,25 +68,20 @@ public class UserServiceImpl implements UserService{
             System.out.println(user.toString());
         }
     }
-    public void viewPatients() {
+    public List<User> getPatients() {
         List<User> users = getUsers();
         List<User> patients = users.stream()
                 .filter(user -> user.getRoll().equals("patient"))
                 .collect(Collectors.toList());
+        return patients;
 
-        for(User patient: patients){
-            System.out.println(patient.toString());
-        }
     }
-    public void viewDoctors() {
+    public List<User> getDoctors() {
         List<User> users = getUsers();
         List<User> doctors = users.stream()
                 .filter(user -> user.getRoll().equals("doctor"))
                 .collect(Collectors.toList());
-
-        for(User doctor: doctors){
-            System.out.println(doctor.toString());
-        }
+        return doctors;
     }
 
 

@@ -12,9 +12,8 @@ public interface UserService {
     public User validateUserLogin(String username, String password);
 
 
-    public void viewUsers();
-    public void viewPatients();
-    public void viewDoctors();
+    public List<User> getPatients();
+    public List<User> getDoctors();
 
 
 }

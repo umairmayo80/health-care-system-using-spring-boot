@@ -77,9 +77,9 @@ public class MainClean {
         int choice =0;
         do{
             System.out.println("=== Login As ===");
-            System.out.println("1. server.domain.Admin");
-            System.out.println("2. server.domain.Patient");
-            System.out.println("3. server.domain.Doctor");
+            System.out.println("1. Admin");
+            System.out.println("2. Patient");
+            System.out.println("3. Doctor");
             System.out.println("4. Back to Menu");
             System.out.print("Enter your choice: ");
             try {
@@ -224,22 +224,40 @@ public class MainClean {
 
     }
 
-    public void viewAllUsers() {
-        // Implementation for viewing all users
-        System.out.println("View All Users function called");
-        userService.viewUsers();
+
+    public void displayUsers(List<User> usersList){
+        // Print table header
+        System.out.format("%-5s %-15s %-10s %-15s %-15s %-10s%n", "ID", "Name", "Role", "Username", "Password", "Account Status");
+
+        // Print table rows
+        for (User user : usersList) {
+            System.out.format("%-5d %-15s %-10s %-15s %-15s %-10s%n",
+                    user.getId(), user.getName(), user.getRoll(), user.getUsername(), user.getPassword(), user.getAccountStatus());
+        }
     }
+
+    public void viewAllUsers() {
+        System.out.println("View All Users function called");
+
+        List<User> usersList = userService.getUsers();
+        displayUsers(usersList);
+    }
+
 
     public void viewPatients() {
         // Implementation for viewing patients
         System.out.println("View Patients function called");
-        userService.viewPatients();
+        List<User> patients = userService.getPatients();
+
+        displayUsers(patients);
+
     }
 
     public void viewDoctors() {
         // Implementation for viewing doctors
         System.out.println("View Doctors function called");
-        userService.viewDoctors();
+        List<User> doctors = userService.getDoctors();
+        displayUsers(doctors);
     }
 
     public void viewAppointments(){
