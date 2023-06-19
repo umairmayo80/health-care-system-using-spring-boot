@@ -1,7 +1,10 @@
 package server.domain;
 
+import server.service.ScheduleCreationException;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 
 public class Schedule {
     private int userId;
@@ -9,11 +12,25 @@ public class Schedule {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public Schedule(int userId, String date, String startTime, String endTime) {
+    public Schedule(int userId, String date, String startTime, String endTime) throws ScheduleCreationException {
         this.userId = userId;
-        this.date = LocalDate.parse(date);
-        this.startTime = LocalTime.parse(startTime);
-        this.endTime = LocalTime.parse(endTime);
+        try {
+            this.date = LocalDate.parse(date);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid date format. Please enter date in the format YYYY-MM-DD.", e);
+        }
+
+        try {
+            this.startTime = LocalTime.parse(startTime);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid start time format. Please enter time in the format HH:MM:SS.", e);
+        }
+
+        try {
+            this.endTime = LocalTime.parse(endTime);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid end time format. Please enter time in the format HH:MM:SS.", e);
+        }
     }
 
     public int getUserId() {

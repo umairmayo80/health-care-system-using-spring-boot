@@ -5,6 +5,7 @@ import server.domain.Schedule;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class ScheduleService {
     private static final String scheduleFilePath = "schedule.csv";
@@ -41,7 +42,7 @@ public abstract class ScheduleService {
                     scheduleList.add(schedule);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | ScheduleCreationException e) {
             System.out.println("Error loading schedule from file: " + e.getMessage());
         }
         return scheduleList;
@@ -57,14 +58,24 @@ public abstract class ScheduleService {
         return  ScheduleService.scheduleList;
     }
 
+    public static List<Schedule> getSchedulesByID(int doctorID){
+        List<Schedule> scheduleList = ScheduleService.getSchedules();
+        List<Schedule> doctorSheduleList = scheduleList.stream()
+                .filter(schedule -> schedule.getUserId() == doctorID)
+                .collect(Collectors.toList());
+        return doctorSheduleList;
+    }
+
     public static void addScheduleEntry(Schedule schedule){
         ScheduleService.scheduleList = getSchedules();
         ScheduleService.scheduleList.add(schedule);
         saveSchedule();
     }
-    public static void main(String[] args){
-        Schedule newSchedule = new Schedule(-1, "2023-01-01",
+    public static void main(String[] args) throws ScheduleCreationException {
+        Schedule newSchedule = new Schedule(-1, "2023-01dsd-01",
                 "09:00:00","17:00:00");
         ScheduleService.addScheduleEntry(newSchedule);
+
+        ScheduleService.getSchedulesByID(18).forEach(System.out::println);
     }
 }

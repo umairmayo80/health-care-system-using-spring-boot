@@ -1,11 +1,12 @@
 package client;
 import server.domain.Appointment;
+import server.domain.Schedule;
 import server.domain.User;
-import server.service.AdminService;
-import server.service.AppointmentService;
-import server.service.PatientService;
-import server.service.UserService;
+import server.service.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -260,7 +261,47 @@ public class Main {
 
     public static void doctorMenu(){
         System.out.println("server.domain.Doctor menu called");
+        boolean login = validateLogin("Doctor");
+        if(!login) return;
+        System.out.println("Welcome server.domain.Doctor " + currentUser.getName());
+//        Type cast the server.domain.User
+//        System.out.println(currentUser);
+        int choice=0;
+
+        do {
+            System.out.println("=== server.domain.Doctor Menu ===");
+            System.out.println("1. View Schedule");
+            System.out.println("2. View Appointments");
+            System.out.println("3. Create new shift entry");
+            System.out.println("4. Logout");
+            System.out.print("Enter your choice: ");
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (InputMismatchException | NumberFormatException e){
+                System.out.println("Invalid Input. Try again.");
+                continue;
+            }
+            switch (choice) {
+                case 1:
+                    viewSchedule();
+                    break;
+                case 2:
+                    viewDoctorAppointments();
+                    break;
+                case 3:
+                    newScheduleEntry();
+                    break;
+                case 4:
+                    System.out.println("Logging out...");
+                    currentUser = null; // Reset the current user
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (true);
     }
+
     public static void patientMenu(){
         System.out.println("server.domain.Patient menu called");
         boolean login = validateLogin("Patient");
@@ -337,6 +378,55 @@ public class Main {
         }
     }
 
+    public static void viewSchedule() {
+        // Code to view the schedule
+        // Implement the logic to display the schedule to the user
+        System.out.println("View schedule function called...");
+        ScheduleService.getSchedulesByID(currentUser.getId()).forEach(System.out::println);
+
+    }
+
+    public static void viewDoctorAppointments() {
+        // Code to view the doctor appointments
+        // Implement the logic to retrieve and display the doctor's appointments
+        System.out.println("Viewing doctor appointments function called...");
+        List<Appointment> appointmentsByDoctorId = AppointmentService.getAppointmentsByDoctorId(currentUser.getId());
+        System.out.println("patient_id,doctor_id,datetime");
+        for(Appointment appointment : appointmentsByDoctorId){
+            System.out.println(appointment.getPatientId()+","+appointment.getDoctorId()
+                    +","+appointment.getDateTime());
+        }
+    }
+
+    public static void newScheduleEntry() {
+        // Code to create a new schedule entry
+        // Implement the logic to prompt the user for input and create a new schedule entry
+        System.out.println("Creating new schedule entry function called...");
+
+        System.out.println("Enter shift details:");
+
+        System.out.print("\tEnter date (YYYY-MM-DD): ");
+        String dateStr = scanner.nextLine().strip();
+
+        System.out.print("\tEnter start time (HH:MM:SS): ");
+        String startTimeStr = scanner.nextLine().strip();
+
+        System.out.print("\tEnter end time (HH:MM:SS): ");
+        String endTimeStr = scanner.nextLine().strip();
+
+
+        try {
+            Schedule newSchedule = new Schedule(currentUser.getId(),dateStr,
+                    startTimeStr,endTimeStr);
+            ScheduleService.addScheduleEntry(newSchedule);
+        } catch (ScheduleCreationException e) {
+            System.out.println("Error creating schedule: " + e.getMessage());
+//            e.printStackTrace();
+            // Handle the exception
+        }
+
+
+    }
 }
 
 

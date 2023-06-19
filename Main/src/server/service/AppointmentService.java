@@ -65,16 +65,19 @@ public class AppointmentService {
     }
 
     public static List<Appointment> getAppointmentsByPatientId(int patientId){
-        if(AppointmentService.appointments.isEmpty() ||
-                FileModificationChecker.isFileModified("appointments.csv",
-                        FileModificationChecker.loadedLastModifiedInfo.get("appointments.csv")))
-        {
-            AppointmentService.appointments = AppointmentService.loadAppointmentsFromFile("appointments.csv");
-        }
-        List<Appointment> patientAppointments = AppointmentService.appointments.stream()
+        List<Appointment> appointmentList = getAppointments();
+        List<Appointment> patientAppointments = appointmentList.stream()
                 .filter(appointment -> appointment.getPatientId() == patientId)
                 .collect(Collectors.toList());
         return  patientAppointments;
+    }
+
+    public static List<Appointment> getAppointmentsByDoctorId(int doctorId){
+        List<Appointment> appointmentList = getAppointments();
+        List<Appointment> doctorAppointments = appointmentList.stream()
+                .filter(appointment -> appointment.getDoctorId() == doctorId)
+                .collect(Collectors.toList());
+        return  doctorAppointments;
     }
 
 

@@ -1,11 +1,8 @@
 package server.impl;
 import server.domain.Appointment;
 import server.domain.Doctor;
-import server.service.AppointmentService;
-import server.service.DoctorService;
+import server.service.*;
 import server.domain.Schedule;
-import server.service.PatientService;
-import server.service.ScheduleService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +23,7 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws ScheduleCreationException {
         Doctor doctor = new Doctor(-3,"doctor1","pat123","pat123");
 //
         System.out.println(doctor);
