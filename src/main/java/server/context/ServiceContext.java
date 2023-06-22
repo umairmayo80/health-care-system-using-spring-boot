@@ -2,6 +2,7 @@ package server.context;
 
 import server.impl.*;
 import server.service.*;
+import server.utilities.DatabaseConnection;
 
 
 public class ServiceContext {
@@ -11,6 +12,8 @@ public class ServiceContext {
     private static AdminService adminService;
     private static AppointmentService appointmentService;
     private static ScheduleService scheduleService;
+
+    private static DatabaseConnection databaseConnection;
 
     private ServiceContext(){
     }
@@ -31,6 +34,17 @@ public class ServiceContext {
             synchronized (ServiceContext.class){
                 if (userService == null){
                     userService = new UserServiceImpl();
+                }
+            }
+        }
+        return userService;
+    }
+
+    public static UserService getUserServiceDB(){
+        if (userService == null){
+            synchronized (ServiceContext.class){
+                if (userService == null){
+                    userService = new UserServiceDBImpl();
                 }
             }
         }
@@ -82,6 +96,16 @@ public class ServiceContext {
         return scheduleService;
     }
 
+    public static DatabaseConnection getDatabaseConnection(){
+        if(databaseConnection == null){
+            synchronized (ServiceContext.class){
+                if(databaseConnection == null){
+                    databaseConnection = new DatabaseConnection();
+                }
+            }
+        }
+        return databaseConnection;
+    }
 
 
 }

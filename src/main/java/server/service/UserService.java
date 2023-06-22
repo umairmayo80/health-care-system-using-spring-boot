@@ -5,15 +5,19 @@ import java.util.List;
 public interface UserService {
     public final static String userFilePath = "users.csv";
 
-    public List<User> getUsers();
+    List<User> getUsers();
 
-    public void saveUsersToDb(List<User> userList);
-
-    public User validateUserLogin(String username, String password);
+    void saveUsersToDb(List<User> userList);
 
 
-    public List<User> getPatients();
-    public List<User> getDoctors();
+    User validateUserLogin(String username, String password, String userRole);
+
+    List<User> getPatients();
+    List<User> getDoctors();
+
+    void viewUsers();
+    void viewPatients();
+    void viewDoctors();
 
 
 }

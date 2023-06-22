@@ -10,7 +10,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-public class MainClean {
+public class CLIWithDatabaseIntegration {
     private final Scanner scanner;
     private final PatientService patientService;
     private final DoctorService doctorService;
@@ -19,11 +19,12 @@ public class MainClean {
     private final AppointmentService appointmentService;
     private User currentUser; // to hold the current user
 
+    //Use db file or sql
 
-    MainClean(){
+    CLIWithDatabaseIntegration (){
         this.patientService = ServiceContext.getPatientService();
         this.doctorService = ServiceContext.getDoctorService();
-        this.userService = ServiceContext.getUserService();
+        this.userService = ServiceContext.getUserServiceDB();
         this.adminService = ServiceContext.getAdminService();
         this.appointmentService = ServiceContext.getAppointmentService();
         this.currentUser = null;
@@ -31,7 +32,7 @@ public class MainClean {
     }
 
     public static void main(String[] args){
-        MainClean cli = new MainClean();
+        CLIWithDatabaseIntegration cli = new CLIWithDatabaseIntegration();
         cli.displayWelcomeMenu();
     }
 
@@ -225,22 +226,11 @@ public class MainClean {
     }
 
 
-    public void displayUsers(List<User> usersList){
-        // Print table header
-        System.out.format("%-5s %-15s %-10s %-15s %-15s %-10s%n", "ID", "Name", "Role", "Username", "Password", "Account Status");
 
-        // Print table rows
-        for (User user : usersList) {
-            System.out.format("%-5d %-15s %-10s %-15s %-15s %-10s%n",
-                    user.getId(), user.getName(), user.getRoll(), user.getUsername(), user.getPassword(), user.getAccountStatus());
-        }
-    }
 
     public void viewAllUsers() {
         System.out.println("View All Users function called");
-
-        List<User> usersList = userService.getUsers();
-        displayUsers(usersList);
+        userService.viewUsers();
     }
 
 
@@ -249,7 +239,7 @@ public class MainClean {
         System.out.println("View Patients function called");
         List<User> patients = userService.getPatients();
 
-        displayUsers(patients);
+//        userService.viewUsers(); (patients);
 
     }
 
@@ -257,7 +247,7 @@ public class MainClean {
         // Implementation for viewing doctors
         System.out.println("View Doctors function called");
         List<User> doctors = userService.getDoctors();
-        displayUsers(doctors);
+        userService.viewUsers();
     }
 
     public void viewAppointments(){
@@ -408,7 +398,7 @@ public class MainClean {
 
     public void viewSchedule() {
         System.out.println("View schedule function called...");
-       doctorService.viewSchedule(currentUser.getId());
+        doctorService.viewSchedule(currentUser.getId());
 
     }
 

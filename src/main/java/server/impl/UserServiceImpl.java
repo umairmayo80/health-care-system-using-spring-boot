@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public User validateUserLogin(String username, String password){
+    public User validateUserLogin(String username, String password, String userRole){
         // Logic to validate username and password
         List<User> users = getUsers();
         Optional<User> loginUser = users.stream()
@@ -82,6 +82,20 @@ public class UserServiceImpl implements UserService{
                 .filter(user -> user.getRoll().equals("doctor"))
                 .collect(Collectors.toList());
         return doctors;
+    }
+
+    public void viewPatients(){
+        List<User> users = getPatients();
+        for(User user: users){
+            System.out.println(user.toString());
+        }
+    }
+
+    public void viewDoctors(){
+        List<User> users = getDoctors();
+        for(User user: users){
+            System.out.println(user.toString());
+        }
     }
 
 
