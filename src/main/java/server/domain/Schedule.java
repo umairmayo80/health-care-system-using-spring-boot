@@ -1,6 +1,6 @@
 package server.domain;
 
-import server.service.ScheduleCreationException;
+import server.utilities.ScheduleCreationException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

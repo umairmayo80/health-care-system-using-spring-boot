@@ -1,8 +1,12 @@
 package server.context;
 
-import server.impl.*;
 import server.service.*;
+import server.service.impl.Database.UserServiceDBImpl;
+import server.service.impl.FileSystem.*;
 import server.utilities.DatabaseConnection;
+
+import java.sql.Connection;
+import java.util.Scanner;
 
 
 public class ServiceContext {
@@ -13,7 +17,9 @@ public class ServiceContext {
     private static AppointmentService appointmentService;
     private static ScheduleService scheduleService;
 
-    private static DatabaseConnection databaseConnection;
+    private static Connection databaseConnection;
+
+    private static Scanner scanner;
 
     private ServiceContext(){
     }
@@ -96,11 +102,11 @@ public class ServiceContext {
         return scheduleService;
     }
 
-    public static DatabaseConnection getDatabaseConnection(){
+    public static Connection getDatabaseConnection(){
         if(databaseConnection == null){
             synchronized (ServiceContext.class){
                 if(databaseConnection == null){
-                    databaseConnection = new DatabaseConnection();
+                    databaseConnection = new DatabaseConnection().getConnection();
                 }
             }
         }
@@ -108,4 +114,14 @@ public class ServiceContext {
     }
 
 
+    public static Scanner getScanner(){
+        if(scanner == null){
+            synchronized (ServiceContext.class){
+                if(scanner == null){
+                    scanner = new Scanner(System.in);
+                }
+            }
+        }
+        return scanner;
+    }
 }

@@ -1,16 +1,17 @@
-package server.impl;
+package server.service.impl.FileSystem;
 import server.context.ServiceContext;
 import server.domain.Appointment;
-import server.domain.Doctor;
+import server.domain.Slot;
 import server.service.*;
 import server.domain.Schedule;
+import server.utilities.ScheduleCreationException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DoctorServiceImpl implements DoctorService {
 
-    public void addSchedule(Schedule schedule){
+    public void addScheduleSlots(Schedule schedule){
         ServiceContext.getScheduleService().addScheduleEntry(schedule);
     }
 
@@ -24,7 +25,12 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
-    public void viewSchedule(int userID){
+    @Override
+    public void addSlotsEntry(Slot slot) {
+        // will updated this to handle both file and db in next update
+    }
+
+    public void viewSlots(int userID){
         ServiceContext.getScheduleService().getSchedulesByID(userID).forEach(System.out::println);
     }
 

@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Appointment {
     private int patientId;
+//    slot Obj;
     private int doctorId;
     private LocalDateTime dateTime;
 

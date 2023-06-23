@@ -1,4 +1,4 @@
-package server.impl;
+package server.service.impl.FileSystem;
 
 import server.context.ServiceContext;
 import server.domain.User;
@@ -23,12 +23,7 @@ public class AdminServiceImpl implements AdminService {
 
     public boolean addUser(User user) {
         if (isUsernameAvailable(user.getUsername())) {
-
-            List<User> userList = ServiceContext.getUserService().getUsers();
-            userList.add(user);
-            ServiceContext.getUserService().saveUsersToDb(userList);
-            return true;
-
+            return ServiceContext.getUserService().addUserEntry(user);
         } else {
             System.out.println("Error: Username '" + user.getUsername() + "' already exists. Please choose a different username.");
             return false;
@@ -36,7 +31,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
-    public void setUserAccountStatus(String username,boolean status) {
+    public boolean setUserAccountStatus(String username,boolean status) {
 
         Optional<User> targetUser = ServiceContext.getUserService().getUsers().stream()
                 .filter(user -> user.getUsername().equals(username))
@@ -61,15 +56,14 @@ public class AdminServiceImpl implements AdminService {
 //             add the updated
             userList.add(targetIndex,targetUser.get());
 
-            ServiceContext.getUserService().saveUsersToDb(userList);
+            ServiceContext.getUserService().addUsersListToStorage(userList);
 
-
-            return;
-
+            return true;
 
         }
 
-        System.out.printf("Error: No server.domain.User found against this the provided '%s' username.\n",username);
+        System.out.printf("Error: No User found against this the provided '%s' username.\n",username);
+        return false;
 
     }
 

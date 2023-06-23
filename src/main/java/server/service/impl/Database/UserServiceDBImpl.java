@@ -1,4 +1,4 @@
-package server.impl;
+package server.service.impl.Database;
 import server.context.ServiceContext;
 import server.domain.User;
 import server.service.UserService;
@@ -8,12 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class UserServiceDBImpl implements UserService {
     Connection connection;
     public UserServiceDBImpl(){
-        connection = ServiceContext.getDatabaseConnection().getConnection();
+        connection = ServiceContext.getDatabaseConnection();
     }
 
     public List<User> getUsers() {
@@ -33,19 +32,43 @@ public class UserServiceDBImpl implements UserService {
         }
         return users;
     }
+
+    // add new user to the database
+    @Override
+    public boolean addUserEntry(User user) {
+        try {
+            Statement statement = connection.createStatement();
+            String query = "INSERT INTO user_table (name, username, password, role, accountLocked) VALUES ('"
+                    + user.getName() + "','"
+                    + user.getUsername() + "','"
+                    + user.getPassword() + "','"
+                    + user.getRoll() + "',"
+                    + user.getAccountStatus() + ")";
+            statement.executeUpdate(query);
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error: Unable to add user" + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public void addUsersListToStorage(List<User> userList) {
+        userList.forEach(this::addUserEntry);
+    }
+
     public void displayUsers(List<User> usersList){
         // Print table header
+        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
         System.out.format("%-5s %-15s %-10s %-15s %-15s %-10s%n", "ID", "Name", "Role", "Username", "Password", "Account Locked");
+        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
 
         // Print table rows
         for (User user : usersList) {
             System.out.format("%-5d %-15s %-10s %-15s %-15s %-10s%n",
                     user.getId(), user.getName(), user.getRoll(), user.getUsername(), user.getPassword(), user.getAccountStatus());
         }
-    }
-
-    //save a list of users To users Table in database
-    public void saveUsersToDb(List<User> userList){
+        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
     }
 
     public User validateUserLogin(String username, String password, String userRole) {
@@ -134,8 +157,11 @@ public class UserServiceDBImpl implements UserService {
         userService.viewPatients();
         userService.viewDoctors();
 
-        User user = userService.validateUserLogin("admin12","password123","admin");
+        User user = userService.validateUserLogin("admin123","password123","admin");
         System.out.println(user);
+
+        System.out.println(userService.addUserEntry(new User(5,"Ali","doctor","doctor9","doctor123",false)));
+
 
     }
 

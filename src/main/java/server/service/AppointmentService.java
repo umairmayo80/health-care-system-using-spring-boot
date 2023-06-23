@@ -17,7 +17,6 @@ public interface AppointmentService {
 
     public List<Appointment> getAppointmentsByDoctorId(int doctorId);
 
-
     public void addAppointmentEntry(Appointment appointment);
 
 

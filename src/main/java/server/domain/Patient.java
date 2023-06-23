@@ -1,8 +1,7 @@
 package server.domain;
 
 
-import server.impl.PatientServiceImpl;
-import server.service.PatientService;
+import server.service.impl.FileSystem.PatientServiceImpl;
 
 public class Patient extends User{
 //    private List<server.domain.Appointment> appointments;

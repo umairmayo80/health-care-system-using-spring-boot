@@ -4,6 +4,8 @@ import server.domain.Appointment;
 import server.domain.Schedule;
 import server.domain.User;
 import server.service.*;
+import server.utilities.ScheduleCreationException;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
@@ -408,7 +410,7 @@ public class MainClean {
 
     public void viewSchedule() {
         System.out.println("View schedule function called...");
-       doctorService.viewSchedule(currentUser.getId());
+       doctorService.viewSlots(currentUser.getId());
 
     }
 
@@ -440,7 +442,7 @@ public class MainClean {
         try {
             Schedule newSchedule = new Schedule(currentUser.getId(),dateStr,
                     startTimeStr,endTimeStr);
-            doctorService.addSchedule(newSchedule);
+            doctorService.addScheduleSlots(newSchedule);
             System.out.println("Entry added successfully");
         } catch (ScheduleCreationException e) {
             System.out.println("Error creating schedule: " + e.getMessage());

@@ -115,7 +115,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "server.domain.User{" +
+        return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", role='" + roll + '\'' +

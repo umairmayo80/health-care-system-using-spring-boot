@@ -4,6 +4,11 @@ import server.domain.Appointment;
 import server.domain.Schedule;
 import server.domain.User;
 import server.service.*;
+import server.service.impl.Database.AdminServiceDBImpl;
+import server.service.impl.Database.UserServiceDBImpl;
+import server.service.impl.FileSystem.*;
+import server.utilities.ScheduleCreationException;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
@@ -19,20 +24,66 @@ public class CLIWithDatabaseIntegration {
     private final AppointmentService appointmentService;
     private User currentUser; // to hold the current user
 
-    //Use db file or sql
+    // Constructor injection
+    CLIWithDatabaseIntegration (UserService userService, AdminService adminService,
+                                PatientService patientService,DoctorService doctorService,
+                                AppointmentService appointmentService){
+        this.userService = userService;
+        this.adminService = adminService;
+        this.patientService = patientService;
+        this.doctorService = doctorService;
 
-    CLIWithDatabaseIntegration (){
-        this.patientService = ServiceContext.getPatientService();
-        this.doctorService = ServiceContext.getDoctorService();
-        this.userService = ServiceContext.getUserServiceDB();
-        this.adminService = ServiceContext.getAdminService();
-        this.appointmentService = ServiceContext.getAppointmentService();
+        this.appointmentService = appointmentService;
+
         this.currentUser = null;
-        this.scanner = new Scanner(System.in);
+        this.scanner = ServiceContext.getScanner();
+    }
+
+    private static CLIWithDatabaseIntegration initializeCLI(){
+        int choice = 0;
+        do {
+            System.out.print("\nWelcome to Health Care System"
+                    +"Select Storage Type:"
+                    +"\n\t1. File System"
+                    +"\n\t2. MySQL Database"
+                    +"\n\t3. Exit"
+                    +"\n\tEnter your choice:");
+            try {
+                choice = Integer.parseInt(ServiceContext.getScanner().nextLine());
+            } catch (InputMismatchException | NumberFormatException e){
+                System.out.println("Invalid Input. Try again.");
+                continue;
+            }
+            switch (choice) {
+                case 1:
+                    UserService userServiceFile = new UserServiceImpl();
+                    AdminService adminServiceFile = new AdminServiceImpl();
+                    PatientService patientServiceFile = new PatientServiceImpl();
+                    DoctorService doctorServiceFile = new DoctorServiceImpl();
+                    AppointmentService appointmentServiceFile = new AppointmentServiceImpl();
+                    return new CLIWithDatabaseIntegration(userServiceFile,adminServiceFile,patientServiceFile,doctorServiceFile,appointmentServiceFile);
+
+                case 2:
+                    UserService userServiceDB = new UserServiceDBImpl();
+                    AdminService adminServiceDB = new AdminServiceDBImpl();
+                    PatientService patientServiceDB = new PatientServiceImpl();
+                    DoctorService doctorServiceDB = new DoctorServiceImpl();
+                    AppointmentService appointmentServiceDB = new AppointmentServiceImpl();
+                    return new CLIWithDatabaseIntegration(userServiceDB,adminServiceDB,patientServiceDB,doctorServiceDB,appointmentServiceDB);
+                case 3:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (true);
+
     }
 
     public static void main(String[] args){
-        CLIWithDatabaseIntegration cli = new CLIWithDatabaseIntegration();
+        CLIWithDatabaseIntegration cli = CLIWithDatabaseIntegration.initializeCLI();
         cli.displayWelcomeMenu();
     }
 
@@ -220,12 +271,10 @@ public class CLIWithDatabaseIntegration {
         if(adminService.addUser(user)){
             System.out.println("User Added Successfully!");
         }
-
-
-
+        else{
+            System.out.println("Error: Unable to add user.");
+        }
     }
-
-
 
 
     public void viewAllUsers() {
@@ -237,17 +286,15 @@ public class CLIWithDatabaseIntegration {
     public void viewPatients() {
         // Implementation for viewing patients
         System.out.println("View Patients function called");
-        List<User> patients = userService.getPatients();
+        userService.viewPatients();
 
-//        userService.viewUsers(); (patients);
 
     }
 
     public void viewDoctors() {
         // Implementation for viewing doctors
         System.out.println("View Doctors function called");
-        List<User> doctors = userService.getDoctors();
-        userService.viewUsers();
+        userService.viewDoctors();
     }
 
     public void viewAppointments(){
@@ -266,14 +313,24 @@ public class CLIWithDatabaseIntegration {
         System.out.println("Lock server.domain.User function called");
         System.out.print("Enter target username:");
         String username = scanner.nextLine().strip();
-        adminService.setUserAccountStatus(username,true);
+        if(adminService.setUserAccountStatus(username,true)){
+            System.out.println("\t'"+username+"' account locked");
+        }
+        else{
+            System.out.println("\tError: unable to update to account status");
+        }
     }
     public void unlockUser() {
         // Implementation for unlocking a user
         System.out.println("UnLock server.domain.User function called");
         System.out.print("Enter target username:");
         String username = scanner.nextLine().strip();
-        adminService.setUserAccountStatus(username,false);
+        if(adminService.setUserAccountStatus(username,false)){
+            System.out.println("\t'"+username+"' account unlocked");
+        }
+        else{
+            System.out.println("\tError: unable to update to account status");
+        }
     }
 
 
@@ -398,7 +455,7 @@ public class CLIWithDatabaseIntegration {
 
     public void viewSchedule() {
         System.out.println("View schedule function called...");
-        doctorService.viewSchedule(currentUser.getId());
+        doctorService.viewSlots(currentUser.getId());
 
     }
 
@@ -430,7 +487,7 @@ public class CLIWithDatabaseIntegration {
         try {
             Schedule newSchedule = new Schedule(currentUser.getId(),dateStr,
                     startTimeStr,endTimeStr);
-            doctorService.addSchedule(newSchedule);
+            doctorService.addScheduleSlots(newSchedule);
             System.out.println("Entry added successfully");
         } catch (ScheduleCreationException e) {
             System.out.println("Error creating schedule: " + e.getMessage());

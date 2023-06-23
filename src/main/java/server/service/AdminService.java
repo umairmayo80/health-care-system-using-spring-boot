@@ -4,9 +4,9 @@ import server.domain.User;
 
 public interface AdminService {
 
-    public boolean addUser(User user);
+    boolean addUser(User user);
 
-    public void setUserAccountStatus(String username,boolean status);
+    boolean setUserAccountStatus(String username,boolean status);
 
 
 }

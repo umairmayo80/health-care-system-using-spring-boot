@@ -1,8 +1,7 @@
-package server.impl;
+package server.service.impl.FileSystem;
 import server.context.ServiceContext;
 import server.domain.Appointment;
 import server.service.PatientService;
-import server.service.ScheduleService;
 
 import java.util.List;
 import java.util.stream.Collectors;

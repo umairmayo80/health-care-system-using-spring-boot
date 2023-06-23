@@ -19,6 +19,7 @@ public class DatabaseConnection {
     private Connection initConnection() throws SQLException{
 
         MysqlDataSource dataSource = new MysqlDataSource();
+
         // Set the connection parameters
         dataSource.setUrl("jdbc:mysql://localhost:3306/"+databaseName);
         dataSource.setUser("root");
@@ -77,6 +78,13 @@ public class DatabaseConnection {
                     "    endTime TIME,\n" +
                     "    occupied BOOLEAN\n" +
                     ");\n");
+
+            // Constraint for unique records
+            String alterTableQuery = "ALTER TABLE slot_table " +
+                                     "ADD CONSTRAINT unique_slot UNIQUE (doctorId, date, startTime, endTime)";
+
+            statement.executeUpdate(alterTableQuery);
+
 
             // insert dummy data
             statement.executeUpdate("INSERT INTO slot_table (doctorId, date, startTime, endTime, occupied)\n" +

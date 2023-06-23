@@ -1,7 +1,7 @@
-package server.impl;
+package server.service.impl.FileSystem;
 import server.domain.Schedule;
 import server.utilities.FileModificationChecker;
-import server.service.ScheduleCreationException;
+import server.utilities.ScheduleCreationException;
 import server.service.ScheduleService;
 
 import java.io.*;

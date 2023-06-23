@@ -1,4 +1,4 @@
-package server.impl;
+package server.service.impl.FileSystem;
 import server.domain.User;
 import server.service.UserService;
 import java.io.BufferedWriter;
@@ -12,11 +12,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class UserServiceImpl implements UserService{
+    public final static String userFilePath = "users.csv";
 
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
         try {
-            List<String> lines = Files.readAllLines(Paths.get(UserService.userFilePath));
+            List<String> lines = Files.readAllLines(Paths.get(UserServiceImpl.userFilePath));
             for (String line : lines) {
                 String[] parts = line.split(",");
                 if (parts.length == 6) {
@@ -38,8 +39,17 @@ public class UserServiceImpl implements UserService{
         return users;
     }
 
-    public void saveUsersToDb(List<User> userList){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(UserService.userFilePath, false))) {
+    @Override
+    public boolean addUserEntry(User user) {
+        List<User> userList= getUsers();
+        userList.add(user);
+        addUsersListToStorage(userList);
+        return true;
+    }
+
+    // saves the users list to file. It overwrites the previous data with new data
+    public void addUsersListToStorage(List<User> userList){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(UserServiceImpl.userFilePath, false))) {
             for (User itrUser : userList) {
                 writer.write(itrUser.getId() + "," + itrUser.getName() + "," + itrUser.getUsername() + "," + itrUser.getPassword() + "," + itrUser.getRoll()
                         + "," + itrUser.getAccountStatus());
