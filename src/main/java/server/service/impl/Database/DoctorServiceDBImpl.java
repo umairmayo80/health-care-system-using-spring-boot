@@ -35,6 +35,6 @@ public class DoctorServiceDBImpl implements DoctorService {
 
     @Override
     public void viewSlots(int userID) {
-
+        ServiceContext.getSlotService().getSlotsById(userID);
     }
 }

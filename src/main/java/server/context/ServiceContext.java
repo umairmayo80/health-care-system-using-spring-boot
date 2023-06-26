@@ -1,10 +1,11 @@
 package server.context;
 
 import server.service.*;
-import server.service.impl.Database.AppointmentServiceV1Impl;
+import server.service.impl.Database.AppointmentServiceV1DBImpl;
 import server.service.impl.Database.SlotsServiceDBImpl;
 import server.service.impl.Database.UserServiceDBImpl;
 import server.service.impl.FileSystem.*;
+import server.service.version1.AppointmentServiceV1;
 import server.utilities.DatabaseConnection;
 
 import java.sql.Connection;
@@ -148,7 +149,7 @@ public class ServiceContext {
         if(appointmentServiceV1 == null){
             synchronized (ServiceContext.class){
                 if(appointmentServiceV1 == null){
-                    appointmentServiceV1 = new AppointmentServiceV1Impl();
+                    appointmentServiceV1 = new AppointmentServiceV1DBImpl();
                 }
             }
         }

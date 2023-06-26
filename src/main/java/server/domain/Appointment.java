@@ -1,10 +1,7 @@
 package server.domain;
-
-import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Appointment {
     private int patientId;

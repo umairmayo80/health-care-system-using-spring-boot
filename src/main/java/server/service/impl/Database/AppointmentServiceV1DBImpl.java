@@ -2,8 +2,8 @@ package server.service.impl.Database;
 
 import server.context.ServiceContext;
 import server.domain.Slot;
-import server.domain.version1.Appointment;
-import server.service.AppointmentServiceV1;
+import server.domain.version1.AppointmentV1;
+import server.service.version1.AppointmentServiceV1;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,16 +12,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentServiceV1Impl implements AppointmentServiceV1 {
+public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {
     private Connection dbConnection;
-    public AppointmentServiceV1Impl()
+    public AppointmentServiceV1DBImpl()
     {
         this.dbConnection= ServiceContext.getDatabaseConnection();
     }
 
 
-    public List<Appointment> getAppointmentsByQuery(String query) {
-        List<Appointment> appointmentList = new ArrayList<>();
+    public List<AppointmentV1> getAppointmentsByQuery(String query) {
+        List<AppointmentV1> appointmentList = new ArrayList<>();
         try {
             Statement statement = dbConnection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -34,36 +34,35 @@ public class AppointmentServiceV1Impl implements AppointmentServiceV1 {
         return appointmentList;
     }
 
-    private Appointment parseSlotDataFromResultSet(ResultSet resultSet) throws SQLException {
+    private AppointmentV1 parseSlotDataFromResultSet(ResultSet resultSet) throws SQLException {
         int appointmentId = resultSet.getInt("appointmentId");
         int patientId = resultSet.getInt("patientId");
         int doctorSlotId = resultSet.getInt("slotId");
-        return new Appointment(appointmentId,patientId,doctorSlotId);
+        return new AppointmentV1(appointmentId,patientId,doctorSlotId);
     }
 
 
     @Override
-    public void saveAppointmentsToStorage(List<Appointment> appointmentList) {
-        for(Appointment appointment: appointmentList){
+    public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
+        for(AppointmentV1 appointment: appointmentList){
             addAppointmentEntry(appointment);
         }
     }
 
     @Override
-    public List<Appointment> getAppointments() {
+    public List<AppointmentV1> getAppointments() {
         String query = "select * from appointment_table;";
         return getAppointmentsByQuery(query);
     }
 
-
-    public void viewAppointmentByUserId(int userId){
+    @Override
+    public void viewAllAppointments() {
         String query = "SELECT a.appointmentId, a.patientId, p.name AS patientName, a.slotId, s.doctorId, d.name AS doctorName, " +
                 "s.date, s.startTime, s.endTime, s.occupied " +
                 "FROM appointment_table a " +
                 "JOIN slot_table s ON a.slotId = s.slotId " +
                 "JOIN user_table p ON a.patientId = p.userid " +
-                "JOIN user_table d ON s.doctorId = d.userid " +
-                "WHERE a.patientId = " + userId;
+                "JOIN user_table d ON s.doctorId = d.userid ";
         try {
             Statement statement = dbConnection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -72,14 +71,42 @@ public class AppointmentServiceV1Impl implements AppointmentServiceV1 {
             System.out.println("Error: Unable to retrieve data from the database: " + e.getMessage());
         }
     }
+
+
     @Override
     public void viewAppointmentsByPatientId(int patientId) {
-        viewAppointmentByUserId(patientId);
+        String query = "SELECT a.appointmentId, a.patientId, p.name AS patientName, a.slotId, s.doctorId, d.name AS doctorName, " +
+                "s.date, s.startTime, s.endTime, s.occupied " +
+                "FROM appointment_table a " +
+                "JOIN slot_table s ON a.slotId = s.slotId " +
+                "JOIN user_table p ON a.patientId = p.userid " +
+                "JOIN user_table d ON s.doctorId = d.userid " +
+                "WHERE a.patientId = " + patientId;
+        try {
+            Statement statement = dbConnection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            displayAppointmentData(resultSet);
+        } catch (SQLException e) {
+            System.out.println("Error: Unable to retrieve data from the database: " + e.getMessage());
+        }
     }
 
     @Override
     public void viewAppointmentsByDoctorId(int doctorId) {
-        viewAppointmentByUserId(doctorId);
+        String query = "SELECT a.appointmentId, a.patientId, p.name AS patientName, a.slotId, s.doctorId, d.name AS doctorName, " +
+                "s.date, s.startTime, s.endTime, s.occupied " +
+                "FROM appointment_table a " +
+                "JOIN slot_table s ON a.slotId = s.slotId " +
+                "JOIN user_table p ON a.patientId = p.userid " +
+                "JOIN user_table d ON s.doctorId = d.userid " +
+                "WHERE s.doctorId = " + doctorId;
+        try {
+            Statement statement = dbConnection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            displayAppointmentData(resultSet);
+        } catch (SQLException e) {
+            System.out.println("Error: Unable to retrieve data from the database: " + e.getMessage());
+        }
     }
 
 
@@ -111,10 +138,10 @@ public class AppointmentServiceV1Impl implements AppointmentServiceV1 {
 
 
     @Override
-    public boolean addAppointmentEntry(Appointment appointment) {
+    public boolean addAppointmentEntry(AppointmentV1 appointment) {
         Slot slot = ServiceContext.getSlotService().getSlotBySlotId(appointment.getDoctorSlotId());
         if(slot == null){
-            System.out.println("Error,unable to add appointment entry");
+            System.out.println("No slot found against the provided id: "+appointment.getDoctorSlotId());
             return false;
         }
         if(slot.getOccupied()){
@@ -142,11 +169,11 @@ public class AppointmentServiceV1Impl implements AppointmentServiceV1 {
     }
 
     public static void main(String[] args){
-        AppointmentServiceV1Impl appointmentServiceV1 = new AppointmentServiceV1Impl();
+        AppointmentServiceV1DBImpl appointmentServiceV1 = new AppointmentServiceV1DBImpl();
         System.out.println(appointmentServiceV1.getAppointments());
 
         appointmentServiceV1.viewAppointmentsByPatientId(2);
 
-        System.out.println(appointmentServiceV1.addAppointmentEntry(new Appointment(2,3)));
+        System.out.println(appointmentServiceV1.addAppointmentEntry(new AppointmentV1(2,3)));
     }
 }

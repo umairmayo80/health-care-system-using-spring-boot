@@ -1,18 +1,18 @@
 package server.domain.version1;
 
-public class Appointment {
+public class AppointmentV1 {
     private int patientId;
     private int doctorSlotId;
     private int appointmentId;
 
     // Constructor
-    public Appointment(int appointmentId, int patientId, int doctorSlotId) {
+    public AppointmentV1(int appointmentId, int patientId, int doctorSlotId) {
         this.patientId = patientId;
         this.doctorSlotId = doctorSlotId;
         this.appointmentId = appointmentId;
     }
 
-    public Appointment(int patientId,int doctorSlotId){
+    public AppointmentV1(int patientId, int doctorSlotId){
         this.appointmentId = 0;
         this.patientId = patientId;
         this. doctorSlotId = doctorSlotId;

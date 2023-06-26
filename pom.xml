@@ -24,7 +24,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>client.DatabaseIntegration</mainClass>
+                            <mainClass>client.CLI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -13,5 +13,8 @@ public interface SlotService {
     void viewSlotsById(int userId);
     List<Slot> getSlotsById(int userId);
     void viewBookedSlotsById(int userId);
+
+    void viewFreeSlots();
+
     void viewFreeSlotsById(int userId);
 }

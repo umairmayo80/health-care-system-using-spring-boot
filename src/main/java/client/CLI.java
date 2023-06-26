@@ -1,39 +1,98 @@
 package client;
+
 import server.context.ServiceContext;
-import server.domain.Appointment;
-import server.domain.Schedule;
+
+import server.domain.Slot;
 import server.domain.User;
+import server.domain.version1.AppointmentV1;
 import server.service.*;
+import server.service.impl.Database.AdminServiceDBImpl;
+import server.service.impl.Database.AppointmentServiceV1DBImpl;
+import server.service.impl.Database.SlotsServiceDBImpl;
+import server.service.impl.Database.UserServiceDBImpl;
+import server.service.impl.FileSystem.*;
+import server.service.version1.AppointmentServiceV1;
 import server.utilities.ScheduleCreationException;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
-public class MainClean {
+public class CLI {
     private final Scanner scanner;
     private final PatientService patientService;
     private final DoctorService doctorService;
     private final UserService userService;
     private final AdminService adminService;
-    private final AppointmentService appointmentService;
     private User currentUser; // to hold the current user
+    private final AppointmentServiceV1 appointmentServiceV1;
+    private final SlotService slotService;
 
 
-    MainClean(){
-        this.patientService = ServiceContext.getPatientService();
-        this.doctorService = ServiceContext.getDoctorService();
-        this.userService = ServiceContext.getUserService();
-        this.adminService = ServiceContext.getAdminService();
-        this.appointmentService = ServiceContext.getAppointmentService();
+    // Constructor injection
+    CLI( UserService userService, AdminService adminService,
+        PatientService patientService, DoctorService doctorService,
+        AppointmentServiceV1 appointmentServiceV1, SlotService slotService) {
+        this.userService = userService;
+        this.adminService = adminService;
+        this.patientService = patientService;
+        this.doctorService = doctorService;
+
+        this.appointmentServiceV1 = appointmentServiceV1;
+        this.slotService = slotService;
+
         this.currentUser = null;
-        this.scanner = new Scanner(System.in);
+        this.scanner = ServiceContext.getScanner();
     }
 
-    public static void main(String[] args){
-        MainClean cli = new MainClean();
+    private static CLI initializeCLI() {
+        int choice = 0;
+        do {
+            System.out.print("\nWelcome to Health Care System"
+                    + "Select Storage Type:"
+                    + "\n\t1. File System"
+                    + "\n\t2. MySQL Database"
+                    + "\n\t3. Exit"
+                    + "\n\tEnter your choice:");
+            try {
+                choice = Integer.parseInt(ServiceContext.getScanner().nextLine());
+            } catch (InputMismatchException | NumberFormatException e) {
+                System.out.println("Invalid Input. Try again.");
+                continue;
+            }
+            switch (choice) {
+                case 1:
+                    UserService userServiceFile = new UserServiceImpl();
+                    AdminService adminServiceFile = new AdminServiceImpl();
+                    PatientService patientServiceFile = new PatientServiceImpl();
+                    DoctorService doctorServiceFile = new DoctorServiceImpl();
+                    AppointServiceV1FileImpl appointmentServiceFile = new AppointServiceV1FileImpl();
+                    SlotServiceFileImpl slotServiceFile = new SlotServiceFileImpl();
+                    return new CLI(userServiceFile, adminServiceFile, patientServiceFile, doctorServiceFile,
+                            appointmentServiceFile, slotServiceFile);
+
+                case 2:
+                    UserService userServiceDB = new UserServiceDBImpl();
+                    AdminService adminServiceDB = new AdminServiceDBImpl();
+                    PatientService patientServiceDB = new PatientServiceImpl();
+                    DoctorService doctorServiceDB = new DoctorServiceImpl();
+                    AppointmentServiceV1 appointmentServiceDB = new AppointmentServiceV1DBImpl();
+                    SlotService slotService1 = new SlotsServiceDBImpl();
+                    return new CLI(userServiceDB, adminServiceDB, patientServiceDB, doctorServiceDB,
+                            appointmentServiceDB, slotService1);
+                case 3:
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (true);
+
+    }
+
+    public static void main(String[] args) {
+        CLI cli = CLI.initializeCLI();
         cli.displayWelcomeMenu();
     }
 
@@ -50,7 +109,7 @@ public class MainClean {
             System.out.print("Enter your choice: ");
             try {
                 choice = Integer.parseInt(scanner.nextLine());
-            } catch (InputMismatchException | NumberFormatException e){
+            } catch (InputMismatchException | NumberFormatException e) {
                 System.out.println("Invalid Input. Try again.");
                 continue;
             }
@@ -76,8 +135,8 @@ public class MainClean {
     }
 
     public void login() {
-        int choice =0;
-        do{
+        int choice = 0;
+        do {
             System.out.println("=== Login As ===");
             System.out.println("1. Admin");
             System.out.println("2. Patient");
@@ -86,7 +145,7 @@ public class MainClean {
             System.out.print("Enter your choice: ");
             try {
                 choice = Integer.parseInt(scanner.nextLine());
-            } catch (InputMismatchException | NumberFormatException e){
+            } catch (InputMismatchException | NumberFormatException e) {
                 System.out.println("Invalid Input. Try again.");
                 continue;
             }
@@ -111,19 +170,18 @@ public class MainClean {
 
     }
 
-    public boolean validateLogin(String userRoll){
-        System.out.printf("=== Login As %s===\n",userRoll);
+    public boolean validateLogin(String userRoll) {
+        System.out.printf("=== Login As %s===\n", userRoll);
         System.out.print("Enter username: ");
         String username = scanner.nextLine().strip();
         System.out.print("Enter password: ");
         String password = scanner.nextLine().strip();
 
 //        scanner.close();
-        User user = userService.validateUserLogin(username,password,userRoll);
-        if(user!= null && user.getRoll().equals(userRoll.toLowerCase()))
-        {
+        User user = userService.validateUserLogin(username, password, userRoll);
+        if (user != null && user.getRoll().equals(userRoll.toLowerCase())) {
             System.out.println("Login successful!");
-            currentUser= user;
+            currentUser = user;
             return true;
         }
 
@@ -143,12 +201,12 @@ public class MainClean {
 
     public void adminMenu() {
         boolean login = validateLogin("Admin");
-        if(!login) return;
-        System.out.println("Welcome server.domain.Admin " + currentUser.getName());
+        if (!login) return;
+        System.out.println("Welcome Admin " + currentUser.getName());
         int choice;
 
         do {
-            System.out.println("=== server.domain.Admin Menu ===");
+            System.out.println("=== Admin Menu ===");
             System.out.println("1. Add User");
             System.out.println("2. View All Users");
             System.out.println("3. View Patients");
@@ -160,7 +218,7 @@ public class MainClean {
             System.out.print("Enter your choice: ");
             try {
                 choice = Integer.parseInt(scanner.nextLine().strip());
-            } catch (InputMismatchException | NumberFormatException e){
+            } catch (InputMismatchException | NumberFormatException e) {
                 System.out.println("Invalid Input. Try again.");
                 continue;
             }
@@ -175,7 +233,7 @@ public class MainClean {
                     viewPatients();
                     break;
                 case 4:
-                    viewDoctors();
+                    viewAvailableDoctorSlots();
                     break;
                 case 5:
                     lockUser();
@@ -218,94 +276,82 @@ public class MainClean {
         User user = new User(name, roll, username, password);
 
         //Save the user to database
-        if(adminService.addUser(user)){
+        if (adminService.addUser(user)) {
             System.out.println("User Added Successfully!");
-        }
-
-
-
-    }
-
-
-    public void displayUsers(List<User> usersList){
-        // Print table header
-        System.out.format("%-5s %-15s %-10s %-15s %-15s %-10s%n", "ID", "Name", "Role", "Username", "Password", "Account Status");
-
-        // Print table rows
-        for (User user : usersList) {
-            System.out.format("%-5d %-15s %-10s %-15s %-15s %-10s%n",
-                    user.getId(), user.getName(), user.getRoll(), user.getUsername(), user.getPassword(), user.getAccountStatus());
+        } else {
+            System.out.println("Error: Unable to add user.");
         }
     }
 
     public void viewAllUsers() {
         System.out.println("View All Users function called");
-
-        List<User> usersList = userService.getUsers();
-        displayUsers(usersList);
+        userService.viewUsers();
     }
 
 
     public void viewPatients() {
         // Implementation for viewing patients
         System.out.println("View Patients function called");
-        List<User> patients = userService.getPatients();
+        userService.viewPatients();
 
-        displayUsers(patients);
 
     }
 
-    public void viewDoctors() {
+    public void viewAvailableDoctorSlots() {
         // Implementation for viewing doctors
         System.out.println("View Doctors function called");
-        List<User> doctors = userService.getDoctors();
-        displayUsers(doctors);
+        slotService.viewFreeSlots();
     }
 
-    public void viewAppointments(){
+    public void viewAppointments() {
         System.out.println("View Appointments function called");
-        List<Appointment> appointmentList = appointmentService.getAppointments();
-
-        System.out.println("patient_id,doctor_id,datetime");
-        for(Appointment appointment : appointmentList){
-            System.out.println(appointment.getPatientId()+","+appointment.getDoctorId()
-                    +","+appointment.getDateTime());
-        }
+        appointmentServiceV1.viewAllAppointments();
     }
 
     public void lockUser() {
         // Implementation for locking a user
-        System.out.println("Lock server.domain.User function called");
+        System.out.println("Lock User function called");
         System.out.print("Enter target username:");
         String username = scanner.nextLine().strip();
-        adminService.setUserAccountStatus(username,true);
+        if (adminService.setUserAccountStatus(username, true)) {
+            System.out.println("\t'" + username + "' account locked");
+        } else {
+            System.out.println("\tError: unable to update to account status");
+        }
     }
+
     public void unlockUser() {
         // Implementation for unlocking a user
         System.out.println("UnLock server.domain.User function called");
         System.out.print("Enter target username:");
         String username = scanner.nextLine().strip();
-        adminService.setUserAccountStatus(username,false);
+        if (adminService.setUserAccountStatus(username, false)) {
+            System.out.println("\t'" + username + "' account unlocked");
+        } else {
+            System.out.println("\tError: unable to update to account status");
+        }
     }
 
 
-    public void doctorMenu(){
-        System.out.println("server.domain.Doctor menu called");
+    public void doctorMenu() {
+        System.out.println("Doctor menu called");
         boolean login = validateLogin("Doctor");
-        if(!login) return;
-        System.out.println("Welcome server.domain.Doctor " + currentUser.getName());
-        int choice=0;
+        if (!login) return;
+        System.out.println("Doctor " + currentUser.getName());
+        int choice = 0;
 
         do {
-            System.out.println("=== server.domain.Doctor Menu ===");
-            System.out.println("1. View Schedule");
+            System.out.println("=== Doctor Menu ===");
+            System.out.println("1. View Scheduled Slots");
             System.out.println("2. View Appointments");
-            System.out.println("3. Create new shift entry");
-            System.out.println("4. Logout");
+            System.out.println("3. Add New Slot entry");
+            System.out.println("4. View Booked Slots");
+            System.out.println("5. View Free Slots");
+            System.out.println("6. Logout");
             System.out.print("Enter your choice: ");
             try {
                 choice = Integer.parseInt(scanner.nextLine());
-            } catch (InputMismatchException | NumberFormatException e){
+            } catch (InputMismatchException | NumberFormatException e) {
                 System.out.println("Invalid Input. Try again.");
                 continue;
             }
@@ -317,9 +363,16 @@ public class MainClean {
                     viewDoctorAppointments();
                     break;
                 case 3:
-                    newScheduleEntry();
+                    newSlotEntry();
                     break;
                 case 4:
+                    viewBookedSlots();
+                    break;
+                case 5:
+                    viewFreeSlots();
+                    break;
+
+                case 6:
                     System.out.println("Logging out...");
                     currentUser = null; // Reset the current user
                     return;
@@ -330,29 +383,39 @@ public class MainClean {
         } while (true);
     }
 
-    public void patientMenu(){
-        System.out.println("server.domain.Patient menu called");
+    public void viewBookedSlots() {
+        System.out.println("View Booked Slots function called");
+        slotService.viewBookedSlotsById(currentUser.getId());
+    }
+
+    public void viewFreeSlots() {
+        System.out.println("View Free Slots Function called");
+        slotService.viewFreeSlotsById(currentUser.getId());
+    }
+
+    public void patientMenu() {
+        System.out.println("Patient menu called");
         boolean login = validateLogin("Patient");
-        if(!login) return;
+        if (!login) return;
         System.out.println("Welcome server.domain.Patient " + currentUser.getName());
-        int choice=0;
+        int choice = 0;
 
         do {
-            System.out.println("=== server.domain.Patient Menu ===");
-            System.out.println("1. View Doctors");
+            System.out.println("=== Patient Menu ===");
+            System.out.println("1. View Available Doctor slots");
             System.out.println("2. View Appointments");
             System.out.println("3. Create Appointment");
             System.out.println("4. Logout");
             System.out.print("Enter your choice: ");
             try {
                 choice = Integer.parseInt(scanner.nextLine());
-            } catch (InputMismatchException | NumberFormatException e){
+            } catch (InputMismatchException | NumberFormatException e) {
                 System.out.println("Invalid Input. Try again.");
                 continue;
             }
             switch (choice) {
                 case 1:
-                    viewDoctors();
+                    viewAvailableDoctorSlots();
                     break;
                 case 2:
                     viewPatientAppointments();
@@ -372,82 +435,59 @@ public class MainClean {
     }
 
     private void createAppointment() {
-        int docId = 0;
-        LocalDateTime dateTime = null;
-        System.out.println("createAppointments method called");
-        System.out.println("Enter appointment details:");
-        System.out.print("\tEnter doctor ID:");
+        int selectedSlotId = 0;
+        System.out.println("Create new Appointment function called");
+        System.out.println("\t--------------List of available slots-----------");
+        slotService.viewFreeSlots();
+        System.out.print("\tEnter desired slot id:");
         try {
-            docId = Integer.parseInt(scanner.nextLine().strip());
-        } catch (InputMismatchException | NumberFormatException e){
-            System.out.println("Invalid Input. Try again.");
-            return;
-        }
-        System.out.print("\tEnter appointment date and time (input format:2000-12-30T09:30:00):");
-        try {
-            dateTime = LocalDateTime.parse(scanner.nextLine().strip());
-        } catch (DateTimeParseException e){
+            selectedSlotId = Integer.parseInt(scanner.nextLine().strip());
+        } catch (NumberFormatException e) {
             System.out.println("Invalid Input");
             return;
         }
-        Appointment newAppointment = new Appointment(currentUser.getId(),docId,dateTime);
-        if(patientService.addAppointment(newAppointment)){
-            System.out.println("Appointment successfully created ");
-            return;
-        }
-        System.out.println("No Doctor available at this ");
-
+        AppointmentV1 newAppointment = new AppointmentV1(currentUser.getId(), selectedSlotId);
+        if (appointmentServiceV1.addAppointmentEntry(newAppointment))
+            System.out.println("Appointment created successfully");
     }
 
-    public void viewPatientAppointments(){
-        List<Appointment> patientAppointments = appointmentService.getAppointmentsByPatientId(currentUser.getId());
-        System.out.println("patient_id,doctor_id,datetime");
-        for(Appointment appointment : patientAppointments){
-            System.out.println(appointment.getPatientId()+","+appointment.getDoctorId()
-                    +","+appointment.getDateTime());
-        }
+    public void viewPatientAppointments() {
+        appointmentServiceV1.viewAppointmentsByPatientId(currentUser.getId());
     }
 
     public void viewSchedule() {
         System.out.println("View schedule function called...");
-       doctorService.viewSlots(currentUser.getId());
-
+        slotService.viewSlotsById(currentUser.getId());
     }
 
     public void viewDoctorAppointments() {
         System.out.println("Viewing doctor appointments function called...");
-        List<Appointment> appointmentsByDoctorId = appointmentService.getAppointmentsByDoctorId(currentUser.getId());
-        System.out.println("patient_id,doctor_id,datetime");
-        for(Appointment appointment : appointmentsByDoctorId){
-            System.out.println(appointment.getPatientId()+","+appointment.getDoctorId()
-                    +","+appointment.getDateTime());
-        }
+        appointmentServiceV1.viewAppointmentsByDoctorId(currentUser.getId());
     }
 
-    public void newScheduleEntry() {
-        System.out.println("Creating new schedule entry function called...");
+    public void newSlotEntry() {
+        System.out.println("Adding New Slot Entry function called...");
 
-        System.out.println("Enter shift details:");
+        int doctorId = currentUser.getId();
 
-        System.out.print("\tEnter date (YYYY-MM-DD): ");
-        String dateStr = scanner.nextLine().strip();
+        // Prompt the user for input
+        System.out.print("Enter date (YYYY-MM-DD): ");
+        String date = scanner.nextLine().strip();
 
-        System.out.print("\tEnter start time (HH:MM:SS): ");
-        String startTimeStr = scanner.nextLine().strip();
+        System.out.print("Enter startTime (HH:MM): ");
+        String startTime = scanner.nextLine().strip();
 
-        System.out.print("\tEnter end time (HH:MM:SS): ");
-        String endTimeStr = scanner.nextLine().strip();
-
-
+        System.out.print("Enter endTime (HH:MM): ");
+        String endTime = scanner.nextLine().strip();
         try {
-            Schedule newSchedule = new Schedule(currentUser.getId(),dateStr,
-                    startTimeStr,endTimeStr);
-            doctorService.addScheduleSlots(newSchedule);
-            System.out.println("Entry added successfully");
+            Slot newSlot = new Slot(doctorId, date, startTime, endTime);
+            if (slotService.addSlotEntry(newSlot))
+                System.out.println("Entry added successfully");
+            else
+                System.out.println("Error, unable to add new slot");
         } catch (ScheduleCreationException e) {
-            System.out.println("Error creating schedule: " + e.getMessage());
+            System.out.println("Error creating new slot: " + e.getMessage());
         }
-
 
     }
 }

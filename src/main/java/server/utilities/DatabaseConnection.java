@@ -1,5 +1,7 @@
 package server.utilities;
+
 import com.mysql.cj.jdbc.MysqlDataSource;
+
 import java.sql.*;
 
 public class DatabaseConnection {
@@ -9,26 +11,26 @@ public class DatabaseConnection {
     String databaseName;
     Connection connection;
 
-    public DatabaseConnection(){
+    public DatabaseConnection() {
         url = "jdbc:mysql://localhost:3306/";
         username = "root";
         password = "password123";
         databaseName = "HealthCareTest";
     }
 
-    private Connection initConnection() throws SQLException{
+    private Connection initConnection() throws SQLException {
 
         MysqlDataSource dataSource = new MysqlDataSource();
 
         // Set the connection parameters
-        dataSource.setUrl("jdbc:mysql://localhost:3306/"+databaseName);
+        dataSource.setUrl("jdbc:mysql://localhost:3306/" + databaseName);
         dataSource.setUser("root");
         dataSource.setPassword(password);
 
         try {
             connection = dataSource.getConnection();
             System.out.println("Connection to database successful");
-        } catch (SQLSyntaxErrorException e){
+        } catch (SQLSyntaxErrorException e) {
 
             System.out.println("Creating new database");
             url = "jdbc:mysql://localhost:3306/";
@@ -37,7 +39,7 @@ public class DatabaseConnection {
 
             // Create the database if not exists
             Statement createDatabaseStatement = connection.createStatement();
-            createDatabaseStatement.executeUpdate("CREATE database "+databaseName+";");
+            createDatabaseStatement.executeUpdate("CREATE database " + databaseName + ";");
 
             // switch to the database
             connection.setCatalog(databaseName);
@@ -81,7 +83,7 @@ public class DatabaseConnection {
 
             // Constraint for unique records
             String alterTableQuery = "ALTER TABLE slot_table " +
-                                     "ADD CONSTRAINT unique_slot UNIQUE (doctorId, date, startTime, endTime)";
+                    "ADD CONSTRAINT unique_slot UNIQUE (doctorId, date, startTime, endTime)";
 
             statement.executeUpdate(alterTableQuery);
 
@@ -116,11 +118,11 @@ public class DatabaseConnection {
 
 
     }
+
     public Connection getConnection() {
         try {
             return initConnection();
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

@@ -12,8 +12,8 @@ public class Slot {
     private LocalTime endTime;
     private Boolean occupied;
 
-    public Slot(int slotId, int doctorId, LocalDate date, LocalTime startTime, LocalTime endTime) {
-        this.slotId = slotId;
+    public Slot(int doctorId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+        this.slotId = 0;
         this.doctorId = doctorId;
         this.date = date;
         this.startTime = startTime;
@@ -21,8 +21,9 @@ public class Slot {
         this.occupied = false;
     }
 
-    public Slot(int slotId, int doctorId, String date, String startTime, String endTime, Boolean occupied) throws ScheduleCreationException {
-        this.slotId = slotId;
+    public Slot(int doctorId, String date, String startTime, String endTime) throws ScheduleCreationException {
+        this.slotId = 0;
+        this.occupied = false;
         this.doctorId = doctorId;
         try {
             this.date = LocalDate.parse(date);
@@ -42,7 +43,30 @@ public class Slot {
             throw new ScheduleCreationException("Invalid end time format. Please enter time in the format HH:MM:SS.", e);
         }
 
+    }
+
+    public Slot(int slotId, int doctorId, String date, String startTime, String endTime, boolean occupied) throws ScheduleCreationException {
+        this.slotId = slotId;
         this.occupied = occupied;
+        this.doctorId = doctorId;
+        try {
+            this.date = LocalDate.parse(date);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid date format. Please enter date in the format YYYY-MM-DD.", e);
+        }
+
+        try {
+            this.startTime = LocalTime.parse(startTime);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid start time format. Please enter time in the format HH:MM:SS.", e);
+        }
+
+        try {
+            this.endTime = LocalTime.parse(endTime);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid end time format. Please enter time in the format HH:MM:SS.", e);
+        }
+
     }
 
     public int getSlotId() {
@@ -105,17 +129,4 @@ public class Slot {
                 ", occupied=" + occupied +
                 '}';
     }
-
-    public static void main(String[] args){
-        Slot slot = new Slot(1, 101, LocalDate.now(), LocalTime.of(9, 0), LocalTime.of(10, 0));
-        System.out.println(slot.getDate());        // Output: current date
-        System.out.println(slot.getStartTime());   // Output: 09:00
-        System.out.println(slot.getEndTime());     // Output: 10:00
-
-        slot.setDoctorId(102);
-        System.out.println(slot.getDoctorId());
-        System.out.println(slot);
-    }
 }
-
-

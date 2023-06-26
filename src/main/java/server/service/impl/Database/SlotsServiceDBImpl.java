@@ -40,7 +40,6 @@ public class SlotsServiceDBImpl implements SlotService {
         try {
             return slotList.get(0);
         } catch (IndexOutOfBoundsException e){
-            System.out.println("No slot found against the provided id: "+slotID);
             return  null;
         }
     }
@@ -98,6 +97,47 @@ public class SlotsServiceDBImpl implements SlotService {
     }
 
     @Override
+    public void viewFreeSlots() {
+        // Execute the query to select free slots and join with the user_table to get the doctor's name
+        String query = "SELECT slot_table.slotId, user_table.name AS doctorName, slot_table.date, " +
+                "slot_table.startTime, slot_table.endTime " +
+                "FROM slot_table " +
+                "JOIN user_table ON slot_table.doctorId = user_table.userid " +
+                "WHERE slot_table.occupied = false";
+
+        try{
+            Statement statement = dbConnection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            // Print the table header
+            System.out.println("+--------+----------------+------------+-----------+----------+");
+            System.out.println("| slotId | doctorName     | date       | startTime | endTime  |");
+            System.out.println("+--------+----------------+------------+-----------+----------+");
+
+            // Process the result set and display the free slots with all slot details
+            while (resultSet.next()) {
+                int slotId = resultSet.getInt("slotId");
+                String doctorName = resultSet.getString("doctorName");
+                String date = resultSet.getString("date");
+                String startTime = resultSet.getString("startTime");
+                String endTime = resultSet.getString("endTime");
+
+                // Print each row in the specified format
+                System.out.printf("| %6d | %-14s | %10s | %9s | %8s |%n", slotId, doctorName, date, startTime, endTime);
+            }
+
+            // Print the table footer
+            System.out.println("+--------+----------------+------------+-----------+----------+");
+
+            // Close the result set
+            resultSet.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void viewFreeSlotsById(int userId) {
         String query = "SELECT * FROM slot_table where doctorId = "+userId
                 +" AND occupied=false;";
@@ -141,5 +181,9 @@ public class SlotsServiceDBImpl implements SlotService {
         System.out.println(query);
         System.out.println(slotsServiceDB.addSlotEntry(slot));
         slotsServiceDB.viewAllSlots();
+
+
+//        System.out.println("//");
+        slotsServiceDB.viewFreeSlots();
     }
 }
