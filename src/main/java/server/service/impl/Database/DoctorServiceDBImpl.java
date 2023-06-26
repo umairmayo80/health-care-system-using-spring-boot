@@ -24,13 +24,12 @@ public class DoctorServiceDBImpl implements DoctorService {
 
     @Override
     public void viewAppointments(int userID) {
-        // Prints the slots that are booked/ occupied
-
+        // covered by slotService
     }
 
     @Override
     public void addSlotsEntry(Slot slot) {
-
+        // covered by slotService
     }
 
     @Override

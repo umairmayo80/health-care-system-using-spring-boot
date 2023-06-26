@@ -37,19 +37,4 @@ public class PatientServiceImpl implements PatientService {
     }
 
 
-
-    public static void main(String[] args){
-
-//        System.out.println(FileModificationChecker.isFileModified("lastAssignedId.txt",FileModificationChecker.loadedLastModifiedInfo.get("lastAssignedId.txt")));
-//
-//        System.out.println(FileModificationChecker.isFileModified("appointments.csv",
-//                FileModificationChecker.loadedLastModifiedInfo.get("appointments.csv")));
-//
-//
-//        server.service.PatientService.viewAppointments(-1);
-//
-//        Appointment testAddAppointment = new Appointment(-6,-3, LocalDateTime.parse("2023-02-02T09:30:00"));
-//        server.service.PatientService.addAppointment(testAddAppointment);
-
-    }
 }

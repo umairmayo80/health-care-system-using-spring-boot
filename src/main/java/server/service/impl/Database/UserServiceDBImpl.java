@@ -150,19 +150,4 @@ public class UserServiceDBImpl implements UserService {
         return doctorsList;
     }
 
-    public static void main(String[] args){
-        UserService userService = ServiceContext.getUserServiceDB();
-        userService.viewUsers();
-
-        userService.viewPatients();
-        userService.viewDoctors();
-
-        User user = userService.validateUserLogin("admin123","password123","admin");
-        System.out.println(user);
-
-        System.out.println(userService.addUserEntry(new User(5,"Ali","doctor","doctor9","doctor123",false)));
-
-
-    }
-
 }

@@ -164,26 +164,4 @@ public class SlotsServiceDBImpl implements SlotService {
         }
     }
 
-    public static void main(String[] args) throws ScheduleCreationException {
-        SlotsServiceDBImpl slotsServiceDB = new SlotsServiceDBImpl();
-        slotsServiceDB.viewAllSlots();
-        slotsServiceDB.viewSlotsById(3);
-        slotsServiceDB.viewBookedSlotsById(3);
-        slotsServiceDB.viewFreeSlotsById(3);
-
-        Slot slot = new Slot(4,3,"2023-12-12","09:30:00","10:30",false);
-        String query = "INSERT INTO slot_table (doctorId, date, startTime, endTime, occupied) " +
-                "VALUES (" + slot.getDoctorId()
-                + ", '" + slot.getDate()
-                + "', '" + slot.getStartTime()
-                + "', '" + slot.getEndTime()
-                + "', " + slot.getOccupied() + ")";
-        System.out.println(query);
-        System.out.println(slotsServiceDB.addSlotEntry(slot));
-        slotsServiceDB.viewAllSlots();
-
-
-//        System.out.println("//");
-        slotsServiceDB.viewFreeSlots();
-    }
 }

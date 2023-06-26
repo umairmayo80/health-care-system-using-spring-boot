@@ -67,13 +67,5 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
-    public static void main(String[] args){
-//        UserService.viewPatients();
-//
-//        AdminService.addUser(UserService.getUsers().get(0));
-//
-//        AdminService.setUserAccountStatus("admin123000",true);
-//        AdminService.setUserAccountStatus("admin123",true);
-    }
 
 }

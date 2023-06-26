@@ -71,14 +71,4 @@ public class FileModificationChecker {
         return lastModifiedInfo;
     }
 
-    public static void main(String[] args) {
-         saveLastModifiedInfo(filenames);
-        System.out.println("Loaded last modified info:");
-        for (Map.Entry<String, Long> entry : FileModificationChecker.loadedLastModifiedInfo.entrySet()) {
-            System.out.println("File: " + entry.getKey() + ", Last Modified: " + entry.getValue());
-        }
-
-        System.out.println(isFileModified("lastAssignedId.txt",FileModificationChecker.loadedLastModifiedInfo.get("lastAssignedId.txt")));
-
-    }
 }

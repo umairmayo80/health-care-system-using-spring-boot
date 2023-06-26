@@ -168,12 +168,4 @@ public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {
         return true;
     }
 
-    public static void main(String[] args){
-        AppointmentServiceV1DBImpl appointmentServiceV1 = new AppointmentServiceV1DBImpl();
-        System.out.println(appointmentServiceV1.getAppointments());
-
-        appointmentServiceV1.viewAppointmentsByPatientId(2);
-
-        System.out.println(appointmentServiceV1.addAppointmentEntry(new AppointmentV1(2,3)));
-    }
 }

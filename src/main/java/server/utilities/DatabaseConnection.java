@@ -128,31 +128,5 @@ public class DatabaseConnection {
         return null;
     }
 
-    public static void main(String[] args) throws SQLException {
-        DatabaseConnection dbConnectionObj = new DatabaseConnection();
-        Connection connection = dbConnectionObj.getConnection();
 
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("Select * from user_table;");
-
-        // Iterate through the result set and retrieve data
-        while (resultSet.next()) {
-            int userId = resultSet.getInt("userid");
-            String name = resultSet.getString("name");
-            String username = resultSet.getString("username");
-            String password = resultSet.getString("password");
-            String role = resultSet.getString("role");
-            boolean accountLocked = resultSet.getBoolean("accountLocked");
-
-            System.out.println("User ID: " + userId);
-            System.out.println("Name: " + name);
-            System.out.println("Username: " + username);
-            System.out.println("Password: " + password);
-            System.out.println("Role: " + role);
-            System.out.println("Account Locked: " + accountLocked);
-            System.out.println();
-        }
-
-
-    }
 }

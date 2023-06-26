@@ -77,11 +77,5 @@ public class ScheduleServiceImpl implements ScheduleService {
         scheduleList.add(schedule);
         saveSchedule();
     }
-    public static void main(String[] args) throws ScheduleCreationException {
-//        Schedule newSchedule = new Schedule(-1, "2023-01dsd-01",
-//                "09:00:00","17:00:00");
-//        server.service.ScheduleService.addScheduleEntry(newSchedule);
-//
-//        server.service.ScheduleService.getSchedulesByID(18).forEach(System.out::println);
-    }
+
 }

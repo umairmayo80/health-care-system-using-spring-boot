@@ -61,9 +61,4 @@ public class AdminServiceDBImpl implements AdminService {
         return false;
     }
 
-    public static void main(String[] args){
-        AdminService adminService = new AdminServiceDBImpl();
-        adminService.addUser(new User("Test user","user","testuser","user123"));
-        System.out.println(adminService.setUserAccountStatus("testuser",true));
-    }
 }
