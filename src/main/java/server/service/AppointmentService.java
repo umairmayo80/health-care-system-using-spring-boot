@@ -1,5 +1,6 @@
 package server.service;
 import server.domain.Appointment;
+//import server.domain.version1.Appointment;
 import java.util.List;
 
 public interface AppointmentService {

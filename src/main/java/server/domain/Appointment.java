@@ -8,16 +8,8 @@ import java.util.List;
 
 public class Appointment {
     private int patientId;
-//    slot Obj;
     private int doctorId;
     private LocalDateTime dateTime;
-
-//    private static List<server.domain.Appointment> appointmentsList;
-//
-//    static {
-//        appointmentsList = loadAppointmentsFromFile("appointments.csv");
-//    }
-
 
     public Appointment(int patientId, int doctorId, LocalDateTime dateTime) {
         this.patientId = patientId;
@@ -66,10 +58,4 @@ public class Appointment {
                 '}';
     }
 
-
-    // Example usage in the main method
-    public static void main(String[] args) {
-
-
-    }
 }

@@ -1,6 +1,8 @@
 package server.context;
 
 import server.service.*;
+import server.service.impl.Database.AppointmentServiceV1Impl;
+import server.service.impl.Database.SlotsServiceDBImpl;
 import server.service.impl.Database.UserServiceDBImpl;
 import server.service.impl.FileSystem.*;
 import server.utilities.DatabaseConnection;
@@ -16,6 +18,10 @@ public class ServiceContext {
     private static AdminService adminService;
     private static AppointmentService appointmentService;
     private static ScheduleService scheduleService;
+
+    private static SlotService slotService; // it replaces scheduleService
+
+    private static AppointmentServiceV1 appointmentServiceV1;
 
     private static Connection databaseConnection;
 
@@ -124,4 +130,30 @@ public class ServiceContext {
         }
         return scanner;
     }
+
+
+    public static SlotService getSlotService(){
+        if(slotService == null){
+            synchronized (ServiceContext.class){
+                if(slotService == null){
+                    slotService = new SlotsServiceDBImpl();
+                }
+            }
+        }
+        return slotService;
+    }
+
+
+    public static AppointmentServiceV1 getAppointmentServiceV1(){
+        if(appointmentServiceV1 == null){
+            synchronized (ServiceContext.class){
+                if(appointmentServiceV1 == null){
+                    appointmentServiceV1 = new AppointmentServiceV1Impl();
+                }
+            }
+        }
+        return appointmentServiceV1;
+    }
+
+
 }

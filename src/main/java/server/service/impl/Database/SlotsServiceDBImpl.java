@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SlotsServiceDBImpl implements SlotService {
     private Connection dbConnection;
-    SlotsServiceDBImpl()
+    public SlotsServiceDBImpl()
     {
         this.dbConnection= ServiceContext.getDatabaseConnection();
     }
@@ -32,6 +32,19 @@ public class SlotsServiceDBImpl implements SlotService {
         String query = "SELECT * FROM slot_table";
         return getSlotsByQuery(query);
     }
+
+    @Override
+    public Slot getSlotBySlotId(int slotID) {
+        String query = "Select * from slot_table where slotId= "+slotID;
+        List<Slot> slotList = getSlotsByQuery(query);
+        try {
+            return slotList.get(0);
+        } catch (IndexOutOfBoundsException e){
+            System.out.println("No slot found against the provided id: "+slotID);
+            return  null;
+        }
+    }
+
     public List<Slot> getSlotsByQuery(String query) {
         List<Slot> slotList = new ArrayList<>();
         try {
@@ -67,9 +80,13 @@ public class SlotsServiceDBImpl implements SlotService {
 
     @Override
     public void viewSlotsById(int userId) {
+        displaySlots(getSlotsById(userId));
+    }
+
+
+    public List<Slot> getSlotsById(int userId){
         String query = "SELECT * FROM slot_table where doctorId = "+userId+";";
-        List<Slot> slotList = getSlotsByQuery(query);
-        displaySlots(slotList);
+        return getSlotsByQuery(query);
     }
 
     @Override

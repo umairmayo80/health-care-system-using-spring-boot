@@ -12,7 +12,7 @@ public class DatabaseConnection {
     public DatabaseConnection(){
         url = "jdbc:mysql://localhost:3306/";
         username = "root";
-        password = "Ts123456!";
+        password = "password123";
         databaseName = "HealthCareTest";
     }
 
@@ -23,7 +23,7 @@ public class DatabaseConnection {
         // Set the connection parameters
         dataSource.setUrl("jdbc:mysql://localhost:3306/"+databaseName);
         dataSource.setUser("root");
-        dataSource.setPassword("Ts123456!");
+        dataSource.setPassword(password);
 
         try {
             connection = dataSource.getConnection();
