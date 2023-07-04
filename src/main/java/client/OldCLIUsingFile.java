@@ -121,7 +121,7 @@ public class OldCLIUsingFile {
 
 //        scanner.close();
         User user = userService.validateUserLogin(username, password, userRoll);
-        if (user != null && user.getRoll().equals(userRoll.toLowerCase())) {
+        if (user != null && user.getRole().equals(userRoll.toLowerCase())) {
             System.out.println("Login successful!");
             currentUser = user;
             return true;
@@ -233,7 +233,7 @@ public class OldCLIUsingFile {
         // Print table rows
         for (User user : usersList) {
             System.out.format("%-5d %-15s %-10s %-15s %-15s %-10s%n",
-                    user.getId(), user.getName(), user.getRoll(), user.getUsername(), user.getPassword(), user.getAccountStatus());
+                    user.getUserId(), user.getName(), user.getRole(), user.getUsername(), user.getPassword(), user.getAccountStatus());
         }
     }
 
@@ -390,7 +390,7 @@ public class OldCLIUsingFile {
             System.out.println("Invalid Input");
             return;
         }
-        Appointment newAppointment = new Appointment(currentUser.getId(), docId, dateTime);
+        Appointment newAppointment = new Appointment(currentUser.getUserId(), docId, dateTime);
         if (patientService.addAppointment(newAppointment)) {
             System.out.println("Appointment successfully created ");
             return;
@@ -400,7 +400,7 @@ public class OldCLIUsingFile {
     }
 
     public void viewPatientAppointments() {
-        List<Appointment> patientAppointments = appointmentService.getAppointmentsByPatientId(currentUser.getId());
+        List<Appointment> patientAppointments = appointmentService.getAppointmentsByPatientId(currentUser.getUserId());
         System.out.println("patient_id,doctor_id,datetime");
         for (Appointment appointment : patientAppointments) {
             System.out.println(appointment.getPatientId() + "," + appointment.getDoctorId()
@@ -410,13 +410,13 @@ public class OldCLIUsingFile {
 
     public void viewSchedule() {
         System.out.println("View schedule function called...");
-        doctorService.viewSlots(currentUser.getId());
+        doctorService.viewSlots(currentUser.getUserId());
 
     }
 
     public void viewDoctorAppointments() {
         System.out.println("Viewing doctor appointments function called...");
-        List<Appointment> appointmentsByDoctorId = appointmentService.getAppointmentsByDoctorId(currentUser.getId());
+        List<Appointment> appointmentsByDoctorId = appointmentService.getAppointmentsByDoctorId(currentUser.getUserId());
         System.out.println("patient_id,doctor_id,datetime");
         for (Appointment appointment : appointmentsByDoctorId) {
             System.out.println(appointment.getPatientId() + "," + appointment.getDoctorId()
@@ -440,7 +440,7 @@ public class OldCLIUsingFile {
 
 
         try {
-            Schedule newSchedule = new Schedule(currentUser.getId(), dateStr,
+            Schedule newSchedule = new Schedule(currentUser.getUserId(), dateStr,
                     startTimeStr, endTimeStr);
             doctorService.addScheduleSlots(newSchedule);
             System.out.println("Entry added successfully");

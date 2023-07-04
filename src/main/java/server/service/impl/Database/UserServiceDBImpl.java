@@ -2,6 +2,8 @@ package server.service.impl.Database;
 import server.context.ServiceContext;
 import server.domain.User;
 import server.service.UserService;
+import server.utilities.DisplayFormatting;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,7 +44,7 @@ public class UserServiceDBImpl implements UserService {
                     + user.getName() + "','"
                     + user.getUsername() + "','"
                     + user.getPassword() + "','"
-                    + user.getRoll() + "',"
+                    + user.getRole() + "',"
                     + user.getAccountStatus() + ")";
             statement.executeUpdate(query);
             return true;
@@ -57,19 +59,6 @@ public class UserServiceDBImpl implements UserService {
         userList.forEach(this::addUserEntry);
     }
 
-    public void displayUsers(List<User> usersList){
-        // Print table header
-        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
-        System.out.format("%-5s %-15s %-10s %-15s %-15s %-10s%n", "ID", "Name", "Role", "Username", "Password", "Account Locked");
-        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
-
-        // Print table rows
-        for (User user : usersList) {
-            System.out.format("%-5d %-15s %-10s %-15s %-15s %-10s%n",
-                    user.getId(), user.getName(), user.getRoll(), user.getUsername(), user.getPassword(), user.getAccountStatus());
-        }
-        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
-    }
 
     public User validateUserLogin(String username, String password, String userRole) {
         User user = null;
@@ -90,19 +79,19 @@ public class UserServiceDBImpl implements UserService {
     @Override
     public void viewUsers() {
         List<User> users = getUsers();
-        displayUsers(users);
+        DisplayFormatting.displayUsers(users);
     }
 
     @Override
     public void viewPatients() {
         List<User> patients = getPatients();
-        displayUsers(patients);
+        DisplayFormatting.displayUsers(patients);
     }
 
     @Override
     public void viewDoctors() {
         List<User> doctors = getDoctors();
-        displayUsers(doctors);
+        DisplayFormatting.displayUsers(doctors);
     }
 
     public List<User> getPatients() {

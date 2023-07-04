@@ -1,14 +1,22 @@
 package server.context;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
+import org.hibernate.service.ServiceRegistry;
+import server.domain.User;
 import server.service.*;
 import server.service.impl.Database.AppointmentServiceV1DBImpl;
 import server.service.impl.Database.SlotsServiceDBImpl;
 import server.service.impl.Database.UserServiceDBImpl;
 import server.service.impl.FileSystem.*;
+import server.service.impl.hibernate.UserServiceHibernateImpl;
 import server.service.version1.AppointmentServiceV1;
 import server.utilities.DatabaseConnection;
 
 import java.sql.Connection;
+import java.util.Properties;
 import java.util.Scanner;
 
 
@@ -32,6 +40,11 @@ public class ServiceContext {
     private static AppointmentServiceV1 appointmentServiceV1;
 
     private static Connection databaseConnection;
+
+    // services related to hibernate
+    private static SessionFactory sessionFactory;
+
+    private static UserServiceHibernateImpl userServiceHibernate;
 
     private static Scanner scanner;
 
@@ -162,6 +175,54 @@ public class ServiceContext {
         }
         return appointmentServiceV1;
     }
+
+
+
+    public static SessionFactory getSessionFactory(){
+        if(sessionFactory == null){
+            try{
+                Configuration configuration = new Configuration();
+
+                // Hibernate settings equivalent to hibernate.cfg.xml properties
+
+                Properties settings = new Properties();
+                settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
+                settings.put(Environment.URL, "jdbc:mysql://localhost:3306/tempdb?userSSL=false");
+                settings.put(Environment.USER,"test");
+                settings.put(Environment.PASS,"password123!");
+                settings.put(Environment.DIALECT,"org.hibernate.dialect.MySQL8Dialect");
+
+                settings.put(Environment.SHOW_SQL,"true");
+                settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS,"thread");
+                settings.put(Environment.HBM2DDL_AUTO,"create-drop");
+
+                configuration.setProperties(settings);
+
+                configuration.addAnnotatedClass(User.class);
+
+                ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties())
+                        .build();
+                sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return sessionFactory;
+    }
+
+
+
+    public static UserServiceHibernateImpl getUserServiceHibernate(){
+        if(userServiceHibernate == null){
+            synchronized (ServiceContext.class){
+                if(userServiceHibernate == null){
+                    userServiceHibernate = new UserServiceHibernateImpl();
+                }
+            }
+        }
+        return userServiceHibernate;
+    }
+
 
 
 }

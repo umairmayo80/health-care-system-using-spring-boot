@@ -179,7 +179,7 @@ public class CLI {
 
 //        scanner.close();
         User user = userService.validateUserLogin(username, password, userRoll);
-        if (user != null && user.getRoll().equals(userRoll.toLowerCase())) {
+        if (user != null && user.getRole().equals(userRoll.toLowerCase())) {
             System.out.println("Login successful!");
             currentUser = user;
             return true;
@@ -385,12 +385,12 @@ public class CLI {
 
     public void viewBookedSlots() {
         System.out.println("View Booked Slots function called");
-        slotService.viewBookedSlotsById(currentUser.getId());
+        slotService.viewBookedSlotsById(currentUser.getUserId());
     }
 
     public void viewFreeSlots() {
         System.out.println("View Free Slots Function called");
-        slotService.viewFreeSlotsById(currentUser.getId());
+        slotService.viewFreeSlotsById(currentUser.getUserId());
     }
 
     public void patientMenu() {
@@ -446,29 +446,29 @@ public class CLI {
             System.out.println("Invalid Input");
             return;
         }
-        AppointmentV1 newAppointment = new AppointmentV1(currentUser.getId(), selectedSlotId);
+        AppointmentV1 newAppointment = new AppointmentV1(currentUser.getUserId(), selectedSlotId);
         if (appointmentServiceV1.addAppointmentEntry(newAppointment))
             System.out.println("Appointment created successfully");
     }
 
     public void viewPatientAppointments() {
-        appointmentServiceV1.viewAppointmentsByPatientId(currentUser.getId());
+        appointmentServiceV1.viewAppointmentsByPatientId(currentUser.getUserId());
     }
 
     public void viewSchedule() {
         System.out.println("View schedule function called...");
-        slotService.viewSlotsById(currentUser.getId());
+        slotService.viewSlotsById(currentUser.getUserId());
     }
 
     public void viewDoctorAppointments() {
         System.out.println("Viewing doctor appointments function called...");
-        appointmentServiceV1.viewAppointmentsByDoctorId(currentUser.getId());
+        appointmentServiceV1.viewAppointmentsByDoctorId(currentUser.getUserId());
     }
 
     public void newSlotEntry() {
         System.out.println("Adding New Slot Entry function called...");
 
-        int doctorId = currentUser.getId();
+        int doctorId = currentUser.getUserId();
 
         // Prompt the user for input
         System.out.print("Enter date (YYYY-MM-DD): ");

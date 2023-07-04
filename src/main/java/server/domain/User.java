@@ -1,18 +1,34 @@
 package server.domain;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
+import javax.persistence.*;
 import java.io.*;
 import java.util.Objects;
-
+@Entity
+@Table(name = "user_table")
 public class User {
+    @Transient
     private static final String ID_FILE_PATH = "lastAssignedId.txt";
+    @Transient
     private static int lastAssignedId;
 
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userid")
+    private final int userId;
+
     private String name;
-    private String roll;
+    private String role;
+
+    @Column(name = "username", unique = true)
     private String username;
+
     private String password;
 
+    @Column(name = "accountLocked")
     private boolean accountLocked;
 
 
@@ -20,22 +36,31 @@ public class User {
         loadLastAssignedId();
     }
 
+    public User() {
+        userId = 0;
+        this.name = "";
+        this.role = "";
+        this.username = "";
+        this.password = "";
+        this.accountLocked = false;
+    }
+
     public User(String name, String roll) {
         this(name, roll, "", "");
     }
 
-    public User(String name, String roll, String username, String password) {
-        this.id = generateNewId();
+    public User(String name, String role, String username, String password) {
+        this.userId = generateNewId();
         this.name = name;
-        this.roll = roll;
+        this.role = role;
         this.username = username;
         this.password = password;
         this.accountLocked = false;
     }
-    public User(int id, String name, String roll, String username, String password, boolean accountLocked) {
-        this.id = id;
+    public User(int id, String name, String role, String username, String password, boolean accountLocked) {
+        this.userId = id;
         this.name = name;
-        this.roll = roll;
+        this.role = role;
         this.username = username;
         this.password = password;
         this.accountLocked = accountLocked;
@@ -70,8 +95,8 @@ public class User {
     }
 
 
-    public int getId() {
-        return id;
+    public int getUserId() {
+        return userId;
     }
 
     public String getName() {
@@ -82,12 +107,12 @@ public class User {
         this.name = name;
     }
 
-    public String getRoll() {
-        return roll;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoll(String roll) {
-        this.roll = roll;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getUsername() {
@@ -116,9 +141,9 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id=" + userId +
                 ", name='" + name + '\'' +
-                ", role='" + roll + '\'' +
+                ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", accountStatus='" + accountLocked + '\'' +
@@ -130,16 +155,16 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
+        return userId == user.userId &&
                 accountLocked == user.accountLocked &&
                 Objects.equals(name, user.name) &&
-                Objects.equals(roll, user.roll) &&
+                Objects.equals(role, user.role) &&
                 Objects.equals(username, user.username) &&
                 Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, roll, username, password, accountLocked);
+        return Objects.hash(userId, name, role, username, password, accountLocked);
     }
 }

@@ -1,8 +1,5 @@
 package server.domain;
 
-import server.context.ServiceContext;
-import server.service.AdminService;
-
 public class Admin extends User {
 
     public Admin(String name) {
@@ -16,9 +13,9 @@ public class Admin extends User {
     @Override
     public String toString() {
         return "server.domain.Admin{" +
-                "id=" + super.getId() +
+                "id=" + super.getUserId() +
                 ", name='" + super.getName() + '\'' +
-                ", roll='" + super.getRoll() + '\'' +
+                ", roll='" + super.getRole() + '\'' +
                 ", username='" + super.getUsername() + '\'' +
                 ", password='" + super.getPassword() + '\'' +
                 ", accountStatus='" + super.getAccountStatus() + '\'' +

@@ -13,8 +13,8 @@ public class DatabaseConnection {
 
     public DatabaseConnection() {
         url = "jdbc:mysql://localhost:3306/";
-        username = "root";
-        password = "password123";
+        username = "test";
+        password = "password123!";
         databaseName = "HealthCareTest";
     }
 
@@ -23,8 +23,8 @@ public class DatabaseConnection {
         MysqlDataSource dataSource = new MysqlDataSource();
 
         // Set the connection parameters
-        dataSource.setUrl("jdbc:mysql://localhost:3306/" + databaseName);
-        dataSource.setUser("root");
+        dataSource.setUrl(url + databaseName);
+        dataSource.setUser(username);
         dataSource.setPassword(password);
 
         try {
@@ -33,7 +33,6 @@ public class DatabaseConnection {
         } catch (SQLSyntaxErrorException e) {
 
             System.out.println("Creating new database");
-            url = "jdbc:mysql://localhost:3306/";
             // Establish the database connection
             connection = DriverManager.getConnection(url, username, password);
 

@@ -1,12 +1,17 @@
 package server.domain;
 import server.utilities.ScheduleCreationException;
+
+import javax.persistence.Transient;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 
 public class Slot {
     private int slotId;
+    @Transient
     private int doctorId;
+
+    private User doctor;
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;

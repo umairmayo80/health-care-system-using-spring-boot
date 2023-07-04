@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService{
     public void addUsersListToStorage(List<User> userList){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(UserServiceImpl.userFilePath, false))) {
             for (User itrUser : userList) {
-                writer.write(itrUser.getId() + "," + itrUser.getName() + "," + itrUser.getUsername() + "," + itrUser.getPassword() + "," + itrUser.getRoll()
+                writer.write(itrUser.getUserId() + "," + itrUser.getName() + "," + itrUser.getUsername() + "," + itrUser.getPassword() + "," + itrUser.getRole()
                         + "," + itrUser.getAccountStatus());
                 writer.newLine();
             }
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService{
     public List<User> getPatients() {
         List<User> users = getUsers();
         List<User> patients = users.stream()
-                .filter(user -> user.getRoll().equals("patient"))
+                .filter(user -> user.getRole().equals("patient"))
                 .collect(Collectors.toList());
         return patients;
 
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService{
     public List<User> getDoctors() {
         List<User> users = getUsers();
         List<User> doctors = users.stream()
-                .filter(user -> user.getRoll().equals("doctor"))
+                .filter(user -> user.getRole().equals("doctor"))
                 .collect(Collectors.toList());
         return doctors;
     }
