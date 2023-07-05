@@ -5,12 +5,18 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.spi.ServiceException;
+import server.domain.Slot;
 import server.domain.User;
+import server.domain.version1.AppointmentV1;
 import server.service.*;
 import server.service.impl.Database.AppointmentServiceV1DBImpl;
 import server.service.impl.Database.SlotsServiceDBImpl;
 import server.service.impl.Database.UserServiceDBImpl;
 import server.service.impl.FileSystem.*;
+import server.service.impl.hibernate.AdminServiceHibernateImpl;
+import server.service.impl.hibernate.AppointmentServiceV1HibernateImpl;
+import server.service.impl.hibernate.SlotServiceHibernateImpl;
 import server.service.impl.hibernate.UserServiceHibernateImpl;
 import server.service.version1.AppointmentServiceV1;
 import server.utilities.DatabaseConnection;
@@ -45,6 +51,12 @@ public class ServiceContext {
     private static SessionFactory sessionFactory;
 
     private static UserServiceHibernateImpl userServiceHibernate;
+
+    private static AdminServiceHibernateImpl adminServiceHibernate;
+
+    private static SlotServiceHibernateImpl slotServiceHibernate;
+
+    private static AppointmentServiceV1HibernateImpl appointmentServiceV1Hibernate;
 
     private static Scanner scanner;
 
@@ -199,12 +211,15 @@ public class ServiceContext {
                 configuration.setProperties(settings);
 
                 configuration.addAnnotatedClass(User.class);
+                configuration.addAnnotatedClass(Slot.class);
+                configuration.addAnnotatedClass(AppointmentV1.class);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties())
                         .build();
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-            } catch (Exception e){
-                e.printStackTrace();
+            } catch (ServiceException e){
+                System.out.println("Fail to connect to database: "+e.getMessage());
+                System.exit(1);
             }
         }
         return sessionFactory;
@@ -221,6 +236,41 @@ public class ServiceContext {
             }
         }
         return userServiceHibernate;
+    }
+
+
+    public static AdminServiceHibernateImpl getAdminServiceHibernate(){
+        if(adminServiceHibernate == null){
+            synchronized (ServiceContext.class){
+                if(adminServiceHibernate == null){
+                    adminServiceHibernate = new AdminServiceHibernateImpl();
+                }
+            }
+        }
+        return adminServiceHibernate;
+    }
+
+    public static SlotServiceHibernateImpl getSlotServiceHibernate(){
+        if(slotServiceHibernate == null){
+            synchronized (ServiceContext.class){
+                if(slotServiceHibernate == null){
+                    slotServiceHibernate = new SlotServiceHibernateImpl();
+                }
+            }
+        }
+        return slotServiceHibernate;
+    }
+
+
+    public static AppointmentServiceV1HibernateImpl getAppointmentServiceV1Hibernate(){
+        if(appointmentServiceV1Hibernate == null){
+            synchronized (ServiceContext.class){
+                if(appointmentServiceV1Hibernate == null){
+                    appointmentServiceV1Hibernate = new AppointmentServiceV1HibernateImpl();
+                }
+            }
+        }
+        return appointmentServiceV1Hibernate;
     }
 
 

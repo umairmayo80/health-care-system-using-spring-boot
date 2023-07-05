@@ -1,9 +1,36 @@
 package server.domain.version1;
 
+import server.domain.Slot;
+import server.domain.User;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "appointment_table")
 public class AppointmentV1 {
-    private int patientId;
-    private int doctorSlotId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "appointmentId")
     private int appointmentId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patientId", referencedColumnName = "userid")
+    private User patient;
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctorSlotId", referencedColumnName = "slotId")
+    private Slot slot;
+
+    @Transient
+    private int patientId;
+    @Transient
+    private int doctorSlotId;
+
+    // default constructor
+    AppointmentV1(){
+
+    }
 
     // Constructor
     public AppointmentV1(int appointmentId, int patientId, int doctorSlotId) {
@@ -17,6 +44,16 @@ public class AppointmentV1 {
         this.patientId = patientId;
         this. doctorSlotId = doctorSlotId;
     }
+
+    public AppointmentV1(int appointmentId, User patient, Slot slot, int patientId, int doctorSlotId) {
+        this.appointmentId = appointmentId;
+        this.patient = patient;
+        this.slot = slot;
+        this.patientId = patientId;
+        this.doctorSlotId = doctorSlotId;
+    }
+
+
 
     // Getter for patientId
     public int getPatientId() {
@@ -46,6 +83,23 @@ public class AppointmentV1 {
     // Setter for appointmentId
     public void setAppointmentId(int appointmentId) {
         this.appointmentId = appointmentId;
+    }
+
+
+    public User getPatient() {
+        return patient;
+    }
+
+    public void setPatient(User patient) {
+        this.patient = patient;
+    }
+
+    public Slot getSlot() {
+        return slot;
+    }
+
+    public void setSlot(Slot slot) {
+        this.slot = slot;
     }
 
     // toString method to represent the Appointment object as a string

@@ -6,12 +6,13 @@ import org.hibernate.exception.ConstraintViolationException;
 import server.context.ServiceContext;
 import server.domain.User;
 import server.service.UserService;
-import server.service.impl.hibernate.UserServiceHibernateImpl;
 
-import javax.persistence.PersistenceException;
 
 public class UserServiceHibernateImplTesting {
     public static void main(String[] args){
+
+
+
         Session session = ServiceContext.getSessionFactory().openSession();
 
         User user1  = new User("Ali","patient","user123","user123");

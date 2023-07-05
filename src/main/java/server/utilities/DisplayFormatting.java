@@ -1,5 +1,6 @@
 package server.utilities;
 
+import server.domain.Slot;
 import server.domain.User;
 
 import java.util.List;
@@ -17,6 +18,21 @@ public class DisplayFormatting {
                     user.getUserId(), user.getName(), user.getRole(), user.getUsername(), user.getPassword(), user.getAccountStatus());
         }
         System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
+    }
+
+
+    public static void displaySlots(List<Slot> slotList){
+        // Display the data in a table format
+        System.out.println("+--------+----------+------------+-----------+----------+----------+");
+        System.out.println("| slotId | doctorId |    date    | startTime |  endTime | occupied |");
+        System.out.println("+--------+----------+------------+-----------+----------+----------+");
+
+        for(Slot slot : slotList){
+            System.out.format("|%-7d |%9d |%11s |%10s |%9s |%9s |\n", slot.getSlotId(), slot.getDoctorId(), slot.getDate(), slot.getStartTime(), slot.getEndTime(), slot.getOccupied());
+        }
+        System.out.println("+--------+----------+------------+-----------+----------+----------+");
+
+
     }
 
 }

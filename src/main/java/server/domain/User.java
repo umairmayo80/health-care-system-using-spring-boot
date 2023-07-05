@@ -1,12 +1,14 @@
 package server.domain;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
+import server.domain.version1.AppointmentV1;
 
 import javax.persistence.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+
 @Entity
 @Table(name = "user_table")
 public class User {
@@ -16,9 +18,9 @@ public class User {
     private static int lastAssignedId;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userid")
-    private final int userId;
+    private int userId;
 
     private String name;
     private String role;
@@ -31,19 +33,21 @@ public class User {
     @Column(name = "accountLocked")
     private boolean accountLocked;
 
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Slot> slots = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AppointmentV1> appointmentV1List = new ArrayList<>();
+
 
     static {
         loadLastAssignedId();
     }
 
     public User() {
-        userId = 0;
-        this.name = "";
-        this.role = "";
-        this.username = "";
-        this.password = "";
-        this.accountLocked = false;
     }
+
 
     public User(String name, String roll) {
         this(name, roll, "", "");
@@ -64,6 +68,19 @@ public class User {
         this.username = username;
         this.password = password;
         this.accountLocked = accountLocked;
+    }
+
+
+
+    public User(int userId, String name, String role, String username, String password, boolean accountLocked, List<Slot> slots, List<AppointmentV1> appointmentV1List) {
+        this.userId = userId;
+        this.name = name;
+        this.role = role;
+        this.username = username;
+        this.password = password;
+        this.accountLocked = accountLocked;
+        this.slots = slots;
+        this.appointmentV1List = appointmentV1List;
     }
 
     private static int generateNewId() {
@@ -94,7 +111,9 @@ public class User {
         }
     }
 
-
+    public void setUserId(int userId){
+        this.userId = userId;
+    }
     public int getUserId() {
         return userId;
     }
@@ -137,6 +156,35 @@ public class User {
     public boolean getAccountStatus(){
         return accountLocked;
     }
+
+
+    public List<Slot> getSlots() {
+        return slots;
+    }
+
+    public void setSlots(List<Slot> slots) {
+        this.slots = slots;
+    }
+
+
+    public List<AppointmentV1> getAppointmentV1List() {
+        return appointmentV1List;
+    }
+
+    public void setAppointmentV1List(List<AppointmentV1> appointmentV1List) {
+        this.appointmentV1List = appointmentV1List;
+    }
+
+    public void addSlot(Slot slot) {
+        slots.add(slot);
+        slot.setDoctor(this);
+    }
+
+    public void removeSlot(Slot slot) {
+        slots.remove(slot);
+        slot.setDoctor(null);
+    }
+
 
     @Override
     public String toString() {

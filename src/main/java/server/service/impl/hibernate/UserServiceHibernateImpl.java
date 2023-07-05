@@ -11,23 +11,25 @@ import javax.persistence.PersistenceException;
 import java.util.List;
 
 public class UserServiceHibernateImpl implements UserService {
-    private final Session session;
     public UserServiceHibernateImpl(){
-        session = ServiceContext.getSessionFactory().openSession();
     }
 
 
     @Override
     public List<User> getUsers() {
+        Session session = ServiceContext.getSessionFactory().openSession();
         List<User> userList = null;
         // HQL
         userList = session.createQuery("from User").list();
+        session.close();
         return userList;
+
     }
 
 
     @Override
     public boolean addUserEntry(User user) {
+        Session session = ServiceContext.getSessionFactory().openSession();
         Transaction transaction = null;
         try{
             // start the transaction
@@ -45,9 +47,11 @@ public class UserServiceHibernateImpl implements UserService {
             if(transaction != null){
                 transaction.rollback();
             }
+            session.close();
             return false;
 
         }
+        session.close();
         return true;
     }
 
@@ -58,6 +62,7 @@ public class UserServiceHibernateImpl implements UserService {
 
     @Override
     public User validateUserLogin(String username, String password, String userRole) {
+        Session session = ServiceContext.getSessionFactory().openSession();
         User user = null;
         //HQL Query
         user = (User) session.createQuery("from User where username=:username AND password=:password " +
@@ -66,24 +71,29 @@ public class UserServiceHibernateImpl implements UserService {
                 .setParameter("password",password)
                 .setParameter("role",userRole)
                 .uniqueResult();
+        session.close();
         return user;
     }
 
     @Override
     public List<User> getPatients() {
+        Session session = ServiceContext.getSessionFactory().openSession();
         List<User> patientList;
         patientList = (List<User>) session.createQuery("from User where role=:role")
                 .setParameter("role","patient")
                 .list();
+        session.close();
         return patientList;
     }
 
     @Override
     public List<User> getDoctors() {
+        Session session = ServiceContext.getSessionFactory().openSession();
         List<User> doctorList;
         doctorList = (List<User>) session.createQuery("from User where role=:role")
                 .setParameter("role","doctor")
                 .list();
+        session.close();
         return doctorList;
     }
 
