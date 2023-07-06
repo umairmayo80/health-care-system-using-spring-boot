@@ -174,6 +174,10 @@ public class User {
 //        return appointmentV1List;
 //    }
 
+    public List<AppointmentV1> getAppointmentV1List(){
+        return appointmentV1List;
+    }
+
     public void setAppointmentV1List(List<AppointmentV1> appointmentV1List) {
         this.appointmentV1List = appointmentV1List;
     }

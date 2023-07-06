@@ -5,10 +5,12 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import server.context.ServiceContext;
 import server.domain.User;
+import server.domain.version1.AppointmentV1;
 import server.service.UserService;
 import server.utilities.DisplayFormatting;
 import javax.persistence.PersistenceException;
 import java.util.List;
+import java.util.Optional;
 
 public class UserServiceHibernateImpl implements UserService {
     public UserServiceHibernateImpl(){
@@ -112,5 +114,66 @@ public class UserServiceHibernateImpl implements UserService {
     public void viewDoctors() {
         List<User> doctors = getDoctors();
         DisplayFormatting.displayUsers(doctors);
+    }
+
+    @Override
+    public boolean deleteUser(String username) {
+        Session session = ServiceContext.getSessionFactory().openSession();
+        Transaction transaction = null;
+        try {
+//            transaction = session.beginTransaction();
+//            String hql = "FROM User as u WHERE u.username = :username";
+//            User user = (User) session.createQuery(hql)
+//                    .setParameter("username", username)
+//                    .uniqueResult();
+//            if(user==null) {
+//                System.out.println("No User found against the provided username");
+//                return false;
+//            }
+
+//            System.out.println(user);
+//            System.out.println(user.getAppointmentV1List());
+//            System.out.println(user.getSlots());
+
+
+
+//
+//            // Delete associated AppointmentV1 objects
+//            List<AppointmentV1> appointmentV1List = user.getAppointmentV1List();
+//            for (AppointmentV1 appointmentV1 : appointmentV1List) {
+//                session.delete(appointmentV1);
+//            }
+//
+//            transaction.commit();
+//
+//            user.getAppointmentV1List().clear();
+//            user.getSlots().clear();
+//            session.delete(user);
+
+            // poor solution but working
+            List<User> userList = getUsers();
+
+            Optional<User> userOptional = userList.stream().
+                    filter(user1 -> user1.getUsername().equals(username)).
+                    findFirst();
+            if(userOptional.isEmpty()) {
+                System.out.println("No User found against the provided username");
+                return false;
+            }
+
+            transaction =  session.beginTransaction();
+            session.delete(userOptional.get());
+            transaction.commit();
+            session.close();
+
+            return true;
+        } catch (Exception e){
+            System.out.println("Error: Unable to write data to Database using hibernate: " + e.getMessage());
+            e.printStackTrace();
+            if(transaction!=null){
+                transaction.rollback();
+            }
+        }
+        return false;
     }
 }

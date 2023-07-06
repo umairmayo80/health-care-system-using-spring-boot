@@ -5,7 +5,6 @@ import org.hibernate.Transaction;
 import server.context.ServiceContext;
 import server.domain.Slot;
 import server.service.SlotService;
-import server.utilities.DisplayFormatting;
 
 import java.util.List;
 
@@ -59,12 +58,26 @@ public class SlotServiceHibernateImpl implements SlotService {
     @Override
     public void viewAllSlots() {
         List<Slot> slotList = getSlots();
-        DisplayFormatting.displaySlots(slotList);
+        displaySlots(slotList);
+    }
+
+    public static void displaySlots(List<Slot> slotList){
+        // Display the data in a table format
+        System.out.println("+--------+----------+------------+-----------+----------+----------+");
+        System.out.println("| slotId | doctorId |    date    | startTime |  endTime | occupied |");
+        System.out.println("+--------+----------+------------+-----------+----------+----------+");
+
+        for(Slot slot : slotList){
+            System.out.format("|%-7d |%9d |%11s |%10s |%9s |%9s |\n", slot.getSlotId(), slot.getDoctor().getUserId(), slot.getDate(), slot.getStartTime(), slot.getEndTime(), slot.getOccupied());
+        }
+        System.out.println("+--------+----------+------------+-----------+----------+----------+");
+
+
     }
 
     @Override
     public void viewSlotsById(int userId) {
-        DisplayFormatting.displaySlots(getSlotsById(userId));
+        displaySlots(getSlotsById(userId));
     }
 
 
@@ -86,7 +99,7 @@ public class SlotServiceHibernateImpl implements SlotService {
         slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId
                             +" AND s.occupied=true").list();
         session.close();
-        DisplayFormatting.displaySlots(slotList);
+        displaySlots(slotList);
 
     }
 
@@ -97,7 +110,7 @@ public class SlotServiceHibernateImpl implements SlotService {
         // HQL
         slotList = (List<Slot>) session.createQuery("from Slot as s where s.occupied=false").list();
         session.close();
-        DisplayFormatting.displaySlots(slotList);
+        displaySlots(slotList);
     }
 
     @Override
@@ -108,6 +121,6 @@ public class SlotServiceHibernateImpl implements SlotService {
         slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId
                 +" AND s.occupied=false").list();
         session.close();
-        DisplayFormatting.displaySlots(slotList);
+        displaySlots(slotList);
     }
 }

@@ -108,5 +108,10 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
+    public boolean deleteUser(String username) {
+        return false;
+    }
+
 
 }

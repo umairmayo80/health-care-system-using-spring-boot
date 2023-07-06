@@ -84,5 +84,7 @@ public class InitializeHibernateDb {
             System.exit(1);
         }
 
+
+
     }
 }

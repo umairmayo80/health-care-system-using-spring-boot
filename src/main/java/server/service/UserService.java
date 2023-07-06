@@ -17,5 +17,7 @@ public interface UserService {
     void viewPatients();
     void viewDoctors();
 
+    boolean deleteUser(String username);
+
 
 }

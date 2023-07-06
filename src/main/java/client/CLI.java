@@ -230,7 +230,8 @@ public class CLI {
             System.out.println("5. Lock User");
             System.out.println("6. Unlock User");
             System.out.println("7. View Scheduled Appointments");
-            System.out.println("8. Logout");
+            System.out.println("8. Delete User");
+            System.out.println("9. Logout");
             System.out.print("Enter your choice: ");
             try {
                 choice = Integer.parseInt(scanner.nextLine().strip());
@@ -261,6 +262,9 @@ public class CLI {
                     viewAppointments();
                     break;
                 case 8:
+                    deleteUser();
+                    break;
+                case 9:
                     System.out.println("Logging out...");
                     currentUser = null; // Reset the current user
                     return;
@@ -269,6 +273,22 @@ public class CLI {
                     break;
             }
         } while (true);
+    }
+
+    private void deleteUser() {
+        // Implementation for adding a user
+        System.out.println("Delete User function called");
+
+        System.out.print("Enter target user`s username:");
+        String username = scanner.nextLine().strip();
+
+        //Save the user to database
+        if (userService.deleteUser(username)) {
+            System.out.println("User Deleted Successfully!");
+        } else {
+            System.out.println("Error: Unable to delete user.");
+        }
+
     }
 
     public void addUser() {
@@ -467,8 +487,10 @@ public class CLI {
             return;
         }
         AppointmentV1 newAppointment = new AppointmentV1(currentUser.getUserId(), selectedSlotId);
+
         // now associate the new appointment with the parents
         currentUser.addAppointmentV1(newAppointment);
+
         if (appointmentServiceV1.addAppointmentEntry(newAppointment))
             System.out.println("Appointment created successfully");
     }
@@ -503,6 +525,9 @@ public class CLI {
         String endTime = scanner.nextLine().strip();
         try {
             Slot newSlot = new Slot(doctorId, date, startTime, endTime);
+            //associate the slot with the parent
+            currentUser.addSlot(newSlot);
+
             if (slotService.addSlotEntry(newSlot))
                 System.out.println("Entry added successfully");
             else

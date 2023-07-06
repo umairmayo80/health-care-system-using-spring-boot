@@ -14,10 +14,10 @@ public class AdminServiceHibernateImpl implements AdminService {
 
     @Override
     public boolean setUserAccountStatus(String username, boolean status) {
+        Session session = ServiceContext.getSessionFactory().openSession();
+        Transaction transaction = null;
         try {
-            Session session = ServiceContext.getSessionFactory().openSession();
-
-            Transaction transaction = session.beginTransaction();
+            transaction = session.beginTransaction();
             String query = "UPDATE User as u SET u.accountLocked ="+status
                     +" where u.username='"+username+"'";
 
@@ -35,7 +35,11 @@ public class AdminServiceHibernateImpl implements AdminService {
         catch (Exception e){
             System.out.println("Error: Unable to write data to Database using hibernate" + e.getMessage());
             e.printStackTrace();
+            if(transaction!=null){
+                transaction.rollback();
+            }
         }
+        session.close();
         return false;
     }
 }
