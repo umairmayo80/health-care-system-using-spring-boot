@@ -88,17 +88,24 @@ public class AppointmentServiceV1HibernateTesting {
         // associate the appointment with the target patient
 //        appointmentV1.setPatient(user2); this will be unidirectional, only the appointment will know
         user2.addAppointmentV1(appointmentV1); // this will make bidirectional and will work in cascading
+        System.out.println("asd");
+
 
         AppointmentServiceV1 appointmentServiceV1 = new AppointmentServiceV1HibernateImpl();
         appointmentServiceV1.addAppointmentEntry(appointmentV1);
 
 
+        System.out.println("asd");
         Session session = ServiceContext.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
+//        Transaction transaction = session.beginTransaction();
+//
+////        session.delete(user2);
+////        session.delete(user3);
+//        transaction.commit();
 
-//        session.delete(user2);
-        session.delete(user3);
-        transaction.commit();
+
+
+        appointmentServiceV1.viewAllAppointments();
 
 
     }

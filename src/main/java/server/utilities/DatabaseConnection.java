@@ -29,7 +29,7 @@ public class DatabaseConnection {
 
         try {
             connection = dataSource.getConnection();
-            System.out.println("Connection to database successful");
+            System.out.println("Connection to database successful db");
         } catch (SQLSyntaxErrorException e) {
 
             System.out.println("Creating new database");
