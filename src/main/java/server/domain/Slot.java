@@ -187,6 +187,7 @@ public class Slot {
 
     public void setAppointmentV1(AppointmentV1 appointmentV1) {
         this.appointmentV1 = appointmentV1;
+        appointmentV1.setSlot(this);
     }
 
     @Override

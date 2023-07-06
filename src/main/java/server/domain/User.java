@@ -37,7 +37,7 @@ public class User {
     private List<Slot> slots = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppointmentV1> appointmentV1List = new ArrayList<>();
 
 
@@ -183,6 +183,16 @@ public class User {
     public void removeSlot(Slot slot) {
         slots.remove(slot);
         slot.setDoctor(null);
+    }
+
+    public void addAppointmentV1(AppointmentV1 appointmentV1){
+        appointmentV1List.add(appointmentV1);
+        appointmentV1.setPatient(this);
+    }
+
+    public void removeAppointment(AppointmentV1 appointmentV1){
+        appointmentV1List.remove(appointmentV1);
+        appointmentV1.setPatient(null);
     }
 
 
