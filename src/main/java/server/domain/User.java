@@ -1,12 +1,11 @@
 package server.domain;
 
+import org.hibernate.Hibernate;
 import server.domain.version1.AppointmentV1;
 
 import javax.persistence.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Entity
@@ -33,11 +32,11 @@ public class User {
     @Column(name = "accountLocked")
     private boolean accountLocked;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Slot> slots = new ArrayList<>();
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Slot> slots = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppointmentV1> appointmentV1List = new ArrayList<>();
 
 
@@ -72,7 +71,7 @@ public class User {
 
 
 
-    public User(int userId, String name, String role, String username, String password, boolean accountLocked, List<Slot> slots, List<AppointmentV1> appointmentV1List) {
+    public User(int userId, String name, String role, String username, String password, boolean accountLocked, Set<Slot> slots, List<AppointmentV1> appointmentV1List) {
         this.userId = userId;
         this.name = name;
         this.role = role;
@@ -158,18 +157,22 @@ public class User {
     }
 
 
-    public List<Slot> getSlots() {
+    public Set<Slot> getSlots() {
         return slots;
     }
 
-    public void setSlots(List<Slot> slots) {
+    public void setSlots(Set<Slot> slots) {
         this.slots = slots;
     }
 
 
-    public List<AppointmentV1> getAppointmentV1List() {
-        return appointmentV1List;
-    }
+//    public List<AppointmentV1> getAppointmentV1List() {
+//        if (appointmentV1List == null) {
+//            appointmentV1List = new ArrayList<>();
+//        }
+//        Hibernate.initialize(appointmentV1List);
+//        return appointmentV1List;
+//    }
 
     public void setAppointmentV1List(List<AppointmentV1> appointmentV1List) {
         this.appointmentV1List = appointmentV1List;
@@ -185,7 +188,7 @@ public class User {
         slot.setDoctor(null);
     }
 
-    public void addAppointmentV1(AppointmentV1 appointmentV1){
+    public void addAppointmentV1(AppointmentV1 appointmentV1) {
         appointmentV1List.add(appointmentV1);
         appointmentV1.setPatient(this);
     }

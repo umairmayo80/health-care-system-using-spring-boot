@@ -19,7 +19,7 @@ public class Slot {
     @Transient
     private int doctorId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctorId", referencedColumnName = "userid")
     private User doctor;
 
@@ -38,7 +38,7 @@ public class Slot {
             mappedBy = "slot",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     private AppointmentV1 appointmentV1;
 

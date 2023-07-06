@@ -15,6 +15,7 @@ import server.utilities.ScheduleCreationException;
 
 public class AppointmentServiceV1HibernateTesting {
     public static void main(String[] args) throws ScheduleCreationException {
+
         // Inserting dummy data into the database
 //        Session session = ServiceContext.getSessionFactory().openSession();
 //        Transaction transaction = session.beginTransaction();
@@ -23,6 +24,8 @@ public class AppointmentServiceV1HibernateTesting {
         User user1  = new User("John Doe","admin","admin123","password123");
         User user2  = new User("Jane Smith","patient","patient123","patient123");
         User user3  = new User("Robert Johnson","doctor","doctor123","doctor123");
+
+        User user4  = new User("Alex","patient","patient2","patient123");
 
         UserService userService = ServiceContext.getUserServiceHibernate();
 
@@ -35,6 +38,8 @@ public class AppointmentServiceV1HibernateTesting {
         userService.addUserEntry(user1);
         userService.addUserEntry(user2);
         userService.addUserEntry(user3);
+
+        userService.addUserEntry(user4);
 
 
         userService.viewUsers();
@@ -77,22 +82,27 @@ public class AppointmentServiceV1HibernateTesting {
 
         // insert slot data
         AppointmentV1 appointmentV1 = new AppointmentV1(2,3);
+        AppointmentV1 appointment2 = new AppointmentV1(4,2);
 
         //associate the appointment with the target slot otherwise the relation will not be made with parent and foreign key will be null
         // we also need to add this in the
 //        appointmentV1.setSlot(slot3);
         slot3.setAppointmentV1(appointmentV1);
+        slot2.setAppointmentV1(appointment2);
 
 
 
         // associate the appointment with the target patient
 //        appointmentV1.setPatient(user2); this will be unidirectional, only the appointment will know
         user2.addAppointmentV1(appointmentV1); // this will make bidirectional and will work in cascading
+        user4.addAppointmentV1(appointment2);
+
         System.out.println("asd");
 
 
         AppointmentServiceV1 appointmentServiceV1 = new AppointmentServiceV1HibernateImpl();
         appointmentServiceV1.addAppointmentEntry(appointmentV1);
+        appointmentServiceV1.addAppointmentEntry(appointment2);
 
 
         System.out.println("asd");
@@ -106,6 +116,13 @@ public class AppointmentServiceV1HibernateTesting {
 
 
         appointmentServiceV1.viewAllAppointments();
+
+
+        appointmentServiceV1.viewAppointmentsByPatientId(4);
+        appointmentServiceV1.viewAppointmentsByDoctorId(3);
+
+
+
 
 
     }

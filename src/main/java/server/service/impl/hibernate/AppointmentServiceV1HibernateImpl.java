@@ -13,7 +13,7 @@ import java.util.List;
 public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
     @Override
     public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
-
+        appointmentList.forEach(this::addAppointmentEntry);
     }
 
     @Override
@@ -22,13 +22,17 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
         List<AppointmentV1> appointmentList = null;
         // HQL
         appointmentList = session.createQuery("from AppointmentV1").list();
+        initializeAssociations(appointmentList);
+        session.close();
+        return appointmentList;
+    }
+
+    private void initializeAssociations(List<AppointmentV1> appointmentList) {
         // Initialize associations before closing the session
         for (AppointmentV1 appointmentV1 : appointmentList) {
             appointmentV1.getPatient().getName(); // Initialize the patient association
             appointmentV1.getSlot().getDoctor().getName(); // Initialize the slot and doctor associations
         }
-        session.close();
-        return appointmentList;
     }
 
     @Override
@@ -63,11 +67,24 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
 
     @Override
     public void viewAppointmentsByPatientId(int patientId) {
-
+        Session session = ServiceContext.getSessionFactory().openSession();
+        List<AppointmentV1> appointmentList = null;
+        // HQL
+        appointmentList = session.createQuery("from AppointmentV1 as a where a.patient.userId="+patientId).list();
+        initializeAssociations(appointmentList);
+        session.close();
+        displayAppointmentData(appointmentList);
     }
 
     @Override
     public void viewAppointmentsByDoctorId(int doctorId) {
+        Session session = ServiceContext.getSessionFactory().openSession();
+        List<AppointmentV1> appointmentList = null;
+        // HQL
+        appointmentList = session.createQuery("from AppointmentV1 a where a.slot.doctor.userId="+doctorId).list();
+        initializeAssociations(appointmentList);
+        session.close();
+        displayAppointmentData(appointmentList);
 
     }
 
@@ -83,6 +100,9 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
             System.out.println("Error, slot is already occupied. Pick a different slot");
             return false;
         }
+
+        //associate the appointment with the slot
+        slot.setAppointmentV1(appointment);
 
         // add the appointment into database
         Session session = ServiceContext.getSessionFactory().openSession();

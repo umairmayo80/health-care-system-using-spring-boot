@@ -11,7 +11,9 @@ import server.service.impl.Database.AppointmentServiceV1DBImpl;
 import server.service.impl.Database.SlotsServiceDBImpl;
 import server.service.impl.Database.UserServiceDBImpl;
 import server.service.impl.FileSystem.*;
+import server.service.impl.hibernate.*;
 import server.service.version1.AppointmentServiceV1;
+import server.utilities.InitializeHibernateDb;
 import server.utilities.ScheduleCreationException;
 
 import java.util.InputMismatchException;
@@ -51,7 +53,8 @@ public class CLI {
                     + "Select Storage Type:"
                     + "\n\t1. File System"
                     + "\n\t2. MySQL Database"
-                    + "\n\t3. Exit"
+                    + "\n\t3. Hibernate"
+                    + "\n\t4. Exit"
                     + "\n\tEnter your choice:");
             try {
                 choice = Integer.parseInt(ServiceContext.getScanner().nextLine());
@@ -80,6 +83,19 @@ public class CLI {
                     return new CLI(userServiceDB, adminServiceDB, patientServiceDB, doctorServiceDB,
                             appointmentServiceDB, slotService1);
                 case 3:
+                    UserService userServiceHibernate = new UserServiceHibernateImpl();
+                    AdminService adminServiceHibernate = new AdminServiceHibernateImpl();
+                    PatientService patientServiceHibernate = new PatientServiceHibernateImpl();
+                    DoctorService doctorServiceHibernate = new DoctorServiceHibernateImpl();
+                    AppointmentServiceV1 appointmentServiceHibernate = new AppointmentServiceV1HibernateImpl();
+                    SlotService slotServiceHibernate = new SlotServiceHibernateImpl();
+
+                    // Initialize Hibernate System
+                    InitializeHibernateDb.initializeHibernateDb();
+
+                    return new CLI(userServiceHibernate, adminServiceHibernate, patientServiceHibernate, doctorServiceHibernate,
+                            appointmentServiceHibernate, slotServiceHibernate);
+                case 4:
                     System.out.println("Exiting...");
                     System.exit(0);
                     break;
@@ -233,7 +249,7 @@ public class CLI {
                     viewPatients();
                     break;
                 case 4:
-                    viewAvailableDoctorSlots();
+                    viewDoctors();
                     break;
                 case 5:
                     lockUser();
@@ -294,12 +310,16 @@ public class CLI {
         System.out.println("View Patients function called");
         userService.viewPatients();
 
+    }
 
+    public void viewDoctors(){
+        System.out.println("View Doctors function called");
+        userService.viewDoctors();
     }
 
     public void viewAvailableDoctorSlots() {
         // Implementation for viewing doctors
-        System.out.println("View Doctors function called");
+        System.out.println("View Available Doctor Slots function called");
         slotService.viewFreeSlots();
     }
 
@@ -447,6 +467,8 @@ public class CLI {
             return;
         }
         AppointmentV1 newAppointment = new AppointmentV1(currentUser.getUserId(), selectedSlotId);
+        // now associate the new appointment with the parents
+        currentUser.addAppointmentV1(newAppointment);
         if (appointmentServiceV1.addAppointmentEntry(newAppointment))
             System.out.println("Appointment created successfully");
     }

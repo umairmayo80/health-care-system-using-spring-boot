@@ -13,12 +13,12 @@ public class AppointmentV1 {
     @Column(name = "appointmentId")
     private int appointmentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "patientId", referencedColumnName = "userid")
     private User patient;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctorSlotId", referencedColumnName = "slotId")
     private Slot slot;
 
