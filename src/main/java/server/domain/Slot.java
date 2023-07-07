@@ -189,6 +189,12 @@ public class Slot {
         this.appointmentV1 = appointmentV1;
         appointmentV1.setSlot(this);
     }
+    public void removeAppointmentV1(){
+        if(appointmentV1 !=null){
+            appointmentV1.setSlot(null);
+            this.appointmentV1 = null;
+        }
+    }
 
     @Override
     public String toString() {

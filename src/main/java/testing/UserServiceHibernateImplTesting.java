@@ -4,7 +4,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import server.context.ServiceContext;
+import server.domain.Slot;
 import server.domain.User;
+import server.domain.version1.AppointmentV1;
 import server.service.UserService;
 import server.utilities.InitializeHibernateDb;
 
@@ -56,10 +58,10 @@ public class UserServiceHibernateImplTesting {
         InitializeHibernateDb.initializeHibernateDb();
         userService.viewUsers();
 
-
-        List<User> userList = userService.getUsers();
-
-        User user = userList.get(1);
+//
+//        List<User> userList = userService.getUsers();
+//
+//        User user = userList.get(1);
 //        System.out.println(user.toString());
 
 //        System.out.println(user.getAppointmentV1List());
@@ -68,7 +70,21 @@ public class UserServiceHibernateImplTesting {
         Session session = ServiceContext.getSessionFactory().openSession();
         Transaction transaction1 =  session.beginTransaction();
 //        session.delete(user);
-        userService.deleteUser("patient2");
+
+        User user = session.get(User.class,2);
+
+        // Remove the association between AppointmentV1 and Slot entities
+        for (AppointmentV1 appointment : user.getAppointmentV1List()) {
+            Slot slot = appointment.getSlot();
+            slot.removeAppointmentV1(); // If we don`t do that hibernate will through exception Exception in thread "main" javax.persistence.EntityNotFoundException: deleted object would be re-saved by cascade (remove deleted object from associations): [server.domain.version1.AppointmentV1#1]
+        }
+
+
+//        user.getAppointmentV1List().clear();
+//        user.getSlots().clear();
+
+//        session.delete(user);
+//        userService.deleteUser("patient2");
         transaction1.commit();
 
 

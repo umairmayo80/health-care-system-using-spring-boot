@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import server.context.ServiceContext;
+import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.service.UserService;
@@ -121,52 +122,30 @@ public class UserServiceHibernateImpl implements UserService {
         Session session = ServiceContext.getSessionFactory().openSession();
         Transaction transaction = null;
         try {
-//            transaction = session.beginTransaction();
-//            String hql = "FROM User as u WHERE u.username = :username";
-//            User user = (User) session.createQuery(hql)
-//                    .setParameter("username", username)
-//                    .uniqueResult();
-//            if(user==null) {
-//                System.out.println("No User found against the provided username");
-//                return false;
-//            }
-
-//            System.out.println(user);
-//            System.out.println(user.getAppointmentV1List());
-//            System.out.println(user.getSlots());
-
-
-
-//
-//            // Delete associated AppointmentV1 objects
-//            List<AppointmentV1> appointmentV1List = user.getAppointmentV1List();
-//            for (AppointmentV1 appointmentV1 : appointmentV1List) {
-//                session.delete(appointmentV1);
-//            }
-//
-//            transaction.commit();
-//
-//            user.getAppointmentV1List().clear();
-//            user.getSlots().clear();
-//            session.delete(user);
-
-            // poor solution but working
-            List<User> userList = getUsers();
-
-            Optional<User> userOptional = userList.stream().
-                    filter(user1 -> user1.getUsername().equals(username)).
-                    findFirst();
-            if(userOptional.isEmpty()) {
+            transaction = session.beginTransaction();
+            String hql = "FROM User as u WHERE u.username = :username";
+            User user = (User) session.createQuery(hql)
+                    .setParameter("username", username)
+                    .uniqueResult();
+            if(user==null) {
                 System.out.println("No User found against the provided username");
                 return false;
             }
 
-            transaction =  session.beginTransaction();
-            session.delete(userOptional.get());
-            transaction.commit();
-            session.close();
 
-            return true;
+            // Remove the association between AppointmentV1 and Slot entities
+            for (AppointmentV1 appointment : user.getAppointmentV1List()) {
+                Slot slot = appointment.getSlot();
+                slot.removeAppointmentV1(); // If we don`t remove the child appointment from parent slot, hibernate will through exception Exception in thread "main" javax.persistence.EntityNotFoundException: deleted object would be re-saved by cascade (remove deleted object from associations): [server.domain.version1.AppointmentV1#1]
+            }
+
+            // As we have already defined cascading to parent will automatically delete the children upon deletion, so no need
+            user.getAppointmentV1List().clear();
+            user.getSlots().clear();
+
+            session.delete(user);
+            transaction.commit();
+
         } catch (Exception e){
             System.out.println("Error: Unable to write data to Database using hibernate: " + e.getMessage());
             e.printStackTrace();

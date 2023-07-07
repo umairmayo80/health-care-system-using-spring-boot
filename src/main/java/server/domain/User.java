@@ -32,7 +32,7 @@ public class User {
     @Column(name = "accountLocked")
     private boolean accountLocked;
 
-    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Slot> slots = new HashSet<>();
 
 
