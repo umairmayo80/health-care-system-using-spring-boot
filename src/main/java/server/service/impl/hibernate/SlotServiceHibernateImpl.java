@@ -1,58 +1,30 @@
 package server.service.impl.hibernate;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import server.context.ServiceContext;
+import server.context.RepositoryContext;
+import server.dao.impl.hibernate.SlotRepoHibernateImpl;
 import server.domain.Slot;
 import server.service.SlotService;
 
 import java.util.List;
 
 public class SlotServiceHibernateImpl implements SlotService {
-
+    private SlotRepoHibernateImpl slotRepoHibernate;
     public SlotServiceHibernateImpl(){
+        slotRepoHibernate = RepositoryContext.getSlotRepoHibernate();
     }
+
     @Override
     public List<Slot> getSlots() {
-        Session session = ServiceContext.getSessionFactory().openSession();
-        List<Slot> slotList = null;
-        // HQL
-        slotList = session.createQuery("from Slot").list();
-        session.close();
-        return slotList;
+        return slotRepoHibernate.getSlots();
     }
 
     @Override
     public Slot getSlotBySlotId(int slotID) {
-        Session session = ServiceContext.getSessionFactory().openSession();
-        Slot slot = null;
-        // HQL
-        slot = (Slot) session.createQuery("from Slot where slotId="+slotID).uniqueResult();
-        session.close();
-        return slot;
+       return slotRepoHibernate.getSlotBySlotId(slotID);
     }
 
     @Override
     public boolean addSlotEntry(Slot slot) {
-        Session session = ServiceContext.getSessionFactory().openSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-
-            session.save(slot);
-
-            transaction.commit();
-            session.close();
-        } catch (Exception e) {
-            System.out.println("Error: Unable to add slot entry to the database using hibernate: " + e.getMessage());
-            e.printStackTrace();
-            if(transaction != null){
-                transaction.rollback();
-                session.close();
-            }
-            return false;
-        }
-        return true;
+        return slotRepoHibernate.addSlotEntry(slot);
     }
 
     @Override
@@ -72,7 +44,6 @@ public class SlotServiceHibernateImpl implements SlotService {
         }
         System.out.println("+--------+----------+------------+-----------+----------+----------+");
 
-
     }
 
     @Override
@@ -83,44 +54,21 @@ public class SlotServiceHibernateImpl implements SlotService {
 
     @Override
     public List<Slot> getSlotsById(int userId) {
-        Session session = ServiceContext.getSessionFactory().openSession();
-        List<Slot> slotList = null;
-        // HQL
-        slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId).list();
-        session.close();
-        return slotList;
+       return slotRepoHibernate.getSlotsById(userId);
     }
 
     @Override
     public void viewBookedSlotsById(int userId) {
-        Session session = ServiceContext.getSessionFactory().openSession();
-        List<Slot> slotList = null;
-        // HQL
-        slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId
-                            +" AND s.occupied=true").list();
-        session.close();
-        displaySlots(slotList);
-
+        slotRepoHibernate.viewBookedSlotsById(userId);
     }
 
     @Override
     public void viewFreeSlots() {
-        Session session = ServiceContext.getSessionFactory().openSession();
-        List<Slot> slotList = null;
-        // HQL
-        slotList = (List<Slot>) session.createQuery("from Slot as s where s.occupied=false").list();
-        session.close();
-        displaySlots(slotList);
+        slotRepoHibernate.viewFreeSlots();
     }
 
     @Override
     public void viewFreeSlotsById(int userId) {
-        Session session = ServiceContext.getSessionFactory().openSession();
-        List<Slot> slotList = null;
-        // HQL
-        slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId
-                +" AND s.occupied=false").list();
-        session.close();
-        displaySlots(slotList);
+       slotRepoHibernate.viewFreeSlotsById(userId);
     }
 }

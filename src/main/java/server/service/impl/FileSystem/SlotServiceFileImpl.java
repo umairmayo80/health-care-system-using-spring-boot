@@ -1,62 +1,59 @@
 package server.service.impl.FileSystem;
 
+import server.context.RepositoryContext;
 import server.domain.Slot;
 import server.service.SlotService;
+import server.dao.impl.fileSystem.SlotRepoFileImpl;
 
 import java.util.List;
 
 public class SlotServiceFileImpl implements SlotService {
+    private final SlotRepoFileImpl slotRepoFile;
+    public SlotServiceFileImpl(){
+        slotRepoFile = RepositoryContext.getSlotRepoFile();
+    }
     @Override
     public List<Slot> getSlots() {
-
-        System.out.println("Filesystem is pending");
-        return null;
+        return slotRepoFile.getSlots();
     }
 
     @Override
     public Slot getSlotBySlotId(int slotID) {
-        System.out.println("Filesystem is pending");
-        return null;
+        return slotRepoFile.getSlotBySlotId(slotID);
     }
 
     @Override
     public boolean addSlotEntry(Slot slot) {
-        System.out.println("Filesystem is pending");
-        return false;
+        return slotRepoFile.addSlotEntry(slot);
     }
 
     @Override
     public void viewAllSlots() {
-        System.out.println("Filesystem is pending");
-
+        slotRepoFile.viewAllSlots();
     }
 
     @Override
     public void viewSlotsById(int userId) {
-        System.out.println("Filesystem is pending");
-
+        slotRepoFile.viewSlotsById(userId);
     }
 
     @Override
     public List<Slot> getSlotsById(int userId) {
-        System.out.println("Filesystem is pending");
-        return null;
+        return slotRepoFile.getSlotsById(userId);
     }
 
     @Override
     public void viewBookedSlotsById(int userId) {
-        System.out.println("Filesystem is pending");
-
+        slotRepoFile.viewBookedSlotsById(userId);
     }
 
     @Override
     public void viewFreeSlots() {
-        System.out.println("Filesystem is pending");
-    }
+        slotRepoFile.viewFreeSlots();
+  }
 
     @Override
     public void viewFreeSlotsById(int userId) {
-        System.out.println("Filesystem is pending");
-
+        slotRepoFile.viewFreeSlotsById(userId);
     }
 }
