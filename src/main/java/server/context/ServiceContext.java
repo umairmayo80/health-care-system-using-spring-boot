@@ -196,7 +196,7 @@ public class ServiceContext {
         String url = "jdbc:mysql://localhost:3306/";
         String username = "test";
         String password = "password123!";
-        String databaseName = "tempdb";
+        String databaseName = "HealthCareDatabase";
         if(sessionFactory == null){
             try{
                 Configuration configuration = new Configuration();
