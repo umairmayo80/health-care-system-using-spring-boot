@@ -2,6 +2,7 @@ package server.service.impl.fileSystem;
 
 import server.context.RepositoryContext;
 import server.domain.Slot;
+import server.domain.User;
 import server.service.SlotService;
 import server.dao.impl.fileSystem.SlotRepoFileImpl;
 
@@ -55,5 +56,12 @@ public class SlotServiceFileImpl implements SlotService {
     @Override
     public void viewFreeSlotsById(int userId) {
         slotRepoFile.viewFreeSlotsById(userId);
+    }
+
+    @Override
+    public boolean addSlot(Slot newSlot, User currentUser) {
+        //associate the slot with the parent
+        currentUser.addSlot(newSlot);
+        return addSlotEntry(newSlot);
     }
 }

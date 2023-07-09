@@ -1,23 +1,28 @@
 package server.service.version1;
 //import server.domain.Appointment;
+import server.domain.User;
 import server.domain.version1.AppointmentV1;
+
+import java.util.Currency;
 import java.util.List;
 
 public interface AppointmentServiceV1 {
 
 
     // Save appointments to storage
-    public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList);
+    void saveAppointmentsToStorage(List<AppointmentV1> appointmentList);
 
-    public List<AppointmentV1> getAppointments();
+    List<AppointmentV1> getAppointments();
 
     void viewAllAppointments();
 
-    public void viewAppointmentsByPatientId(int patientId);
+    void viewAppointmentsByPatientId(int patientId);
 
-    public void viewAppointmentsByDoctorId(int doctorId);
+    void viewAppointmentsByDoctorId(int doctorId);
 
-    public boolean addAppointmentEntry(AppointmentV1 appointment);
+    boolean addAppointmentEntry(AppointmentV1 appointment);
+
+    boolean addAppointment(AppointmentV1 appointmentV1, User currentUser);
 
 
 }

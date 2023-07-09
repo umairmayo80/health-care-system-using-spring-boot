@@ -193,17 +193,20 @@ public class ServiceContext {
 
 
     public static SessionFactory getSessionFactory(){
+        String url = "jdbc:mysql://localhost:3306/";
+        String username = "test";
+        String password = "password123!";
+        String databaseName = "tempdb";
         if(sessionFactory == null){
             try{
                 Configuration configuration = new Configuration();
 
                 // Hibernate settings equivalent to hibernate.cfg.xml properties
-
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-                settings.put(Environment.URL, "jdbc:mysql://localhost:3306/tempdb?userSSL=false");
-                settings.put(Environment.USER,"test");
-                settings.put(Environment.PASS,"password123!");
+                settings.put(Environment.URL, url+databaseName+"?userSSL=false");
+                settings.put(Environment.USER,username);
+                settings.put(Environment.PASS,password);
                 settings.put(Environment.DIALECT,"org.hibernate.dialect.MySQL8Dialect");
 
                 settings.put(Environment.SHOW_SQL,"false");
@@ -220,7 +223,9 @@ public class ServiceContext {
                         .build();
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
             } catch (ServiceException e){
-                System.out.println("Fail to connect to database: "+e.getMessage());
+                System.out.println("Fail to connect to database:" +
+                        "\n Please check your username and password and ensure that the '"+databaseName+" database exits'\n"
+                        +e.getMessage());
                 System.exit(1);
             }
         }

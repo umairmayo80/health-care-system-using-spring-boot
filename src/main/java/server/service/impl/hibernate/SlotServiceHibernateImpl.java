@@ -2,6 +2,7 @@ package server.service.impl.hibernate;
 import server.context.RepositoryContext;
 import server.dao.impl.hibernate.SlotRepoHibernateImpl;
 import server.domain.Slot;
+import server.domain.User;
 import server.service.SlotService;
 
 import java.util.List;
@@ -70,5 +71,12 @@ public class SlotServiceHibernateImpl implements SlotService {
     @Override
     public void viewFreeSlotsById(int userId) {
        slotRepoHibernate.viewFreeSlotsById(userId);
+    }
+
+    @Override
+    public boolean addSlot(Slot newSlot, User currentUser) {
+        //associate the slot with the parent
+        currentUser.addSlot(newSlot);
+        return addSlotEntry(newSlot);
     }
 }

@@ -20,12 +20,7 @@ public class InitializeHibernateDb {
 
             UserService userService = ServiceContext.getUserServiceHibernate();
 
-            // Save the users individually first
-//        session.save(user1);
-//        session.save(user2);
-//        session.save(user3);
-//        transaction.commit();
-
+            // persist the users
             userService.addUserEntry(user1);
             userService.addUserEntry(user2);
             userService.addUserEntry(user3);
@@ -39,10 +34,6 @@ public class InitializeHibernateDb {
 
 
             // associate the slots with the users
-//        slot1.setDoctor(user3); // these are wrong way to make association
-//        slot2.setDoctor(user3);
-//        slot3.setDoctor(user3);
-
             // right way is, it will be bidirectional
             user3.addSlot(slot1);
             user3.addSlot(slot2);
@@ -61,14 +52,11 @@ public class InitializeHibernateDb {
             AppointmentV1 appointment2 = new AppointmentV1(4, 2);
 
             //associate the appointment with the target slot otherwise the relation will not be made with parent and foreign key will be null
-            // we also need to add this in the
-//        appointmentV1.setSlot(slot3);
             slot3.setAppointmentV1(appointmentV1);
             slot2.setAppointmentV1(appointment2);
 
 
             // associate the appointment with the target patient
-//        appointmentV1.setPatient(user2); this will be unidirectional, only the appointment will know
             user2.addAppointmentV1(appointmentV1); // this will make bidirectional and will work in cascading
             user4.addAppointmentV1(appointment2);
 

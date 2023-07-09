@@ -488,10 +488,7 @@ public class CLI {
         }
         AppointmentV1 newAppointment = new AppointmentV1(currentUser.getUserId(), selectedSlotId);
 
-        // now associate the new appointment with the parents
-        currentUser.addAppointmentV1(newAppointment);
-
-        if (appointmentServiceV1.addAppointmentEntry(newAppointment))
+        if (appointmentServiceV1.addAppointment(newAppointment,currentUser))
             System.out.println("Appointment created successfully");
     }
 
@@ -525,10 +522,8 @@ public class CLI {
         String endTime = scanner.nextLine().strip();
         try {
             Slot newSlot = new Slot(doctorId, date, startTime, endTime);
-            //associate the slot with the parent
-            currentUser.addSlot(newSlot);
 
-            if (slotService.addSlotEntry(newSlot))
+            if (slotService.addSlot(newSlot, currentUser))
                 System.out.println("Entry added successfully");
             else
                 System.out.println("Error, unable to add new slot");

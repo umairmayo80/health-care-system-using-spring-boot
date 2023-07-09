@@ -1,6 +1,7 @@
 package server.service.impl.fileSystem;
 
 import server.context.RepositoryContext;
+import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.dao.impl.fileSystem.AppointmentV1RepoFileImpl;
 import server.service.version1.AppointmentServiceV1;
@@ -40,5 +41,13 @@ public class AppointServiceV1FileImpl implements AppointmentServiceV1 {
     @Override
     public boolean addAppointmentEntry(AppointmentV1 appointment) {
         return appointmentV1RepoFile.addAppointmentEntry(appointment);
+    }
+
+
+    @Override
+    public boolean addAppointment(AppointmentV1 appointmentV1, User currentUser) {
+        // now associate the new appointment with the parents
+        currentUser.addAppointmentV1(appointmentV1);
+        return addAppointmentEntry(appointmentV1);
     }
 }

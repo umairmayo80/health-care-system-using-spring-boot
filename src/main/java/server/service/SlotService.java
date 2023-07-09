@@ -17,4 +17,6 @@ public interface SlotService {
     void viewFreeSlots();
 
     void viewFreeSlotsById(int userId);
+
+    boolean addSlot(Slot newSlot, User currentUser);
 }

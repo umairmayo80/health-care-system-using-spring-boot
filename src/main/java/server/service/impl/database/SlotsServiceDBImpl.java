@@ -2,6 +2,7 @@ package server.service.impl.database;
 import server.context.RepositoryContext;
 import server.domain.Slot;
 import server.dao.impl.database.SlotRepoDbImpl;
+import server.domain.User;
 import server.utilities.DisplayFormatting;
 import server.service.SlotService;
 
@@ -59,6 +60,13 @@ public class SlotsServiceDBImpl implements SlotService {
     @Override
     public boolean addSlotEntry(Slot slot) {
        return slotRepoDb.addSlotEntry(slot);
+    }
+
+    @Override
+    public boolean addSlot(Slot newSlot, User currentUser) {
+        //associate the slot with the parent
+        currentUser.addSlot(newSlot);
+        return addSlotEntry(newSlot);
     }
 
 }
