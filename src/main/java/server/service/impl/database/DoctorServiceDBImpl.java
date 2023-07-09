@@ -1,15 +1,11 @@
-package server.service.impl.Database;
+package server.service.impl.database;
 
 import server.context.ServiceContext;
 import server.domain.Schedule;
 import server.domain.Slot;
 import server.service.DoctorService;
 
-import javax.print.Doc;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DoctorServiceDBImpl implements DoctorService {
     private Connection dbConnection;

@@ -1,17 +1,10 @@
-package server.service.impl.Database;
+package server.service.impl.database;
 
 import server.context.RepositoryContext;
-import server.context.ServiceContext;
 import server.dao.impl.database.AppointmentV1RepoDbImpl;
-import server.domain.Slot;
 import server.domain.version1.AppointmentV1;
 import server.service.version1.AppointmentServiceV1;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {

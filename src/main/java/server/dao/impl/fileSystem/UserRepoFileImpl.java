@@ -1,7 +1,7 @@
 package server.dao.impl.fileSystem;
 import server.domain.User;
 import server.dao.UserRepository;
-import server.service.impl.FileSystem.UserServiceImpl;
+import server.service.impl.fileSystem.UserServiceImpl;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;

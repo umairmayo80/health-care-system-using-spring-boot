@@ -1,4 +1,4 @@
-package server.service.impl.Database;
+package server.service.impl.database;
 import server.context.RepositoryContext;
 import server.domain.Slot;
 import server.dao.impl.database.SlotRepoDbImpl;
