@@ -1,17 +1,50 @@
 package server.domain;
+import server.domain.version1.AppointmentV1;
 import server.utilities.ScheduleCreationException;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 
+@Entity
+@Table(name = "slot_table",
+                uniqueConstraints = @UniqueConstraint(name = "unique_slot", columnNames = {"doctorId","date","startTime","endTime"}))
 public class Slot {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "slotId")
     private int slotId;
-    private int doctorId;
-    private LocalDate date;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private Boolean occupied;
 
+    @Transient
+    private int doctorId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "doctorId", referencedColumnName = "userid")
+    private User doctor;
+
+
+    private LocalDate date;
+
+    @Column(name = "startTime")
+    private LocalTime startTime;
+
+    @Column(name = "endTime")
+    private LocalTime endTime;
+    private boolean occupied;
+
+
+    @OneToOne(
+            mappedBy = "slot",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    private AppointmentV1 appointmentV1;
+
+    public Slot()
+    {
+    }
     public Slot(int doctorId, LocalDate date, LocalTime startTime, LocalTime endTime) {
         this.slotId = 0;
         this.doctorId = doctorId;
@@ -69,6 +102,28 @@ public class Slot {
 
     }
 
+    public Slot(int slotId, int doctorId, User doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean occupied) {
+        this.slotId = slotId;
+        this.doctorId = doctorId;
+        this.doctor = doctor;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.occupied = occupied;
+    }
+
+
+    public Slot(int slotId, int doctorId, User doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean occupied, AppointmentV1 appointmentV1) {
+        this.slotId = slotId;
+        this.doctorId = doctorId;
+        this.doctor = doctor;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.occupied = occupied;
+        this.appointmentV1 = appointmentV1;
+    }
+
     public int getSlotId() {
         return slotId;
     }
@@ -109,7 +164,7 @@ public class Slot {
         this.endTime = endTime;
     }
 
-    public Boolean getOccupied() {
+    public boolean getOccupied() {
         return occupied;
     }
 
@@ -117,6 +172,29 @@ public class Slot {
         this.occupied = occupied;
     }
 
+    public User getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(User doctor) {
+        this.doctor = doctor;
+    }
+
+
+    public AppointmentV1 getAppointmentV1() {
+        return appointmentV1;
+    }
+
+    public void setAppointmentV1(AppointmentV1 appointmentV1) {
+        this.appointmentV1 = appointmentV1;
+        appointmentV1.setSlot(this);
+    }
+    public void removeAppointmentV1(){
+        if(appointmentV1 !=null){
+            appointmentV1.setSlot(null);
+            this.appointmentV1 = null;
+        }
+    }
 
     @Override
     public String toString() {

@@ -1,4 +1,4 @@
-package server.service.impl.FileSystem;
+package server.service.impl.fileSystem;
 import server.domain.Schedule;
 import server.utilities.FileModificationChecker;
 import server.utilities.ScheduleCreationException;

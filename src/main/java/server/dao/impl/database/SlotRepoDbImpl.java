@@ -1,8 +1,11 @@
-package server.service.impl.Database;
+package server.dao.impl.database;
+
 import server.context.ServiceContext;
 import server.domain.Slot;
+import server.dao.SlotRepository;
+import server.utilities.DisplayFormatting;
 import server.utilities.ScheduleCreationException;
-import server.service.SlotService;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,12 +13,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SlotsServiceDBImpl implements SlotService {
+public class SlotRepoDbImpl implements SlotRepository {
+
     private Connection dbConnection;
-    public SlotsServiceDBImpl()
+    public SlotRepoDbImpl()
     {
         this.dbConnection= ServiceContext.getDatabaseConnection();
     }
+
 
     private Slot parseSlotDataFromResultSet(ResultSet resultSet) throws SQLException, ScheduleCreationException {
         int slotId = resultSet.getInt("slotId");
@@ -58,28 +63,16 @@ public class SlotsServiceDBImpl implements SlotService {
         return slotList;
     }
 
-    private void displaySlots(List<Slot> slotList){
-        // Display the data in a table format
-        System.out.println("+--------+----------+------------+-----------+----------+----------+");
-        System.out.println("| slotId | doctorId |    date    | startTime |  endTime | occupied |");
-        System.out.println("+--------+----------+------------+-----------+----------+----------+");
 
-        for(Slot slot : slotList){
-            System.out.format("|%-7d |%9d |%11s |%10s |%9s |%9s |\n", slot.getSlotId(), slot.getDoctorId(), slot.getDate(), slot.getStartTime(), slot.getEndTime(), slot.getOccupied());
-        }
-        System.out.println("+--------+----------+------------+-----------+----------+----------+");
-
-
-    }
     @Override
     public void viewAllSlots() {
         List<Slot> slotList = getSlots();
-        displaySlots(slotList);
+        DisplayFormatting.displaySlots(slotList);
     }
 
     @Override
     public void viewSlotsById(int userId) {
-        displaySlots(getSlotsById(userId));
+        DisplayFormatting.displaySlots(getSlotsById(userId));
     }
 
 
@@ -93,7 +86,7 @@ public class SlotsServiceDBImpl implements SlotService {
         String query = "SELECT * FROM slot_table where doctorId = "+userId
                 +" AND occupied=true;";
         List<Slot> slotList = getSlotsByQuery(query);
-        displaySlots(slotList);
+        DisplayFormatting.displaySlots(slotList);
     }
 
     @Override
@@ -142,7 +135,7 @@ public class SlotsServiceDBImpl implements SlotService {
         String query = "SELECT * FROM slot_table where doctorId = "+userId
                 +" AND occupied=false;";
         List<Slot> slotList = getSlotsByQuery(query);
-        displaySlots(slotList);
+        DisplayFormatting.displaySlots(slotList);
     }
 
     @Override
@@ -163,5 +156,4 @@ public class SlotsServiceDBImpl implements SlotService {
             return false;
         }
     }
-
 }

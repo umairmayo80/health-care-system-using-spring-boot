@@ -1,11 +1,10 @@
-package server.service.impl.FileSystem;
-
+package server.dao.impl.fileSystem;
 import server.domain.version1.AppointmentV1;
-import server.service.version1.AppointmentServiceV1;
+import server.dao.AppointmentV1Repository;
 
 import java.util.List;
 
-public class AppointServiceV1FileImpl implements AppointmentServiceV1 {
+public class AppointmentV1RepoFileImpl implements AppointmentV1Repository {
     @Override
     public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
         System.out.println("Filesystem is pending");
@@ -18,19 +17,18 @@ public class AppointServiceV1FileImpl implements AppointmentServiceV1 {
     }
 
     @Override
-    public void viewAllAppointments() {
+    public void viewAppointmentsByPatientId(int patientId) {
         System.out.println("FileSystem is pending");
     }
 
     @Override
-    public void viewAppointmentsByPatientId(int patientId) {
-        System.out.println("Filesystem is pending");
-
+    public void viewAppointmentsByDoctorId(int doctorId) {
+        System.out.println("FileSystem is pending");
     }
 
     @Override
-    public void viewAppointmentsByDoctorId(int doctorId) {
-        System.out.println("Filesystem is pending");
+    public void viewAllAppointments() {
+        System.out.println("FileSystem is pending");
     }
 
     @Override

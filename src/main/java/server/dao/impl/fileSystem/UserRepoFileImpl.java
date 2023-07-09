@@ -1,6 +1,7 @@
-package server.service.impl.FileSystem;
+package server.dao.impl.fileSystem;
 import server.domain.User;
-import server.service.UserService;
+import server.dao.UserRepository;
+import server.service.impl.fileSystem.UserServiceImpl;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,13 +12,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class UserServiceImpl implements UserService{
+public class UserRepoFileImpl implements UserRepository {
     public final static String userFilePath = "users.csv";
 
+    @Override
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
         try {
-            List<String> lines = Files.readAllLines(Paths.get(UserServiceImpl.userFilePath));
+            List<String> lines = Files.readAllLines(Paths.get(UserRepoFileImpl.userFilePath));
             for (String line : lines) {
                 String[] parts = line.split(",");
                 if (parts.length == 6) {
@@ -47,11 +49,12 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 
+    @Override
     // saves the users list to file. It overwrites the previous data with new data
     public void addUsersListToStorage(List<User> userList){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(UserServiceImpl.userFilePath, false))) {
             for (User itrUser : userList) {
-                writer.write(itrUser.getId() + "," + itrUser.getName() + "," + itrUser.getUsername() + "," + itrUser.getPassword() + "," + itrUser.getRoll()
+                writer.write(itrUser.getUserId() + "," + itrUser.getName() + "," + itrUser.getUsername() + "," + itrUser.getPassword() + "," + itrUser.getRole()
                         + "," + itrUser.getAccountStatus());
                 writer.newLine();
             }
@@ -60,52 +63,41 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public User validateUserLogin(String username, String password, String userRole){
-        // Logic to validate username and password
-        List<User> users = getUsers();
-        Optional<User> loginUser = users.stream()
-                .filter(user -> user.getUsername().equals(username) && user.getPassword().equals(password) )
-                .findFirst();
-        return loginUser.orElse(null);
 
-    }
-
-
-
-    public void viewUsers() {
-        List<User> users = getUsers();
-        for(User user: users){
-            System.out.println(user.toString());
-        }
-    }
+    @Override
     public List<User> getPatients() {
         List<User> users = getUsers();
         List<User> patients = users.stream()
-                .filter(user -> user.getRoll().equals("patient"))
+                .filter(user -> user.getRole().equals("patient"))
                 .collect(Collectors.toList());
         return patients;
 
     }
+
+    @Override
     public List<User> getDoctors() {
         List<User> users = getUsers();
         List<User> doctors = users.stream()
-                .filter(user -> user.getRoll().equals("doctor"))
+                .filter(user -> user.getRole().equals("doctor"))
                 .collect(Collectors.toList());
         return doctors;
     }
 
-    public void viewPatients(){
-        List<User> users = getPatients();
-        for(User user: users){
-            System.out.println(user.toString());
-        }
+
+    @Override
+    public boolean deleteUser(String username) {
+        System.out.println("File System impl is pending");
+        return false;
     }
 
-    public void viewDoctors(){
-        List<User> users = getDoctors();
-        for(User user: users){
-            System.out.println(user.toString());
-        }
+    @Override
+    public User getUserByUsername(String username) {
+        // Logic to validate username and password
+        List<User> users = getUsers();
+        Optional<User> loginUser = users.stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
+        return loginUser.orElse(null);
     }
 
 

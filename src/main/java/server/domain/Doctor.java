@@ -14,9 +14,9 @@ public class Doctor extends User{
     @Override
     public String toString() {
         return "server.domain.Doctor{" +
-                "id=" + super.getId() +
+                "id=" + super.getUserId() +
                 ", name='" + super.getName() + '\'' +
-                ", roll='" + super.getRoll() + '\'' +
+                ", roll='" + super.getRole() + '\'' +
                 ", username='" + super.getUsername() + '\'' +
                 ", password='" + super.getPassword() + '\'' +
                 ", accountBlocked='" + super.getAccountStatus() + '\'' +

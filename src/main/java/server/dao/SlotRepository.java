@@ -1,11 +1,10 @@
-package server.service;
+package server.dao;
 
 import server.domain.Slot;
-import server.domain.User;
 
 import java.util.List;
 
-public interface SlotService {
+public interface SlotRepository {
     List<Slot> getSlots();
     Slot getSlotBySlotId(int slotID);
     boolean addSlotEntry(Slot slot);
@@ -17,6 +16,4 @@ public interface SlotService {
     void viewFreeSlots();
 
     void viewFreeSlotsById(int userId);
-
-    boolean addSlot(Slot newSlot, User currentUser);
 }

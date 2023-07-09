@@ -1,4 +1,4 @@
-package server.service.impl.FileSystem;
+package server.service.impl.fileSystem;
 import server.context.ServiceContext;
 import server.domain.Appointment;
 import server.domain.Slot;

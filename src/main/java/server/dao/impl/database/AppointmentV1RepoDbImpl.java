@@ -1,9 +1,9 @@
-package server.service.impl.Database;
+package server.dao.impl.database;
 
 import server.context.ServiceContext;
+import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
 import server.domain.version1.AppointmentV1;
-import server.service.version1.AppointmentServiceV1;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,13 +12,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {
-    private Connection dbConnection;
-    public AppointmentServiceV1DBImpl()
+public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
+    private final Connection dbConnection;
+    public AppointmentV1RepoDbImpl()
     {
         this.dbConnection= ServiceContext.getDatabaseConnection();
     }
-
 
     public List<AppointmentV1> getAppointmentsByQuery(String query) {
         List<AppointmentV1> appointmentList = new ArrayList<>();
@@ -167,5 +166,4 @@ public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {
         }
         return true;
     }
-
 }

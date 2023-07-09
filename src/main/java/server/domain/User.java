@@ -1,44 +1,85 @@
 package server.domain;
 
-import java.io.*;
-import java.util.Objects;
+import org.hibernate.Hibernate;
+import server.domain.version1.AppointmentV1;
 
+import javax.persistence.*;
+import java.io.*;
+import java.util.*;
+
+
+@Entity
+@Table(name = "user_table")
 public class User {
+    @Transient
     private static final String ID_FILE_PATH = "lastAssignedId.txt";
+    @Transient
     private static int lastAssignedId;
 
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userid")
+    private int userId;
+
     private String name;
-    private String roll;
+    private String role;
+
+    @Column(name = "username", unique = true)
     private String username;
+
     private String password;
 
+    @Column(name = "accountLocked")
     private boolean accountLocked;
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Slot> slots = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AppointmentV1> appointmentV1List = new ArrayList<>();
 
 
     static {
         loadLastAssignedId();
     }
 
+    public User() {
+    }
+
+
     public User(String name, String roll) {
         this(name, roll, "", "");
     }
 
-    public User(String name, String roll, String username, String password) {
-        this.id = generateNewId();
+    public User(String name, String role, String username, String password) {
+        this.userId = generateNewId();
         this.name = name;
-        this.roll = roll;
+        this.role = role;
         this.username = username;
         this.password = password;
         this.accountLocked = false;
     }
-    public User(int id, String name, String roll, String username, String password, boolean accountLocked) {
-        this.id = id;
+    public User(int id, String name, String role, String username, String password, boolean accountLocked) {
+        this.userId = id;
         this.name = name;
-        this.roll = roll;
+        this.role = role;
         this.username = username;
         this.password = password;
         this.accountLocked = accountLocked;
+    }
+
+
+
+    public User(int userId, String name, String role, String username, String password, boolean accountLocked, Set<Slot> slots, List<AppointmentV1> appointmentV1List) {
+        this.userId = userId;
+        this.name = name;
+        this.role = role;
+        this.username = username;
+        this.password = password;
+        this.accountLocked = accountLocked;
+        this.slots = slots;
+        this.appointmentV1List = appointmentV1List;
     }
 
     private static int generateNewId() {
@@ -69,9 +110,11 @@ public class User {
         }
     }
 
-
-    public int getId() {
-        return id;
+    public void setUserId(int userId){
+        this.userId = userId;
+    }
+    public int getUserId() {
+        return userId;
     }
 
     public String getName() {
@@ -82,12 +125,12 @@ public class User {
         this.name = name;
     }
 
-    public String getRoll() {
-        return roll;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoll(String roll) {
-        this.roll = roll;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getUsername() {
@@ -113,12 +156,59 @@ public class User {
         return accountLocked;
     }
 
+
+    public Set<Slot> getSlots() {
+        return slots;
+    }
+
+    public void setSlots(Set<Slot> slots) {
+        this.slots = slots;
+    }
+
+
+//    public List<AppointmentV1> getAppointmentV1List() {
+//        if (appointmentV1List == null) {
+//            appointmentV1List = new ArrayList<>();
+//        }
+//        Hibernate.initialize(appointmentV1List);
+//        return appointmentV1List;
+//    }
+
+    public List<AppointmentV1> getAppointmentV1List(){
+        return appointmentV1List;
+    }
+
+    public void setAppointmentV1List(List<AppointmentV1> appointmentV1List) {
+        this.appointmentV1List = appointmentV1List;
+    }
+
+    public void addSlot(Slot slot) {
+        slots.add(slot);
+        slot.setDoctor(this);
+    }
+
+    public void removeSlot(Slot slot) {
+        slots.remove(slot);
+        slot.setDoctor(null);
+    }
+
+    public void addAppointmentV1(AppointmentV1 appointmentV1) {
+        appointmentV1List.add(appointmentV1);
+        appointmentV1.setPatient(this);
+    }
+
+    public void removeAppointment(AppointmentV1 appointmentV1){
+        appointmentV1List.remove(appointmentV1);
+        appointmentV1.setPatient(null);
+    }
+
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id=" + userId +
                 ", name='" + name + '\'' +
-                ", role='" + roll + '\'' +
+                ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", accountStatus='" + accountLocked + '\'' +
@@ -130,16 +220,16 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
+        return userId == user.userId &&
                 accountLocked == user.accountLocked &&
                 Objects.equals(name, user.name) &&
-                Objects.equals(roll, user.roll) &&
+                Objects.equals(role, user.role) &&
                 Objects.equals(username, user.username) &&
                 Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, roll, username, password, accountLocked);
+        return Objects.hash(userId, name, role, username, password, accountLocked);
     }
 }

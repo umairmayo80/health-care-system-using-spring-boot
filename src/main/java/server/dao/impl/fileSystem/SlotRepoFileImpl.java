@@ -1,11 +1,11 @@
-package server.service.impl.FileSystem;
+package server.dao.impl.fileSystem;
 
 import server.domain.Slot;
-import server.service.SlotService;
+import server.dao.SlotRepository;
 
 import java.util.List;
 
-public class SlotServiceFileImpl implements SlotService {
+public class SlotRepoFileImpl implements SlotRepository {
     @Override
     public List<Slot> getSlots() {
 

@@ -1,6 +1,7 @@
-package server.service.impl.FileSystem;
+package server.service.impl.fileSystem;
 import server.context.ServiceContext;
 import server.domain.Appointment;
+import server.domain.version1.AppointmentV1;
 import server.service.PatientService;
 
 import java.util.List;
@@ -34,6 +35,11 @@ public class PatientServiceImpl implements PatientService {
         }
         return false;
 
+    }
+
+    @Override
+    public boolean addAppointment(AppointmentV1 appointment) {
+        return false;
     }
 
 

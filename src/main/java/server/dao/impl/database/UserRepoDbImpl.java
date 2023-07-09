@@ -1,7 +1,7 @@
-package server.service.impl.Database;
+package server.dao.impl.database;
 import server.context.ServiceContext;
 import server.domain.User;
-import server.service.UserService;
+import server.dao.UserRepository;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,9 +9,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserServiceDBImpl implements UserService {
-    Connection connection;
-    public UserServiceDBImpl(){
+public class UserRepoDbImpl implements UserRepository {
+    private final Connection connection;
+
+    public UserRepoDbImpl(){
         connection = ServiceContext.getDatabaseConnection();
     }
 
@@ -22,7 +23,7 @@ public class UserServiceDBImpl implements UserService {
             ResultSet resultSet = statement.executeQuery("Select * from user_table;");
 
             // Iterate through the result set and retrieve data
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 users.add(fetchUserDataFromQueryResult(resultSet));
             }
 
@@ -42,7 +43,7 @@ public class UserServiceDBImpl implements UserService {
                     + user.getName() + "','"
                     + user.getUsername() + "','"
                     + user.getPassword() + "','"
-                    + user.getRoll() + "',"
+                    + user.getRole() + "',"
                     + user.getAccountStatus() + ")";
             statement.executeUpdate(query);
             return true;
@@ -57,25 +58,31 @@ public class UserServiceDBImpl implements UserService {
         userList.forEach(this::addUserEntry);
     }
 
-    public void displayUsers(List<User> usersList){
-        // Print table header
-        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
-        System.out.format("%-5s %-15s %-10s %-15s %-15s %-10s%n", "ID", "Name", "Role", "Username", "Password", "Account Locked");
-        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
 
-        // Print table rows
-        for (User user : usersList) {
-            System.out.format("%-5d %-15s %-10s %-15s %-15s %-10s%n",
-                    user.getId(), user.getName(), user.getRoll(), user.getUsername(), user.getPassword(), user.getAccountStatus());
+    @Override
+    public boolean deleteUser(String username) {
+        try {
+            Statement statement = connection.createStatement();
+            String query = "DELETE FROM user_table WHERE username ='" + username + "';";
+            //update the user accountLocked status where username = username
+            int rowsAffected = statement.executeUpdate(query);
+            if (rowsAffected > 0) {
+                return true;
+            } else {
+                System.out.printf("Error: No User found against this the provided '%s' username.\n", username);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: Unable to write data to database" + e.getMessage());
         }
-        System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
+        return false;
     }
 
-    public User validateUserLogin(String username, String password, String userRole) {
+    @Override
+    public User getUserByUsername(String username) {
         User user = null;
         try {
             Statement statement = connection.createStatement();
-            String query = "SELECT * FROM user_table WHERE username = '" + username + "' AND password = '" + password + "' AND role = '" + userRole + "'";
+            String query = "SELECT * FROM user_table WHERE username = '" + username + "'";
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
                 user = fetchUserDataFromQueryResult(resultSet);
@@ -86,25 +93,6 @@ public class UserServiceDBImpl implements UserService {
         return user;
     }
 
-
-    @Override
-    public void viewUsers() {
-        List<User> users = getUsers();
-        displayUsers(users);
-    }
-
-    @Override
-    public void viewPatients() {
-        List<User> patients = getPatients();
-        displayUsers(patients);
-    }
-
-    @Override
-    public void viewDoctors() {
-        List<User> doctors = getDoctors();
-        displayUsers(doctors);
-    }
-
     public List<User> getPatients() {
         List<User> patientsList = new ArrayList<>();
         try {
@@ -112,7 +100,7 @@ public class UserServiceDBImpl implements UserService {
             ResultSet resultSet = statement.executeQuery("Select * from user_table where role = \"patient\";");
 
             // Iterate through the result set and retrieve data
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 patientsList.add(fetchUserDataFromQueryResult(resultSet));
             }
 
@@ -124,13 +112,13 @@ public class UserServiceDBImpl implements UserService {
     }
 
     private User fetchUserDataFromQueryResult(ResultSet resultSet) throws SQLException {
-            int userId = resultSet.getInt("userid");
-            String name = resultSet.getString("name");
-            String username = resultSet.getString("username");
-            String password = resultSet.getString("password");
-            String role = resultSet.getString("role");
-            boolean accountLocked = resultSet.getBoolean("accountLocked");
-        return new User(userId,name, role, username, password,accountLocked);
+        int userId = resultSet.getInt("userid");
+        String name = resultSet.getString("name");
+        String username = resultSet.getString("username");
+        String password = resultSet.getString("password");
+        String role = resultSet.getString("role");
+        boolean accountLocked = resultSet.getBoolean("accountLocked");
+        return new User(userId, name, role, username, password, accountLocked);
     }
 
     public List<User> getDoctors() {
@@ -140,7 +128,7 @@ public class UserServiceDBImpl implements UserService {
             ResultSet resultSet = statement.executeQuery("Select * from user_table where role = \"doctor\";");
 
             // Iterate through the result set and retrieve data
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 doctorsList.add(fetchUserDataFromQueryResult(resultSet));
             }
 
@@ -149,5 +137,4 @@ public class UserServiceDBImpl implements UserService {
         }
         return doctorsList;
     }
-
 }

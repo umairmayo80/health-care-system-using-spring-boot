@@ -6,12 +6,14 @@ import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.service.*;
-import server.service.impl.Database.AdminServiceDBImpl;
-import server.service.impl.Database.AppointmentServiceV1DBImpl;
-import server.service.impl.Database.SlotsServiceDBImpl;
-import server.service.impl.Database.UserServiceDBImpl;
-import server.service.impl.FileSystem.*;
+import server.service.impl.database.AdminServiceDBImpl;
+import server.service.impl.database.AppointmentServiceV1DBImpl;
+import server.service.impl.database.SlotsServiceDBImpl;
+import server.service.impl.database.UserServiceDBImpl;
+import server.service.impl.fileSystem.*;
+import server.service.impl.hibernate.*;
 import server.service.version1.AppointmentServiceV1;
+import server.utilities.InitializeHibernateDb;
 import server.utilities.ScheduleCreationException;
 
 import java.util.InputMismatchException;
@@ -51,7 +53,8 @@ public class CLI {
                     + "Select Storage Type:"
                     + "\n\t1. File System"
                     + "\n\t2. MySQL Database"
-                    + "\n\t3. Exit"
+                    + "\n\t3. Hibernate"
+                    + "\n\t4. Exit"
                     + "\n\tEnter your choice:");
             try {
                 choice = Integer.parseInt(ServiceContext.getScanner().nextLine());
@@ -80,6 +83,19 @@ public class CLI {
                     return new CLI(userServiceDB, adminServiceDB, patientServiceDB, doctorServiceDB,
                             appointmentServiceDB, slotService1);
                 case 3:
+                    UserService userServiceHibernate = new UserServiceHibernateImpl();
+                    AdminService adminServiceHibernate = new AdminServiceHibernateImpl();
+                    PatientService patientServiceHibernate = new PatientServiceHibernateImpl();
+                    DoctorService doctorServiceHibernate = new DoctorServiceHibernateImpl();
+                    AppointmentServiceV1 appointmentServiceHibernate = new AppointmentServiceV1HibernateImpl();
+                    SlotService slotServiceHibernate = new SlotServiceHibernateImpl();
+
+                    // Initialize Hibernate System
+                    InitializeHibernateDb.initializeHibernateDb();
+
+                    return new CLI(userServiceHibernate, adminServiceHibernate, patientServiceHibernate, doctorServiceHibernate,
+                            appointmentServiceHibernate, slotServiceHibernate);
+                case 4:
                     System.out.println("Exiting...");
                     System.exit(0);
                     break;
@@ -179,7 +195,7 @@ public class CLI {
 
 //        scanner.close();
         User user = userService.validateUserLogin(username, password, userRoll);
-        if (user != null && user.getRoll().equals(userRoll.toLowerCase())) {
+        if (user != null && user.getRole().equals(userRoll.toLowerCase())) {
             System.out.println("Login successful!");
             currentUser = user;
             return true;
@@ -214,7 +230,8 @@ public class CLI {
             System.out.println("5. Lock User");
             System.out.println("6. Unlock User");
             System.out.println("7. View Scheduled Appointments");
-            System.out.println("8. Logout");
+            System.out.println("8. Delete User");
+            System.out.println("9. Logout");
             System.out.print("Enter your choice: ");
             try {
                 choice = Integer.parseInt(scanner.nextLine().strip());
@@ -233,7 +250,7 @@ public class CLI {
                     viewPatients();
                     break;
                 case 4:
-                    viewAvailableDoctorSlots();
+                    viewDoctors();
                     break;
                 case 5:
                     lockUser();
@@ -245,6 +262,9 @@ public class CLI {
                     viewAppointments();
                     break;
                 case 8:
+                    deleteUser();
+                    break;
+                case 9:
                     System.out.println("Logging out...");
                     currentUser = null; // Reset the current user
                     return;
@@ -253,6 +273,22 @@ public class CLI {
                     break;
             }
         } while (true);
+    }
+
+    private void deleteUser() {
+        // Implementation for adding a user
+        System.out.println("Delete User function called");
+
+        System.out.print("Enter target user`s username:");
+        String username = scanner.nextLine().strip();
+
+        //Save the user to database
+        if (userService.deleteUser(username)) {
+            System.out.println("User Deleted Successfully!");
+        } else {
+            System.out.println("Error: Unable to delete user.");
+        }
+
     }
 
     public void addUser() {
@@ -294,12 +330,16 @@ public class CLI {
         System.out.println("View Patients function called");
         userService.viewPatients();
 
+    }
 
+    public void viewDoctors(){
+        System.out.println("View Doctors function called");
+        userService.viewDoctors();
     }
 
     public void viewAvailableDoctorSlots() {
         // Implementation for viewing doctors
-        System.out.println("View Doctors function called");
+        System.out.println("View Available Doctor Slots function called");
         slotService.viewFreeSlots();
     }
 
@@ -385,12 +425,12 @@ public class CLI {
 
     public void viewBookedSlots() {
         System.out.println("View Booked Slots function called");
-        slotService.viewBookedSlotsById(currentUser.getId());
+        slotService.viewBookedSlotsById(currentUser.getUserId());
     }
 
     public void viewFreeSlots() {
         System.out.println("View Free Slots Function called");
-        slotService.viewFreeSlotsById(currentUser.getId());
+        slotService.viewFreeSlotsById(currentUser.getUserId());
     }
 
     public void patientMenu() {
@@ -446,29 +486,30 @@ public class CLI {
             System.out.println("Invalid Input");
             return;
         }
-        AppointmentV1 newAppointment = new AppointmentV1(currentUser.getId(), selectedSlotId);
-        if (appointmentServiceV1.addAppointmentEntry(newAppointment))
+        AppointmentV1 newAppointment = new AppointmentV1(currentUser.getUserId(), selectedSlotId);
+
+        if (appointmentServiceV1.addAppointment(newAppointment,currentUser))
             System.out.println("Appointment created successfully");
     }
 
     public void viewPatientAppointments() {
-        appointmentServiceV1.viewAppointmentsByPatientId(currentUser.getId());
+        appointmentServiceV1.viewAppointmentsByPatientId(currentUser.getUserId());
     }
 
     public void viewSchedule() {
         System.out.println("View schedule function called...");
-        slotService.viewSlotsById(currentUser.getId());
+        slotService.viewSlotsById(currentUser.getUserId());
     }
 
     public void viewDoctorAppointments() {
         System.out.println("Viewing doctor appointments function called...");
-        appointmentServiceV1.viewAppointmentsByDoctorId(currentUser.getId());
+        appointmentServiceV1.viewAppointmentsByDoctorId(currentUser.getUserId());
     }
 
     public void newSlotEntry() {
         System.out.println("Adding New Slot Entry function called...");
 
-        int doctorId = currentUser.getId();
+        int doctorId = currentUser.getUserId();
 
         // Prompt the user for input
         System.out.print("Enter date (YYYY-MM-DD): ");
@@ -481,7 +522,8 @@ public class CLI {
         String endTime = scanner.nextLine().strip();
         try {
             Slot newSlot = new Slot(doctorId, date, startTime, endTime);
-            if (slotService.addSlotEntry(newSlot))
+
+            if (slotService.addSlot(newSlot, currentUser))
                 System.out.println("Entry added successfully");
             else
                 System.out.println("Error, unable to add new slot");
