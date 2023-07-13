@@ -9,7 +9,7 @@ import java.sql.Connection;
 
 public class DoctorServiceDBImpl implements DoctorService {
     private Connection dbConnection;
-    DoctorServiceDBImpl(){
+    public DoctorServiceDBImpl(){
         this.dbConnection = ServiceContext.getDatabaseConnection();
     }
 

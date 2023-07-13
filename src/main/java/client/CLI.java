@@ -9,11 +9,8 @@ import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.service.*;
-import server.service.impl.database.AdminServiceDBImpl;
-import server.service.impl.database.AppointmentServiceV1DBImpl;
-import server.service.impl.database.SlotsServiceDBImpl;
-import server.service.impl.database.UserServiceDBImpl;
-import server.service.impl.fileSystem.*;
+import server.service.impl.database.*;
+
 import server.service.impl.hibernate.*;
 import server.service.version1.AppointmentServiceV1;
 import server.utilities.InitializeHibernateDb;
@@ -65,10 +62,9 @@ public class CLI {
         do {
             System.out.print("\nWelcome to Health Care System"
                     + "Select Storage Type:"
-                    + "\n\t1. File System"
-                    + "\n\t2. MySQL Database"
-                    + "\n\t3. Hibernate"
-                    + "\n\t4. Exit"
+                    + "\n\t1. MySQL Database"
+                    + "\n\t2. Hibernate"
+                    + "\n\t3. Exit"
                     + "\n\tEnter your choice:");
             try {
                 choice = Integer.parseInt(ServiceContext.getScanner().nextLine());
@@ -78,29 +74,17 @@ public class CLI {
             }
             switch (choice) {
                 case 1:
-                    UserService userServiceFile = new UserServiceImpl();
-                    AdminService adminServiceFile = new AdminServiceImpl();
-                    PatientService patientServiceFile = new PatientServiceImpl();
-                    DoctorService doctorServiceFile = new DoctorServiceImpl();
-                    AppointServiceV1FileImpl appointmentServiceFile = new AppointServiceV1FileImpl();
-                    SlotServiceFileImpl slotServiceFile = new SlotServiceFileImpl();
-                    cli =CLI.getInstance(userServiceFile, adminServiceFile, patientServiceFile, doctorServiceFile,
-                            appointmentServiceFile, slotServiceFile);
-                    loop = false;
-                    break;
-
-                case 2:
                     UserService userServiceDB = new UserServiceDBImpl();
                     AdminService adminServiceDB = new AdminServiceDBImpl();
-                    PatientService patientServiceDB = new PatientServiceImpl();
-                    DoctorService doctorServiceDB = new DoctorServiceImpl();
+                    PatientService patientServiceDB = new PatientServiceDBImpl();
+                    DoctorService doctorServiceDB = new DoctorServiceDBImpl();
                     AppointmentServiceV1 appointmentServiceDB = new AppointmentServiceV1DBImpl();
                     SlotService slotService1 = new SlotsServiceDBImpl();
                     cli = CLI.getInstance(userServiceDB, adminServiceDB, patientServiceDB, doctorServiceDB,
                             appointmentServiceDB, slotService1);
                     loop = false;
                     break;
-                case 3:
+                case 2:
                     UserService userServiceHibernate = context.getBean(UserServiceHibernateImpl.class);
                     AdminService adminServiceHibernate = new AdminServiceHibernateImpl();
                     PatientService patientServiceHibernate = new PatientServiceHibernateImpl();
@@ -116,7 +100,8 @@ public class CLI {
                             appointmentServiceHibernate, slotServiceHibernate);
                     loop = false;
                     break;
-                case 4:
+
+                case 3:
                     System.out.println("Exiting...");
                     System.exit(1);
                     break;
