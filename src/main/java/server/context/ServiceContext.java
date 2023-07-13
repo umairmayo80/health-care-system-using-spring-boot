@@ -62,6 +62,7 @@ public class ServiceContext {
     // repository
 
     private ServiceContext(){
+        System.out.println("Service context default constructor");
     }
 
     public static DoctorService getDoctorService(){
