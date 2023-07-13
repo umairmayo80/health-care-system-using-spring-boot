@@ -2,9 +2,9 @@ package server.context;
 import server.dao.impl.database.AppointmentV1RepoDbImpl;
 import server.dao.impl.database.SlotRepoDbImpl;
 import server.dao.impl.database.UserRepoDbImpl;
-import server.dao.impl.hibernate.AppointmentRepoHibernate;
+
 import server.dao.impl.hibernate.SlotRepoHibernateImpl;
-import server.dao.impl.hibernate.UserRepoHibernateImpl;
+
 
 public class RepositoryContext {
 
@@ -13,9 +13,8 @@ public class RepositoryContext {
     private static AppointmentV1RepoDbImpl appointmentV1RepoDb;
 
 
-    private static UserRepoHibernateImpl userRepoHibernate;
     private static SlotRepoHibernateImpl slotRepoHibernate;
-    private static AppointmentRepoHibernate appointmentRepoHibernate;
+
 
     private RepositoryContext(){
     }
@@ -42,26 +41,9 @@ public class RepositoryContext {
         return appointmentV1RepoDb;
     }
 
-    public static UserRepoHibernateImpl getUserRepoHibernate() {
-        if(userRepoHibernate == null){
-            userRepoHibernate = new UserRepoHibernateImpl();
-        }
-        return userRepoHibernate;
-    }
 
-    public static SlotRepoHibernateImpl getSlotRepoHibernate() {
-        if(slotRepoHibernate == null){
-            slotRepoHibernate = new SlotRepoHibernateImpl();
-        }
-        return slotRepoHibernate;
-    }
 
-    public static AppointmentRepoHibernate getAppointmentRepoHibernate() {
-        if(appointmentRepoHibernate == null){
-            appointmentRepoHibernate = new AppointmentRepoHibernate() ;
-        }
-        return appointmentRepoHibernate;
-    }
+
 
 
 

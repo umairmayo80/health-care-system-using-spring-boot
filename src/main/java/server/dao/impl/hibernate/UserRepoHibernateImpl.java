@@ -19,8 +19,6 @@ import java.util.List;
 public class UserRepoHibernateImpl implements UserRepository {
     private SessionFactory sessionFactory;
 
-    public UserRepoHibernateImpl() {
-    }
 
     @Autowired
     public UserRepoHibernateImpl(SessionFactory sessionFactory) {

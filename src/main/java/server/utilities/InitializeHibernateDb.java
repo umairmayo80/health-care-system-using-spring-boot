@@ -15,11 +15,24 @@ import server.service.version1.AppointmentServiceV1;
 @Component
 public class InitializeHibernateDb {
     private UserServiceHibernateImpl userService;
+    private SlotServiceHibernateImpl slotService;
+    private AppointmentServiceV1HibernateImpl appointmentServiceV1;
 
     @Autowired
     public void setUserService(UserServiceHibernateImpl userService) {
         System.out.println("InitializeHibernateDb-C-UserServiceHibernateImpl-Autowired-"+userService);
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setSlotService(SlotServiceHibernateImpl slotService) {
+        this.slotService = slotService;
+    }
+
+
+    @Autowired
+    public void setAppointmentServiceV1(AppointmentServiceV1HibernateImpl appointmentServiceV1) {
+        this.appointmentServiceV1 = appointmentServiceV1;
     }
 
     public void initializeHibernateDb() {
@@ -54,7 +67,6 @@ public class InitializeHibernateDb {
 
 
             // save the slots
-            SlotService slotService = new SlotServiceHibernateImpl();
             slotService.addSlotEntry(slot1);
             slotService.addSlotEntry(slot2);
             slotService.addSlotEntry(slot3);
@@ -74,7 +86,6 @@ public class InitializeHibernateDb {
             user4.addAppointmentV1(appointment2);
 
 
-            AppointmentServiceV1 appointmentServiceV1 = new AppointmentServiceV1HibernateImpl();
             appointmentServiceV1.addAppointmentEntry(appointmentV1);
             appointmentServiceV1.addAppointmentEntry(appointment2);
 

@@ -1,4 +1,6 @@
 package server.service.impl.hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.context.RepositoryContext;
 import server.dao.impl.hibernate.SlotRepoHibernateImpl;
 import server.domain.Slot;
@@ -7,10 +9,13 @@ import server.service.SlotService;
 
 import java.util.List;
 
+@Component
 public class SlotServiceHibernateImpl implements SlotService {
-    private SlotRepoHibernateImpl slotRepoHibernate;
-    public SlotServiceHibernateImpl(){
-        slotRepoHibernate = RepositoryContext.getSlotRepoHibernate();
+    private final SlotRepoHibernateImpl slotRepoHibernate;
+
+    @Autowired
+    public SlotServiceHibernateImpl(SlotRepoHibernateImpl slotRepoHibernate) {
+        this.slotRepoHibernate = slotRepoHibernate;
     }
 
     @Override

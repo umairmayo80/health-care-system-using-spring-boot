@@ -32,9 +32,6 @@ public class ServiceContext {
     // services related to hibernate
 
 
-    private static SlotServiceHibernateImpl slotServiceHibernate;
-
-    private static AppointmentServiceV1HibernateImpl appointmentServiceV1Hibernate;
 
     private static Scanner scanner;
 
@@ -95,41 +92,14 @@ public class ServiceContext {
     }
 
 
-    public static AppointmentServiceV1 getAppointmentServiceV1(){
-        if(appointmentServiceV1 == null){
-            synchronized (ServiceContext.class){
-                if(appointmentServiceV1 == null){
-                    appointmentServiceV1 = new AppointmentServiceV1DBImpl();
-                }
-            }
-        }
-        return appointmentServiceV1;
-    }
 
 
 
-    public static SlotServiceHibernateImpl getSlotServiceHibernate(){
-        if(slotServiceHibernate == null){
-            synchronized (ServiceContext.class){
-                if(slotServiceHibernate == null){
-                    slotServiceHibernate = new SlotServiceHibernateImpl();
-                }
-            }
-        }
-        return slotServiceHibernate;
-    }
 
 
-    public static AppointmentServiceV1HibernateImpl getAppointmentServiceV1Hibernate(){
-        if(appointmentServiceV1Hibernate == null){
-            synchronized (ServiceContext.class){
-                if(appointmentServiceV1Hibernate == null){
-                    appointmentServiceV1Hibernate = new AppointmentServiceV1HibernateImpl();
-                }
-            }
-        }
-        return appointmentServiceV1Hibernate;
-    }
+
+
+
 
 
 

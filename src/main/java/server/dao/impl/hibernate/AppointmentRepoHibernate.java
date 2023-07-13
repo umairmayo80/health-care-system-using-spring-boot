@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
 import server.domain.version1.AppointmentV1;
@@ -14,15 +13,15 @@ import java.util.List;
 @Component
 public class AppointmentRepoHibernate implements AppointmentV1Repository {
     SessionFactory sessionFactory;
+    SlotRepoHibernateImpl slotRepoHibernate;
 
-
-    public AppointmentRepoHibernate() {
-    }
 
     @Autowired
-    public AppointmentRepoHibernate(SessionFactory sessionFactory) {
+    public AppointmentRepoHibernate(SessionFactory sessionFactory, SlotRepoHibernateImpl slotServiceHibernate) {
         this.sessionFactory = sessionFactory;
+        this.slotRepoHibernate = slotServiceHibernate;
     }
+
 
     @Override
     public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
@@ -104,7 +103,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
     @Override
     public boolean addAppointmentEntry(AppointmentV1 appointment) {
         // check if the slot is available or not
-        Slot slot = ServiceContext.getSlotServiceHibernate().getSlotBySlotId(appointment.getDoctorSlotId());
+        Slot slot = slotRepoHibernate.getSlotBySlotId(appointment.getDoctorSlotId());
         if(slot == null){
             System.out.println("No slot found against the provided id: "+appointment.getDoctorSlotId());
             return false;

@@ -31,9 +31,7 @@ public class UserServiceHibernateImpl implements UserService {
 
     @Autowired
     public void setUserRepoHibernate(UserRepoHibernateImpl userRepoHibernate) {
-        System.out.println("UserServiceHibernateImpl-setter-setUserRepoHibernate");
         this.userRepoHibernate = userRepoHibernate;
-        System.out.println(userRepoHibernate);
     }
 
     @Override

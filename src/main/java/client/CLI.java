@@ -87,10 +87,10 @@ public class CLI {
                 case 2:
                     UserService userServiceHibernate = context.getBean(UserServiceHibernateImpl.class);
                     AdminService adminServiceHibernate = new AdminServiceHibernateImpl();
-                    PatientService patientServiceHibernate = new PatientServiceHibernateImpl();
-                    DoctorService doctorServiceHibernate = new DoctorServiceHibernateImpl();
-                    AppointmentServiceV1 appointmentServiceHibernate = new AppointmentServiceV1HibernateImpl();
-                    SlotService slotServiceHibernate = new SlotServiceHibernateImpl();
+                    PatientService patientServiceHibernate = context.getBean(PatientServiceHibernateImpl.class);
+                    DoctorService doctorServiceHibernate = context.getBean(DoctorServiceHibernateImpl.class);
+                    AppointmentServiceV1 appointmentServiceHibernate =  context.getBean(AppointmentServiceV1HibernateImpl.class);
+                    SlotService slotServiceHibernate = context.getBean(SlotServiceHibernateImpl.class);
 
                     // Initialize Hibernate System
 //                    InitializeHibernateDb.initializeHibernateDb();
