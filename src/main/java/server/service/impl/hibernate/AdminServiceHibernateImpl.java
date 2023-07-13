@@ -1,6 +1,7 @@
 package server.service.impl.hibernate;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,15 +12,19 @@ import server.service.UserService;
 
 @Component
 public class AdminServiceHibernateImpl implements AdminService {
-    UserService userService;
+    private UserService userService;
+    private SessionFactory sessionFactory;
 
     public AdminServiceHibernateImpl() {
     }
 
+
+
     @Autowired
-    public AdminServiceHibernateImpl(UserServiceHibernateImpl userService) {
+    public AdminServiceHibernateImpl(UserService userService, SessionFactory sessionFactory) {
         this.userService = userService;
-        System.out.println("AdminServiceHibernateImpl-Autowire-C-userService-"+userService);
+        this.sessionFactory = sessionFactory;
+        System.out.println("AdminServiceHibernateImpl-Autowire-C-userService+sessionFactory-"+userService+"-"+sessionFactory);
     }
 
     @Override
@@ -30,7 +35,7 @@ public class AdminServiceHibernateImpl implements AdminService {
 
     @Override
     public boolean setUserAccountStatus(String username, boolean status) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();

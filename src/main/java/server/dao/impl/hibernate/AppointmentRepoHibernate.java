@@ -1,15 +1,29 @@
 package server.dao.impl.hibernate;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.context.ServiceContext;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
 import server.domain.version1.AppointmentV1;
 
 import java.util.List;
-
+@Component
 public class AppointmentRepoHibernate implements AppointmentV1Repository {
+    SessionFactory sessionFactory;
+
+
+    public AppointmentRepoHibernate() {
+    }
+
+    @Autowired
+    public AppointmentRepoHibernate(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     @Override
     public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
         appointmentList.forEach(this::addAppointmentEntry);
@@ -17,7 +31,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
 
     @Override
     public List<AppointmentV1> getAppointments() {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<AppointmentV1> appointmentList = null;
         // HQL
         appointmentList = session.createQuery("from AppointmentV1").list();
@@ -66,7 +80,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
 
     @Override
     public void viewAppointmentsByPatientId(int patientId) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<AppointmentV1> appointmentList = null;
         // HQL
         appointmentList = session.createQuery("from AppointmentV1 as a where a.patient.userId="+patientId).list();
@@ -77,7 +91,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
 
     @Override
     public void viewAppointmentsByDoctorId(int doctorId) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<AppointmentV1> appointmentList = null;
         // HQL
         appointmentList = session.createQuery("from AppointmentV1 a where a.slot.doctor.userId="+doctorId).list();
@@ -104,7 +118,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
         slot.setAppointmentV1(appointment);
 
         // add the appointment into database
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();

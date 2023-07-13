@@ -21,7 +21,7 @@ public class AppConfig {
 
     @Bean
     @Scope("singleton")
-    public static SessionFactory getSessionFactory(){
+    public SessionFactory getSessionFactory(){
         System.out.println("bean get session factory");
         String url = "jdbc:mysql://localhost:3306/";
         String username = "test";

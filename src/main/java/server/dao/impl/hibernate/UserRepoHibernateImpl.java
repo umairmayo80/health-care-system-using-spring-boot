@@ -5,9 +5,7 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import server.context.ServiceContext;
 import server.dao.UserRepository;
 import server.domain.Slot;
 import server.domain.User;
@@ -45,7 +43,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Override
     public boolean addUserEntry(User user) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try{
             // start the transaction
@@ -80,7 +78,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Override
     public List<User> getPatients() {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<User> patientList;
         patientList = (List<User>) session.createQuery("from User where role=:role")
                 .setParameter("role","patient")
@@ -91,7 +89,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Override
     public List<User> getDoctors() {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<User> doctorList;
         doctorList = (List<User>) session.createQuery("from User where role=:role")
                 .setParameter("role","doctor")
@@ -104,7 +102,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Override
     public boolean deleteUser(String username) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
@@ -142,7 +140,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Override
     public User getUserByUsername(String username) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         User user = null;
         //HQL Query
         user = (User) session.createQuery("from User where username=:username")
