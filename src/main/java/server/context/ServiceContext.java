@@ -1,5 +1,4 @@
 package server.context;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -234,16 +233,16 @@ public class ServiceContext {
 
 
 
-    public static UserServiceHibernateImpl getUserServiceHibernate(){
-        if(userServiceHibernate == null){
-            synchronized (ServiceContext.class){
-                if(userServiceHibernate == null){
-                    userServiceHibernate = new UserServiceHibernateImpl();
-                }
-            }
-        }
-        return userServiceHibernate;
-    }
+//    public static UserServiceHibernateImpl getUserServiceHibernate(){
+//        if(userServiceHibernate == null){
+//            synchronized (ServiceContext.class){
+//                if(userServiceHibernate == null){
+//                    userServiceHibernate = new UserServiceHibernateImpl();
+//                }
+//            }
+//        }
+//        return userServiceHibernate;
+//    }
 
 
     public static AdminServiceHibernateImpl getAdminServiceHibernate(){

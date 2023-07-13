@@ -1,4 +1,6 @@
 package server.utilities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.context.ServiceContext;
 import server.domain.Slot;
 import server.domain.User;
@@ -7,10 +9,20 @@ import server.service.SlotService;
 import server.service.UserService;
 import server.service.impl.hibernate.AppointmentServiceV1HibernateImpl;
 import server.service.impl.hibernate.SlotServiceHibernateImpl;
+import server.service.impl.hibernate.UserServiceHibernateImpl;
 import server.service.version1.AppointmentServiceV1;
 
+@Component
 public class InitializeHibernateDb {
-    public static void initializeHibernateDb() {
+    private UserServiceHibernateImpl userService;
+
+    @Autowired
+    public void setUserService(UserServiceHibernateImpl userService) {
+        System.out.println("InitializeHibernateDb-C-UserServiceHibernateImpl-Autowired-"+userService);
+        this.userService = userService;
+    }
+
+    public void initializeHibernateDb() {
         try {
             User user1 = new User("John Doe", "admin", "admin123", "password123");
             User user2 = new User("Jane Smith", "patient", "patient123", "patient123");
@@ -18,7 +30,8 @@ public class InitializeHibernateDb {
 
             User user4 = new User("Alex", "patient", "patient2", "patient123");
 
-            UserService userService = ServiceContext.getUserServiceHibernate();
+//            UserService userService = ServiceContext.getUserServiceHibernate();
+//            userService = ServiceContext.getUserServiceHibernate();
 
             // persist the users
             userService.addUserEntry(user1);

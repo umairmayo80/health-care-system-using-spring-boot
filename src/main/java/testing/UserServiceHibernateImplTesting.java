@@ -8,6 +8,7 @@ import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.service.UserService;
+import server.service.impl.hibernate.UserServiceHibernateImpl;
 import server.utilities.InitializeHibernateDb;
 
 import java.util.List;
@@ -23,7 +24,8 @@ public class UserServiceHibernateImplTesting {
 //        User user1  = new User("Ali","patient","user123","user123");
 //        System.out.println(user1);
 //
-        UserService userService = ServiceContext.getUserServiceHibernate();
+//        UserService userService = ServiceContext.getUserServiceHibernate();
+        UserService userService = new UserServiceHibernateImpl();
 //        userService.addUserEntry(user1);
 //
 //        // now the Id will be updated according to the database
@@ -55,7 +57,7 @@ public class UserServiceHibernateImplTesting {
 //        session.close();
 
 
-        InitializeHibernateDb.initializeHibernateDb();
+//        InitializeHibernateDb.initializeHibernateDb();
         userService.viewUsers();
 
 //

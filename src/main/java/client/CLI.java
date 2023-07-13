@@ -1,5 +1,8 @@
 package client;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import server.AppConfig;
 import server.context.ServiceContext;
 
 import server.domain.Slot;
@@ -31,7 +34,7 @@ public class CLI {
 
 
     // Constructor injection
-    CLI( UserService userService, AdminService adminService,
+    private CLI( UserService userService, AdminService adminService,
         PatientService patientService, DoctorService doctorService,
         AppointmentServiceV1 appointmentServiceV1, SlotService slotService) {
         this.userService = userService;
@@ -46,8 +49,19 @@ public class CLI {
         this.scanner = ServiceContext.getScanner();
     }
 
-    private static CLI initializeCLI() {
-        int choice = 0;
+    public static CLI getInstance(UserService userService, AdminService adminService,
+                                  PatientService patientService, DoctorService doctorService,
+                                  AppointmentServiceV1 appointmentServiceV1, SlotService slotService) {
+        return new CLI(userService,adminService,patientService,doctorService,appointmentServiceV1,slotService);
+    }
+
+
+    public static void main(String[] args) {
+        CLI cli = null;
+        int choice;
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        boolean loop = true;
         do {
             System.out.print("\nWelcome to Health Care System"
                     + "Select Storage Type:"
@@ -70,8 +84,10 @@ public class CLI {
                     DoctorService doctorServiceFile = new DoctorServiceImpl();
                     AppointServiceV1FileImpl appointmentServiceFile = new AppointServiceV1FileImpl();
                     SlotServiceFileImpl slotServiceFile = new SlotServiceFileImpl();
-                    return new CLI(userServiceFile, adminServiceFile, patientServiceFile, doctorServiceFile,
+                    cli =CLI.getInstance(userServiceFile, adminServiceFile, patientServiceFile, doctorServiceFile,
                             appointmentServiceFile, slotServiceFile);
+                    loop = false;
+                    break;
 
                 case 2:
                     UserService userServiceDB = new UserServiceDBImpl();
@@ -80,10 +96,12 @@ public class CLI {
                     DoctorService doctorServiceDB = new DoctorServiceImpl();
                     AppointmentServiceV1 appointmentServiceDB = new AppointmentServiceV1DBImpl();
                     SlotService slotService1 = new SlotsServiceDBImpl();
-                    return new CLI(userServiceDB, adminServiceDB, patientServiceDB, doctorServiceDB,
+                    cli = CLI.getInstance(userServiceDB, adminServiceDB, patientServiceDB, doctorServiceDB,
                             appointmentServiceDB, slotService1);
+                    loop = false;
+                    break;
                 case 3:
-                    UserService userServiceHibernate = new UserServiceHibernateImpl();
+                    UserService userServiceHibernate = context.getBean(UserServiceHibernateImpl.class);
                     AdminService adminServiceHibernate = new AdminServiceHibernateImpl();
                     PatientService patientServiceHibernate = new PatientServiceHibernateImpl();
                     DoctorService doctorServiceHibernate = new DoctorServiceHibernateImpl();
@@ -91,24 +109,22 @@ public class CLI {
                     SlotService slotServiceHibernate = new SlotServiceHibernateImpl();
 
                     // Initialize Hibernate System
-                    InitializeHibernateDb.initializeHibernateDb();
+//                    InitializeHibernateDb.initializeHibernateDb();
+                    context.getBean(InitializeHibernateDb.class).initializeHibernateDb();
 
-                    return new CLI(userServiceHibernate, adminServiceHibernate, patientServiceHibernate, doctorServiceHibernate,
+                    cli = CLI.getInstance(userServiceHibernate, adminServiceHibernate, patientServiceHibernate, doctorServiceHibernate,
                             appointmentServiceHibernate, slotServiceHibernate);
+                    loop = false;
+                    break;
                 case 4:
                     System.out.println("Exiting...");
-                    System.exit(0);
+                    System.exit(1);
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
                     break;
             }
-        } while (true);
-
-    }
-
-    public static void main(String[] args) {
-        CLI cli = CLI.initializeCLI();
+        } while (loop);
         cli.displayWelcomeMenu();
     }
 
