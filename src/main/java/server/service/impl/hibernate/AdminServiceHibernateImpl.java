@@ -2,14 +2,30 @@ package server.service.impl.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.context.ServiceContext;
 import server.domain.User;
 import server.service.AdminService;
+import server.service.UserService;
 
+@Component
 public class AdminServiceHibernateImpl implements AdminService {
+    UserService userService;
+
+    public AdminServiceHibernateImpl() {
+    }
+
+    @Autowired
+    public AdminServiceHibernateImpl(UserServiceHibernateImpl userService) {
+        this.userService = userService;
+        System.out.println("AdminServiceHibernateImpl-Autowire-C-userService-"+userService);
+    }
+
     @Override
     public boolean addUser(User user) {
-        return ServiceContext.getUserServiceHibernate().addUserEntry(user);
+//        return ServiceContext.getUserServiceHibernate().addUserEntry(user);
+        return userService.addUserEntry(user);
     }
 
     @Override

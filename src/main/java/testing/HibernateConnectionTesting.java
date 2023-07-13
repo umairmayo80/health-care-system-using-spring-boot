@@ -45,8 +45,8 @@ public class HibernateConnectionTesting {
      System.out.println(userRetrieved);
 
 
-     UserServiceHibernateImpl userServiceHibernate = ServiceContext.getUserServiceHibernate();
-     System.out.println(userServiceHibernate.getUsers());
+//     UserServiceHibernateImpl userServiceHibernate = ServiceContext.getUserServiceHibernate();
+//     System.out.println(userServiceHibernate.getUsers());
 
      session.close();
 

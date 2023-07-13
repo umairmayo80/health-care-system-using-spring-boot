@@ -10,6 +10,7 @@ import server.service.SlotService;
 import server.service.UserService;
 import server.service.impl.hibernate.AppointmentServiceV1HibernateImpl;
 import server.service.impl.hibernate.SlotServiceHibernateImpl;
+import server.service.impl.hibernate.UserServiceHibernateImpl;
 import server.service.version1.AppointmentServiceV1;
 import server.utilities.ScheduleCreationException;
 
@@ -27,7 +28,8 @@ public class AppointmentServiceV1HibernateTesting {
 
         User user4  = new User("Alex","patient","patient2","patient123");
 
-        UserService userService = ServiceContext.getUserServiceHibernate();
+//        UserService userService = ServiceContext.getUserServiceHibernate();
+        UserService userService = new UserServiceHibernateImpl();
 
         // Save the users individually first
 //        session.save(user1);

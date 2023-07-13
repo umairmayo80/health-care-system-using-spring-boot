@@ -1,7 +1,12 @@
 package server.dao.impl.hibernate;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import server.context.ServiceContext;
 import server.dao.UserRepository;
 import server.domain.Slot;
@@ -11,10 +16,24 @@ import server.domain.version1.AppointmentV1;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
+@Repository
+@Qualifier("userRepoHibernate")
 public class UserRepoHibernateImpl implements UserRepository {
+    private SessionFactory sessionFactory;
+
+    public UserRepoHibernateImpl() {
+    }
+
+    @Autowired
+    public UserRepoHibernateImpl(SessionFactory sessionFactory) {
+        System.out.println("UserRepoHibernateImpl- autowrie-    public UserRepoHibernateImpl(SessionFactory sessionFactory)-"+sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
+
     @Override
     public List<User> getUsers() {
-        Session session = ServiceContext.getSessionFactory().openSession();
+//        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<User> userList = null;
         // HQL
         userList = session.createQuery("from User").list();
