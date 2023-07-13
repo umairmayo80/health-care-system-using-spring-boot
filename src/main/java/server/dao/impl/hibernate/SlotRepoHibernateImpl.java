@@ -1,15 +1,29 @@
 package server.dao.impl.hibernate;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import server.context.ServiceContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.dao.SlotRepository;
 import server.domain.Slot;
 import java.util.List;
 
+
+@Component
 public class SlotRepoHibernateImpl implements SlotRepository {
+    private SessionFactory sessionFactory;
+
+    public SlotRepoHibernateImpl() {
+    }
+
+    @Autowired
+    public SlotRepoHibernateImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     @Override
     public List<Slot> getSlots() {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
         slotList = session.createQuery("from Slot").list();
@@ -19,7 +33,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
 
     @Override
     public Slot getSlotBySlotId(int slotID) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         Slot slot = null;
         // HQL
         slot = (Slot) session.createQuery("from Slot where slotId="+slotID).uniqueResult();
@@ -29,7 +43,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
 
     @Override
     public boolean addSlotEntry(Slot slot) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
@@ -78,7 +92,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
 
     @Override
     public List<Slot> getSlotsById(int userId) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
         slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId).list();
@@ -88,7 +102,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
 
     @Override
     public void viewBookedSlotsById(int userId) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
         slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId
@@ -100,7 +114,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
 
     @Override
     public void viewFreeSlots() {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
         slotList = (List<Slot>) session.createQuery("from Slot as s where s.occupied=false").list();
@@ -110,7 +124,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
 
     @Override
     public void viewFreeSlotsById(int userId) {
-        Session session = ServiceContext.getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
         slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId
