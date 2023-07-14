@@ -20,12 +20,12 @@ public class SlotsServiceDBImpl implements SlotService {
 
     @Override
     public List<Slot> getSlots(){
-        return slotRepoDb.getSlots();
+        return slotRepoDb.getAll();
     }
 
     @Override
     public Slot getSlotBySlotId(int slotID) {
-        return slotRepoDb.getSlotBySlotId(slotID);
+        return slotRepoDb.getById(slotID);
     }
 
 
@@ -42,7 +42,7 @@ public class SlotsServiceDBImpl implements SlotService {
 
 
     public List<Slot> getSlotsById(int userId){
-        return slotRepoDb.getSlotsById(userId);
+        return slotRepoDb.getAllByUserId(userId);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SlotsServiceDBImpl implements SlotService {
 
     @Override
     public boolean addSlotEntry(Slot slot) {
-       return slotRepoDb.addSlotEntry(slot);
+       return slotRepoDb.add(slot);
     }
 
     @Override

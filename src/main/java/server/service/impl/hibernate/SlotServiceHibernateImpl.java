@@ -19,17 +19,17 @@ public class SlotServiceHibernateImpl implements SlotService {
 
     @Override
     public List<Slot> getSlots() {
-        return slotRepoHibernate.getSlots();
+        return slotRepoHibernate.getAll();
     }
 
     @Override
     public Slot getSlotBySlotId(int slotID) {
-       return slotRepoHibernate.getSlotBySlotId(slotID);
+       return slotRepoHibernate.getById(slotID);
     }
 
     @Override
     public boolean addSlotEntry(Slot slot) {
-        return slotRepoHibernate.addSlotEntry(slot);
+        return slotRepoHibernate.add(slot);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SlotServiceHibernateImpl implements SlotService {
 
     @Override
     public List<Slot> getSlotsById(int userId) {
-       return slotRepoHibernate.getSlotsById(userId);
+       return slotRepoHibernate.getAllByUserId(userId);
     }
 
     @Override

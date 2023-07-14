@@ -90,7 +90,6 @@ public class CLI {
                     SlotService slotServiceHibernate = context.getBean(SlotServiceHibernateImpl.class);
 
                     // Initialize Hibernate System
-//                    InitializeHibernateDb.initializeHibernateDb();
                     context.getBean(InitializeHibernateDb.class).initializeHibernateDb();
 
                     cli = CLI.getInstance(userServiceHibernate, adminServiceHibernate, patientServiceHibernate, doctorServiceHibernate,

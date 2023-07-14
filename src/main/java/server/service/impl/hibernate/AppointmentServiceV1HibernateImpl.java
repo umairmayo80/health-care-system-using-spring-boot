@@ -27,7 +27,7 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
 
     @Override
     public List<AppointmentV1> getAppointments() {
-        return appointmentRepoHibernate.getAppointments();
+        return appointmentRepoHibernate.getAll();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
 
     @Override
     public boolean addAppointmentEntry(AppointmentV1 appointment) {
-        return appointmentRepoHibernate.addAppointmentEntry(appointment);
+        return appointmentRepoHibernate.add(appointment);
     }
 
     @Override

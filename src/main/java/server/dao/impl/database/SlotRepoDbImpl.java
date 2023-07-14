@@ -33,13 +33,13 @@ public class SlotRepoDbImpl implements SlotRepository {
     }
 
     @Override
-    public List<Slot> getSlots(){
+    public List<Slot> getAll(){
         String query = "SELECT * FROM slot_table";
         return getSlotsByQuery(query);
     }
 
     @Override
-    public Slot getSlotBySlotId(int slotID) {
+    public Slot getById(int slotID) {
         String query = "Select * from slot_table where slotId= "+slotID;
         List<Slot> slotList = getSlotsByQuery(query);
         try {
@@ -66,17 +66,17 @@ public class SlotRepoDbImpl implements SlotRepository {
 
     @Override
     public void viewAllSlots() {
-        List<Slot> slotList = getSlots();
+        List<Slot> slotList = getAll();
         DisplayFormatting.displaySlots(slotList);
     }
 
     @Override
     public void viewSlotsById(int userId) {
-        DisplayFormatting.displaySlots(getSlotsById(userId));
+        DisplayFormatting.displaySlots(getAllByUserId(userId));
     }
 
 
-    public List<Slot> getSlotsById(int userId){
+    public List<Slot> getAllByUserId(int userId){
         String query = "SELECT * FROM slot_table where doctorId = "+userId+";";
         return getSlotsByQuery(query);
     }
@@ -139,7 +139,7 @@ public class SlotRepoDbImpl implements SlotRepository {
     }
 
     @Override
-    public boolean addSlotEntry(Slot slot) {
+    public boolean add(Slot slot) {
         try {
             String query = "INSERT INTO slot_table (doctorId, date, startTime, endTime, occupied) " +
                     "VALUES (" + slot.getDoctorId()

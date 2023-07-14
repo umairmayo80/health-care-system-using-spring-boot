@@ -25,7 +25,7 @@ public class UserRepoHibernateImpl implements UserRepository {
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getAll() {
 //        Session session = ServiceContext.getSessionFactory().openSession();
         Session session = sessionFactory.openSession();
         List<User> userList = null;
@@ -38,7 +38,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
 
     @Override
-    public boolean addUserEntry(User user) {
+    public boolean add(User user) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try{
@@ -67,7 +67,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Override
     public void addUsersListToStorage(List<User> userList) {
-        userList.forEach(this::addUserEntry);
+        userList.forEach(this::add);
     }
 
 
@@ -97,7 +97,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
 
     @Override
-    public boolean deleteUser(String username) {
+    public boolean delete(String username) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try {
@@ -135,7 +135,7 @@ public class UserRepoHibernateImpl implements UserRepository {
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public User getByUsername(String username) {
         Session session = sessionFactory.openSession();
         User user = null;
         //HQL Query

@@ -48,12 +48,12 @@ public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
     @Override
     public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
         for(AppointmentV1 appointment: appointmentList){
-            addAppointmentEntry(appointment);
+            add(appointment);
         }
     }
 
     @Override
-    public List<AppointmentV1> getAppointments() {
+    public List<AppointmentV1> getAll() {
         String query = "select * from appointment_table;";
         return getAppointmentsByQuery(query);
     }
@@ -141,8 +141,8 @@ public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
 
 
     @Override
-    public boolean addAppointmentEntry(AppointmentV1 appointment) {
-        Slot slot = slotRepoDb.getSlotBySlotId(appointment.getDoctorSlotId());
+    public boolean add(AppointmentV1 appointment) {
+        Slot slot = slotRepoDb.getById(appointment.getDoctorSlotId());
         if(slot == null){
             System.out.println("No slot found against the provided id: "+appointment.getDoctorSlotId());
             return false;

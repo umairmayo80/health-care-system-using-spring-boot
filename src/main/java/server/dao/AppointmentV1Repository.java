@@ -8,7 +8,7 @@ public interface AppointmentV1Repository {
     // Save appointments to storage
     void saveAppointmentsToStorage(List<AppointmentV1> appointmentList);
 
-    List<AppointmentV1> getAppointments();
+    List<AppointmentV1> getAll();
 
     void viewAppointmentsByPatientId(int patientId);
 
@@ -16,5 +16,5 @@ public interface AppointmentV1Repository {
 
     void viewAllAppointments();
 
-    boolean addAppointmentEntry(AppointmentV1 appointment);
+    boolean add(AppointmentV1 appointment);
 }

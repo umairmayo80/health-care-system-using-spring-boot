@@ -161,26 +161,12 @@ public class User {
         return slots;
     }
 
-    public void setSlots(Set<Slot> slots) {
-        this.slots = slots;
-    }
 
-
-//    public List<AppointmentV1> getAppointmentV1List() {
-//        if (appointmentV1List == null) {
-//            appointmentV1List = new ArrayList<>();
-//        }
-//        Hibernate.initialize(appointmentV1List);
-//        return appointmentV1List;
-//    }
 
     public List<AppointmentV1> getAppointmentV1List(){
         return appointmentV1List;
     }
 
-    public void setAppointmentV1List(List<AppointmentV1> appointmentV1List) {
-        this.appointmentV1List = appointmentV1List;
-    }
 
     public void addSlot(Slot slot) {
         slots.add(slot);

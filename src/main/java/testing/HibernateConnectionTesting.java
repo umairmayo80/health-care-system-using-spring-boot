@@ -1,17 +1,11 @@
 package testing;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
-import org.hibernate.query.Query;
 import server.AppConfig;
-import server.context.ServiceContext;
 import server.domain.User;
-import server.service.impl.hibernate.UserServiceHibernateImpl;
 import server.utilities.DatabaseConnection;
-
 import javax.persistence.PersistenceException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 public class HibernateConnectionTesting {
  public static void main(String[] args){

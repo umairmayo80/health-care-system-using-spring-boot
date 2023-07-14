@@ -27,7 +27,7 @@ public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {
 
     @Override
     public List<AppointmentV1> getAppointments() {
-       return appointmentV1RepoDb.getAppointments();
+       return appointmentV1RepoDb.getAll();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {
 
     @Override
     public boolean addAppointmentEntry(AppointmentV1 appointment) {
-        return appointmentV1RepoDb.addAppointmentEntry(appointment);
+        return appointmentV1RepoDb.add(appointment);
     }
 
 

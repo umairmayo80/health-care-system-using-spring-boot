@@ -25,13 +25,13 @@ public class UserServiceHibernateImpl implements UserService {
 
     @Override
     public List<User> getUsers() {
-        return userRepoHibernate.getUsers();
+        return userRepoHibernate.getAll();
     }
 
 
     @Override
     public boolean addUserEntry(User user) {
-        return userRepoHibernate.addUserEntry(user);
+        return userRepoHibernate.add(user);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class UserServiceHibernateImpl implements UserService {
 
     @Override
     public User validateUserLogin(String username, String password, String userRole) {
-        User user = userRepoHibernate.getUserByUsername(username);
+        User user = userRepoHibernate.getByUsername(username);
         if(user==null){
             return null;
         }
@@ -80,6 +80,6 @@ public class UserServiceHibernateImpl implements UserService {
 
     @Override
     public boolean deleteUser(String username) {
-        return userRepoHibernate.deleteUser(username);
+        return userRepoHibernate.delete(username);
     }
 }
