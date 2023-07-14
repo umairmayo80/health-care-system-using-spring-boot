@@ -11,10 +11,8 @@ import java.util.List;
 
 @Component
 public class SlotRepoHibernateImpl implements SlotRepository {
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
-    public SlotRepoHibernateImpl() {
-    }
 
     @Autowired
     public SlotRepoHibernateImpl(SessionFactory sessionFactory) {
@@ -22,7 +20,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
     }
 
     @Override
-    public List<Slot> getSlots() {
+    public List<Slot> getAll() {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
@@ -32,7 +30,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
     }
 
     @Override
-    public Slot getSlotBySlotId(int slotID) {
+    public Slot getById(int slotID) {
         Session session = sessionFactory.openSession();
         Slot slot = null;
         // HQL
@@ -42,7 +40,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
     }
 
     @Override
-    public boolean addSlotEntry(Slot slot) {
+    public boolean add(Slot slot) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try {
@@ -66,7 +64,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
 
     @Override
     public void viewAllSlots() {
-        List<Slot> slotList = getSlots();
+        List<Slot> slotList = getAll();
         displaySlots(slotList);
     }
 
@@ -86,12 +84,12 @@ public class SlotRepoHibernateImpl implements SlotRepository {
 
     @Override
     public void viewSlotsById(int userId) {
-        displaySlots(getSlotsById(userId));
+        displaySlots(getAllByUserId(userId));
     }
 
 
     @Override
-    public List<Slot> getSlotsById(int userId) {
+    public List<Slot> getAllByUserId(int userId) {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL

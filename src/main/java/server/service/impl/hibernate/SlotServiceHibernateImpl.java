@@ -1,5 +1,6 @@
 package server.service.impl.hibernate;
-import server.context.RepositoryContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.dao.impl.hibernate.SlotRepoHibernateImpl;
 import server.domain.Slot;
 import server.domain.User;
@@ -7,25 +8,28 @@ import server.service.SlotService;
 
 import java.util.List;
 
+@Component
 public class SlotServiceHibernateImpl implements SlotService {
-    private SlotRepoHibernateImpl slotRepoHibernate;
-    public SlotServiceHibernateImpl(){
-        slotRepoHibernate = RepositoryContext.getSlotRepoHibernate();
+    private final SlotRepoHibernateImpl slotRepoHibernate;
+
+    @Autowired
+    public SlotServiceHibernateImpl(SlotRepoHibernateImpl slotRepoHibernate) {
+        this.slotRepoHibernate = slotRepoHibernate;
     }
 
     @Override
     public List<Slot> getSlots() {
-        return slotRepoHibernate.getSlots();
+        return slotRepoHibernate.getAll();
     }
 
     @Override
     public Slot getSlotBySlotId(int slotID) {
-       return slotRepoHibernate.getSlotBySlotId(slotID);
+       return slotRepoHibernate.getById(slotID);
     }
 
     @Override
     public boolean addSlotEntry(Slot slot) {
-        return slotRepoHibernate.addSlotEntry(slot);
+        return slotRepoHibernate.add(slot);
     }
 
     @Override
@@ -55,7 +59,7 @@ public class SlotServiceHibernateImpl implements SlotService {
 
     @Override
     public List<Slot> getSlotsById(int userId) {
-       return slotRepoHibernate.getSlotsById(userId);
+       return slotRepoHibernate.getAllByUserId(userId);
     }
 
     @Override

@@ -1,5 +1,4 @@
 package server;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
@@ -12,20 +11,36 @@ import org.springframework.context.annotation.Scope;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
+import server.utilities.DatabaseConnection;
 
+import javax.xml.crypto.Data;
+import java.sql.Connection;
 import java.util.Properties;
+import java.util.Scanner;
 
 @Configuration
 @ComponentScan(basePackages = {"server"})
 public class AppConfig {
 
+
+    @Bean
+    public Scanner getScanner(){
+        return new Scanner(System.in);
+    }
+
+    @Bean
+    public Connection getConnection(){
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        return databaseConnection.getConnection();
+    }
+
+
     @Bean
     @Scope("singleton")
-    public SessionFactory getSessionFactory(){
-        System.out.println("bean get session factory");
-        String url = "jdbc:mysql://localhost:3306/";
-        String username = "test";
-        String password = "password123!";
+    public SessionFactory getSessionFactory(DatabaseConnection databaseConnection){
+        String url = databaseConnection.getUrl();
+        String username = databaseConnection.getUsername();
+        String password = databaseConnection.getPassword();
         String databaseName = "HealthCareDatabase";
         SessionFactory sessionFactory = null;
         try{
@@ -60,4 +75,6 @@ public class AppConfig {
         }
         return sessionFactory;
     }
+
+
 }

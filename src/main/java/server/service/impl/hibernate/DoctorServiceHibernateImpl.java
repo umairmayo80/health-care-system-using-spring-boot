@@ -1,27 +1,33 @@
 package server.service.impl.hibernate;
-
-import server.context.ServiceContext;
-import server.domain.Schedule;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.domain.Slot;
 import server.service.DoctorService;
 
+@Component
 public class DoctorServiceHibernateImpl implements DoctorService {
-    @Override
-    public void addScheduleSlots(Schedule schedule) {
+    private final AppointmentServiceV1HibernateImpl appointmentServiceV1Hibernate;
+    private final SlotServiceHibernateImpl slotServiceHibernate;
+
+
+    @Autowired
+    public DoctorServiceHibernateImpl(AppointmentServiceV1HibernateImpl appointmentServiceV1Hibernate, SlotServiceHibernateImpl slotServiceHibernate) {
+        this.appointmentServiceV1Hibernate = appointmentServiceV1Hibernate;
+        this.slotServiceHibernate = slotServiceHibernate;
     }
 
     @Override
     public void viewAppointments(int userID) {
-        ServiceContext.getAppointmentServiceV1Hibernate().viewAppointmentsByDoctorId(userID);
+        appointmentServiceV1Hibernate.viewAppointmentsByDoctorId(userID);
     }
 
     @Override
     public void addSlotsEntry(Slot slot) {
-        ServiceContext.getSlotServiceHibernate().addSlotEntry(slot);
+        slotServiceHibernate.addSlotEntry(slot);
     }
 
     @Override
     public void viewSlots(int userID) {
-        ServiceContext.getSlotServiceHibernate().viewSlotsById(userID);
+        slotServiceHibernate.viewSlotsById(userID);
     }
 }

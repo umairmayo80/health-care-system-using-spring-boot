@@ -5,11 +5,11 @@ import server.domain.User;
 import java.util.List;
 
 public interface UserRepository {
-    List<User> getUsers();
-    boolean addUserEntry(User user);
+    List<User> getAll();
+    boolean add (User user);
     void addUsersListToStorage(List<User> userList);
     List<User> getPatients();
     List<User> getDoctors();
-    boolean deleteUser(String username);
-    User getUserByUsername(String username);
+    boolean delete(String username);
+    User getByUsername(String username);
 }

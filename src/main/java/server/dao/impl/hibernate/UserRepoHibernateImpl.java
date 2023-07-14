@@ -10,7 +10,6 @@ import server.dao.UserRepository;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
-
 import javax.persistence.PersistenceException;
 import java.util.List;
 
@@ -19,17 +18,14 @@ import java.util.List;
 public class UserRepoHibernateImpl implements UserRepository {
     private SessionFactory sessionFactory;
 
-    public UserRepoHibernateImpl() {
-    }
 
     @Autowired
     public UserRepoHibernateImpl(SessionFactory sessionFactory) {
-        System.out.println("UserRepoHibernateImpl- autowrie-    public UserRepoHibernateImpl(SessionFactory sessionFactory)-"+sessionFactory);
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getAll() {
 //        Session session = ServiceContext.getSessionFactory().openSession();
         Session session = sessionFactory.openSession();
         List<User> userList = null;
@@ -42,7 +38,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
 
     @Override
-    public boolean addUserEntry(User user) {
+    public boolean add(User user) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try{
@@ -71,7 +67,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Override
     public void addUsersListToStorage(List<User> userList) {
-        userList.forEach(this::addUserEntry);
+        userList.forEach(this::add);
     }
 
 
@@ -101,7 +97,7 @@ public class UserRepoHibernateImpl implements UserRepository {
 
 
     @Override
-    public boolean deleteUser(String username) {
+    public boolean delete(String username) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
         try {
@@ -139,7 +135,7 @@ public class UserRepoHibernateImpl implements UserRepository {
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public User getByUsername(String username) {
         Session session = sessionFactory.openSession();
         User user = null;
         //HQL Query

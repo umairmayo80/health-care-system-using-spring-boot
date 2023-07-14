@@ -1,6 +1,7 @@
 package server.service.impl.database;
 
-import server.context.RepositoryContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.domain.User;
 import server.service.UserService;
 import server.dao.impl.database.UserRepoDbImpl;
@@ -8,21 +9,24 @@ import server.utilities.DisplayFormatting;
 
 import java.util.List;
 
+@Component
 public class UserServiceDBImpl implements UserService {
     UserRepoDbImpl userRepoDb;
 
-    public UserServiceDBImpl() {
-        userRepoDb = RepositoryContext.getUserRepoDb();
+
+    @Autowired
+    public UserServiceDBImpl(UserRepoDbImpl userRepoDb) {
+        this.userRepoDb = userRepoDb;
     }
 
     public List<User> getUsers() {
-       return userRepoDb.getUsers();
+       return userRepoDb.getAll();
     }
 
     // add new user to the database
     @Override
     public boolean addUserEntry(User user) {
-        return userRepoDb.addUserEntry(user);
+        return userRepoDb.add(user);
     }
 
     @Override
@@ -32,7 +36,7 @@ public class UserServiceDBImpl implements UserService {
 
 
     public User validateUserLogin(String username, String password, String userRole) {
-        User user = userRepoDb.getUserByUsername(username);
+        User user = userRepoDb.getByUsername(username);
         if(user==null){
             return null;
         }
@@ -63,7 +67,7 @@ public class UserServiceDBImpl implements UserService {
 
     @Override
     public boolean deleteUser(String username) {
-        return userRepoDb.deleteUser(username);
+        return userRepoDb.delete(username);
     }
 
     public List<User> getPatients() {

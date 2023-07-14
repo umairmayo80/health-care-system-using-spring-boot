@@ -1,5 +1,6 @@
 package server.dao.impl.database;
-import server.context.ServiceContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.domain.User;
 import server.dao.UserRepository;
 import java.sql.Connection;
@@ -9,14 +10,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserRepoDbImpl implements UserRepository {
     private final Connection connection;
 
-    public UserRepoDbImpl(){
-        connection = ServiceContext.getDatabaseConnection();
+
+    @Autowired
+    public UserRepoDbImpl(Connection connection) {
+        this.connection = connection;
     }
 
-    public List<User> getUsers() {
+    public List<User> getAll() {
         List<User> users = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -36,7 +40,7 @@ public class UserRepoDbImpl implements UserRepository {
 
     // add new user to the database
     @Override
-    public boolean addUserEntry(User user) {
+    public boolean add(User user) {
         try {
             Statement statement = connection.createStatement();
             String query = "INSERT INTO user_table (name, username, password, role, accountLocked) VALUES ('"
@@ -55,12 +59,12 @@ public class UserRepoDbImpl implements UserRepository {
 
     @Override
     public void addUsersListToStorage(List<User> userList) {
-        userList.forEach(this::addUserEntry);
+        userList.forEach(this::add);
     }
 
 
     @Override
-    public boolean deleteUser(String username) {
+    public boolean delete(String username) {
         try {
             Statement statement = connection.createStatement();
             String query = "DELETE FROM user_table WHERE username ='" + username + "';";
@@ -78,7 +82,7 @@ public class UserRepoDbImpl implements UserRepository {
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public User getByUsername(String username) {
         User user = null;
         try {
             Statement statement = connection.createStatement();
@@ -126,8 +130,6 @@ public class UserRepoDbImpl implements UserRepository {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("Select * from user_table where role = \"doctor\";");
-
-            // Iterate through the result set and retrieve data
             while (resultSet.next()) {
                 doctorsList.add(fetchUserDataFromQueryResult(resultSet));
             }

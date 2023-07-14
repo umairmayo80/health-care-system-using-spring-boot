@@ -1,5 +1,6 @@
 package server.service.impl.database;
-import server.context.RepositoryContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.domain.Slot;
 import server.dao.impl.database.SlotRepoDbImpl;
 import server.domain.User;
@@ -8,21 +9,23 @@ import server.service.SlotService;
 
 import java.util.List;
 
+@Component
 public class SlotsServiceDBImpl implements SlotService {
     private final SlotRepoDbImpl slotRepoDb;
-    public SlotsServiceDBImpl()
-    {
-        slotRepoDb = RepositoryContext.getSlotRepoDb();
+
+    @Autowired
+    public SlotsServiceDBImpl(SlotRepoDbImpl slotRepoDb) {
+        this.slotRepoDb = slotRepoDb;
     }
 
     @Override
     public List<Slot> getSlots(){
-        return slotRepoDb.getSlots();
+        return slotRepoDb.getAll();
     }
 
     @Override
     public Slot getSlotBySlotId(int slotID) {
-        return slotRepoDb.getSlotBySlotId(slotID);
+        return slotRepoDb.getById(slotID);
     }
 
 
@@ -39,7 +42,7 @@ public class SlotsServiceDBImpl implements SlotService {
 
 
     public List<Slot> getSlotsById(int userId){
-        return slotRepoDb.getSlotsById(userId);
+        return slotRepoDb.getAllByUserId(userId);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class SlotsServiceDBImpl implements SlotService {
 
     @Override
     public boolean addSlotEntry(Slot slot) {
-       return slotRepoDb.addSlotEntry(slot);
+       return slotRepoDb.add(slot);
     }
 
     @Override

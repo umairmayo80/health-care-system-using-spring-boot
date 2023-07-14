@@ -1,11 +1,8 @@
 package server.service.impl.hibernate;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import server.context.RepositoryContext;
-import server.context.ServiceContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.dao.impl.hibernate.AppointmentRepoHibernate;
-import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.service.version1.AppointmentServiceV1;
@@ -13,11 +10,14 @@ import server.service.version1.AppointmentServiceV1;
 
 import java.util.List;
 
+@Component
 public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
     private final AppointmentRepoHibernate appointmentRepoHibernate;
 
-    public AppointmentServiceV1HibernateImpl(){
-        appointmentRepoHibernate = RepositoryContext.getAppointmentRepoHibernate();
+
+    @Autowired
+    public AppointmentServiceV1HibernateImpl(AppointmentRepoHibernate appointmentRepoHibernate) {
+        this.appointmentRepoHibernate = appointmentRepoHibernate;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
 
     @Override
     public List<AppointmentV1> getAppointments() {
-        return appointmentRepoHibernate.getAppointments();
+        return appointmentRepoHibernate.getAll();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
 
     @Override
     public boolean addAppointmentEntry(AppointmentV1 appointment) {
-        return appointmentRepoHibernate.addAppointmentEntry(appointment);
+        return appointmentRepoHibernate.add(appointment);
     }
 
     @Override

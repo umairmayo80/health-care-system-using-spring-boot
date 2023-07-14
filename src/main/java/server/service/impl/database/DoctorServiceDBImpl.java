@@ -1,21 +1,20 @@
 package server.service.impl.database;
-
-import server.context.ServiceContext;
-import server.domain.Schedule;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.domain.Slot;
 import server.service.DoctorService;
 
 import java.sql.Connection;
 
+@Component
 public class DoctorServiceDBImpl implements DoctorService {
     private Connection dbConnection;
-    public DoctorServiceDBImpl(){
-        this.dbConnection = ServiceContext.getDatabaseConnection();
-    }
+    private SlotsServiceDBImpl slotsServiceDB;
 
-    @Override
-    public void addScheduleSlots(Schedule schedule) {
-        // currently this function is for handling Schedule entry. Will remove schedule domain entirely and replace it with slot
+    @Autowired
+    public DoctorServiceDBImpl(Connection dbConnection, SlotsServiceDBImpl slotsServiceDB) {
+        this.dbConnection = dbConnection;
+        this.slotsServiceDB = slotsServiceDB;
     }
 
     @Override
@@ -30,6 +29,6 @@ public class DoctorServiceDBImpl implements DoctorService {
 
     @Override
     public void viewSlots(int userID) {
-        ServiceContext.getSlotService().getSlotsById(userID);
+        slotsServiceDB.getSlotsById(userID);
     }
 }

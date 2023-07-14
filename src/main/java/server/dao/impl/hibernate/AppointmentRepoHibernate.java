@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
 import server.domain.version1.AppointmentV1;
@@ -14,23 +13,23 @@ import java.util.List;
 @Component
 public class AppointmentRepoHibernate implements AppointmentV1Repository {
     SessionFactory sessionFactory;
+    SlotRepoHibernateImpl slotRepoHibernate;
 
-
-    public AppointmentRepoHibernate() {
-    }
 
     @Autowired
-    public AppointmentRepoHibernate(SessionFactory sessionFactory) {
+    public AppointmentRepoHibernate(SessionFactory sessionFactory, SlotRepoHibernateImpl slotServiceHibernate) {
         this.sessionFactory = sessionFactory;
+        this.slotRepoHibernate = slotServiceHibernate;
     }
+
 
     @Override
     public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
-        appointmentList.forEach(this::addAppointmentEntry);
+        appointmentList.forEach(this::add);
     }
 
     @Override
-    public List<AppointmentV1> getAppointments() {
+    public List<AppointmentV1> getAll() {
         Session session = sessionFactory.openSession();
         List<AppointmentV1> appointmentList = null;
         // HQL
@@ -50,7 +49,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
 
     @Override
     public void viewAllAppointments() {
-        List<AppointmentV1> appointmentV1List = getAppointments();
+        List<AppointmentV1> appointmentV1List = getAll();
         displayAppointmentData(appointmentV1List);
     }
 
@@ -102,9 +101,9 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
     }
 
     @Override
-    public boolean addAppointmentEntry(AppointmentV1 appointment) {
+    public boolean add (AppointmentV1 appointment) {
         // check if the slot is available or not
-        Slot slot = ServiceContext.getSlotServiceHibernate().getSlotBySlotId(appointment.getDoctorSlotId());
+        Slot slot = slotRepoHibernate.getById(appointment.getDoctorSlotId());
         if(slot == null){
             System.out.println("No slot found against the provided id: "+appointment.getDoctorSlotId());
             return false;
