@@ -1,9 +1,6 @@
 package server.service.impl.hibernate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
-import server.domain.Schedule;
 import server.domain.Slot;
 import server.service.DoctorService;
 
@@ -17,10 +14,6 @@ public class DoctorServiceHibernateImpl implements DoctorService {
     public DoctorServiceHibernateImpl(AppointmentServiceV1HibernateImpl appointmentServiceV1Hibernate, SlotServiceHibernateImpl slotServiceHibernate) {
         this.appointmentServiceV1Hibernate = appointmentServiceV1Hibernate;
         this.slotServiceHibernate = slotServiceHibernate;
-    }
-
-    @Override
-    public void addScheduleSlots(Schedule schedule) {
     }
 
     @Override
