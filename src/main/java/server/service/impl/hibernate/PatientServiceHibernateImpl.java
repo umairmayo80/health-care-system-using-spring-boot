@@ -2,7 +2,6 @@ package server.service.impl.hibernate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
 import server.domain.Appointment;
 import server.domain.version1.AppointmentV1;
 import server.service.PatientService;

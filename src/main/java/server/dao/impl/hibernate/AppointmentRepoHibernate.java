@@ -1,5 +1,4 @@
 package server.dao.impl.hibernate;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Component;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
 import server.domain.version1.AppointmentV1;
-
 import java.util.List;
 @Component
 public class AppointmentRepoHibernate implements AppointmentV1Repository {

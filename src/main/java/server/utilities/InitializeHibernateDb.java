@@ -1,16 +1,12 @@
 package server.utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
-import server.service.SlotService;
-import server.service.UserService;
 import server.service.impl.hibernate.AppointmentServiceV1HibernateImpl;
 import server.service.impl.hibernate.SlotServiceHibernateImpl;
 import server.service.impl.hibernate.UserServiceHibernateImpl;
-import server.service.version1.AppointmentServiceV1;
 
 @Component
 public class InitializeHibernateDb {
