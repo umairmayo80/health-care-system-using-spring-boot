@@ -10,6 +10,7 @@ import server.dao.UserRepository;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
+
 import javax.persistence.PersistenceException;
 import java.util.List;
 
@@ -26,11 +27,9 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-//        Session session = ServiceContext.getSessionFactory().openSession();
         Session session = sessionFactory.openSession();
         List<User> userList = null;
-        // HQL
-        userList = session.createQuery("from User").list();
+        userList = session.createQuery("from User",User.class).list();
         session.close();
         return userList;
 
@@ -76,7 +75,7 @@ public class UserRepoHibernateImpl implements UserRepository {
     public List<User> getPatients() {
         Session session = sessionFactory.openSession();
         List<User> patientList;
-        patientList = (List<User>) session.createQuery("from User where role=:role")
+        patientList = session.createQuery("from User where role=:role", User.class)
                 .setParameter("role","patient")
                 .list();
         session.close();
@@ -87,7 +86,7 @@ public class UserRepoHibernateImpl implements UserRepository {
     public List<User> getDoctors() {
         Session session = sessionFactory.openSession();
         List<User> doctorList;
-        doctorList = (List<User>) session.createQuery("from User where role=:role")
+        doctorList = session.createQuery("from User where role=:role", User.class)
                 .setParameter("role","doctor")
                 .list();
         session.close();
@@ -103,7 +102,7 @@ public class UserRepoHibernateImpl implements UserRepository {
         try {
             transaction = session.beginTransaction();
             String hql = "FROM User as u WHERE u.username = :username";
-            User user = (User) session.createQuery(hql)
+            User user = session.createQuery(hql,User.class)
                     .setParameter("username", username)
                     .uniqueResult();
             if(user==null) {
@@ -137,9 +136,7 @@ public class UserRepoHibernateImpl implements UserRepository {
     @Override
     public User getByUsername(String username) {
         Session session = sessionFactory.openSession();
-        User user = null;
-        //HQL Query
-        user = (User) session.createQuery("from User where username=:username")
+        User user = session.createQuery("from User where username=:username", User.class)
                 .setParameter("username",username)
                 .uniqueResult();
         session.close();
