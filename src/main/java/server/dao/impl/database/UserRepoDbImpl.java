@@ -1,7 +1,6 @@
 package server.dao.impl.database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
 import server.domain.User;
 import server.dao.UserRepository;
 import java.sql.Connection;

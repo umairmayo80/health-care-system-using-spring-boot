@@ -20,7 +20,6 @@ public class InitializeHibernateDb {
 
     @Autowired
     public void setUserService(UserServiceHibernateImpl userService) {
-        System.out.println("InitializeHibernateDb-C-UserServiceHibernateImpl-Autowired-"+userService);
         this.userService = userService;
     }
 
@@ -95,8 +94,6 @@ public class InitializeHibernateDb {
             System.out.println("Failed to Initialize hibernate System.\n Exiting");
             System.exit(1);
         }
-
-
 
     }
 }

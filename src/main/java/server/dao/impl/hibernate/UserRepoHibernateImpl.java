@@ -10,7 +10,6 @@ import server.dao.UserRepository;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
-
 import javax.persistence.PersistenceException;
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class UserRepoHibernateImpl implements UserRepository {
 
     @Autowired
     public UserRepoHibernateImpl(SessionFactory sessionFactory) {
-        System.out.println("UserRepoHibernateImpl- autowrie-    public UserRepoHibernateImpl(SessionFactory sessionFactory)-"+sessionFactory);
         this.sessionFactory = sessionFactory;
     }
 

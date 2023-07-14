@@ -16,8 +16,6 @@ public class UserServiceHibernateImpl implements UserService {
     private UserRepoHibernateImpl userRepoHibernate;
 
     public UserServiceHibernateImpl(){
-        System.out.println("UserServiceHibernateImpl() init-spring");
-//        userRepoHibernate = RepositoryContext.getUserRepoHibernate();
     }
 
     @Autowired

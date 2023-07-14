@@ -8,6 +8,7 @@ import server.AppConfig;
 import server.context.ServiceContext;
 import server.domain.User;
 import server.service.impl.hibernate.UserServiceHibernateImpl;
+import server.utilities.DatabaseConnection;
 
 import javax.persistence.PersistenceException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -15,7 +16,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 public class HibernateConnectionTesting {
  public static void main(String[] args){
 //     Session session = ServiceContext.getSessionFactory().openSession();
-     Session session = new AppConfig().getSessionFactory().openSession();
+     Session session = new AppConfig().getSessionFactory(new DatabaseConnection()).openSession();
      Transaction transaction = session.beginTransaction();
 
      User user1  = new User("Ali","patient","user123","user123");

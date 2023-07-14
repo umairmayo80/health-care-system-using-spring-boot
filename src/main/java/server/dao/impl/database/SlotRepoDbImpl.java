@@ -1,13 +1,10 @@
 package server.dao.impl.database;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
 import server.domain.Slot;
 import server.dao.SlotRepository;
 import server.utilities.DisplayFormatting;
 import server.utilities.ScheduleCreationException;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

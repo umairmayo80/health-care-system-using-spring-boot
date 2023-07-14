@@ -13,6 +13,7 @@ import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.utilities.DatabaseConnection;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.util.Properties;
 import java.util.Scanner;
@@ -36,11 +37,10 @@ public class AppConfig {
 
     @Bean
     @Scope("singleton")
-    public SessionFactory getSessionFactory(){
-        System.out.println("bean get session factory");
-        String url = "jdbc:mysql://localhost:3306/";
-        String username = "test";
-        String password = "password123!";
+    public SessionFactory getSessionFactory(DatabaseConnection databaseConnection){
+        String url = databaseConnection.getUrl();
+        String username = databaseConnection.getUsername();
+        String password = databaseConnection.getPassword();
         String databaseName = "HealthCareDatabase";
         SessionFactory sessionFactory = null;
         try{

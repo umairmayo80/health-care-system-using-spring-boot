@@ -1,14 +1,16 @@
 package server.utilities;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 
+@Component
 public class DatabaseConnection {
-    String url;
-    String username;
-    String password;
-    String databaseName;
+    private final String url;
+    private final String username;
+    private final String password;
+    private final String databaseName;
     Connection connection;
 
     public DatabaseConnection() {
@@ -16,6 +18,23 @@ public class DatabaseConnection {
         username = "test";
         password = "password123!";
         databaseName = "HealthCareTest";
+    }
+
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
     }
 
     private Connection initConnection() throws SQLException {
@@ -29,7 +48,7 @@ public class DatabaseConnection {
 
         try {
             connection = dataSource.getConnection();
-            System.out.println("Connection to database successful db");
+            System.out.println("Connection to database successful");
         } catch (SQLSyntaxErrorException e) {
 
             System.out.println("Creating new database");

@@ -1,12 +1,9 @@
 package server.dao.impl.database;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
 import server.domain.version1.AppointmentV1;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

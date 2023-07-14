@@ -11,10 +11,8 @@ import java.util.List;
 
 @Component
 public class SlotRepoHibernateImpl implements SlotRepository {
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
-    public SlotRepoHibernateImpl() {
-    }
 
     @Autowired
     public SlotRepoHibernateImpl(SessionFactory sessionFactory) {
