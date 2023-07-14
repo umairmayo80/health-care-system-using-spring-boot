@@ -5,10 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.ServiceContext;
 import server.domain.User;
 import server.service.AdminService;
-import server.service.UserService;
 
 @Component
 public class AdminServiceHibernateImpl implements AdminService {

@@ -1,5 +1,4 @@
 package server.dao.impl.hibernate;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Component;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
 import server.domain.version1.AppointmentV1;
-
 import java.util.List;
 @Component
 public class AppointmentRepoHibernate implements AppointmentV1Repository {
@@ -31,9 +29,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
     @Override
     public List<AppointmentV1> getAll() {
         Session session = sessionFactory.openSession();
-        List<AppointmentV1> appointmentList = null;
-        // HQL
-        appointmentList = session.createQuery("from AppointmentV1").list();
+        List<AppointmentV1> appointmentList = session.createQuery("from AppointmentV1",AppointmentV1.class).list();
         initializeAssociations(appointmentList);
         session.close();
         return appointmentList;
@@ -80,9 +76,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
     @Override
     public void viewAppointmentsByPatientId(int patientId) {
         Session session = sessionFactory.openSession();
-        List<AppointmentV1> appointmentList = null;
-        // HQL
-        appointmentList = session.createQuery("from AppointmentV1 as a where a.patient.userId="+patientId).list();
+        List<AppointmentV1> appointmentList  = session.createQuery("from AppointmentV1 as a where a.patient.userId="+patientId,AppointmentV1.class).list();
         initializeAssociations(appointmentList);
         session.close();
         displayAppointmentData(appointmentList);
@@ -91,9 +85,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
     @Override
     public void viewAppointmentsByDoctorId(int doctorId) {
         Session session = sessionFactory.openSession();
-        List<AppointmentV1> appointmentList = null;
-        // HQL
-        appointmentList = session.createQuery("from AppointmentV1 a where a.slot.doctor.userId="+doctorId).list();
+        List<AppointmentV1> appointmentList = session.createQuery("from AppointmentV1 a where a.slot.doctor.userId="+doctorId,AppointmentV1.class).list();
         initializeAssociations(appointmentList);
         session.close();
         displayAppointmentData(appointmentList);

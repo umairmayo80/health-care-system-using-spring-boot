@@ -2,7 +2,6 @@ package client;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import server.AppConfig;
-import server.context.ServiceContext;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
@@ -39,7 +38,6 @@ public class CLI {
         this.slotService = slotService;
 
         this.currentUser = null;
-        scanner = ServiceContext.getScanner();
     }
 
     public static CLI getInstance(UserService userService, AdminService adminService,

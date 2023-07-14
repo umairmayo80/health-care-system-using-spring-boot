@@ -12,8 +12,6 @@ import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.utilities.DatabaseConnection;
-
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.util.Properties;
 import java.util.Scanner;

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.dao.SlotRepository;
 import server.domain.Slot;
+
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
-        slotList = session.createQuery("from Slot").list();
+        slotList = session.createQuery("from Slot", Slot.class).list();
         session.close();
         return slotList;
     }
@@ -32,9 +33,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
     @Override
     public Slot getById(int slotID) {
         Session session = sessionFactory.openSession();
-        Slot slot = null;
-        // HQL
-        slot = (Slot) session.createQuery("from Slot where slotId="+slotID).uniqueResult();
+        Slot slot = session.createQuery("from Slot where slotId="+slotID,Slot.class).uniqueResult();
         session.close();
         return slot;
     }
@@ -93,7 +92,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
-        slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId).list();
+        slotList = session.createQuery("from Slot as s where s.doctor.userId="+userId,Slot.class).list();
         session.close();
         return slotList;
     }
@@ -103,8 +102,8 @@ public class SlotRepoHibernateImpl implements SlotRepository {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
-        slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId
-                +" AND s.occupied=true").list();
+        slotList = session.createQuery("from Slot as s where s.doctor.userId="+userId
+                +" AND s.occupied=true", Slot.class).list();
         session.close();
         displaySlots(slotList);
 
@@ -115,7 +114,7 @@ public class SlotRepoHibernateImpl implements SlotRepository {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
-        slotList = (List<Slot>) session.createQuery("from Slot as s where s.occupied=false").list();
+        slotList = session.createQuery("from Slot as s where s.occupied=false",Slot.class).list();
         session.close();
         displaySlots(slotList);
     }
@@ -124,9 +123,8 @@ public class SlotRepoHibernateImpl implements SlotRepository {
     public void viewFreeSlotsById(int userId) {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
-        // HQL
-        slotList = (List<Slot>) session.createQuery("from Slot as s where s.doctor.userId="+userId
-                +" AND s.occupied=false").list();
+        slotList = session.createQuery("from Slot as s where s.doctor.userId="+userId
+                +" AND s.occupied=false", Slot.class).list();
         session.close();
         displaySlots(slotList);
     }
