@@ -1,13 +1,8 @@
 package server.service.impl.hibernate;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.RepositoryContext;
-import server.context.ServiceContext;
 import server.dao.impl.hibernate.AppointmentRepoHibernate;
-import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.service.version1.AppointmentServiceV1;

@@ -12,16 +12,12 @@ import server.service.UserService;
 
 @Component
 public class AdminServiceHibernateImpl implements AdminService {
-    private UserService userService;
+    private UserServiceHibernateImpl userService;
     private SessionFactory sessionFactory;
-
-    public AdminServiceHibernateImpl() {
-    }
-
 
 
     @Autowired
-    public AdminServiceHibernateImpl(UserService userService, SessionFactory sessionFactory) {
+    public AdminServiceHibernateImpl(UserServiceHibernateImpl userService, SessionFactory sessionFactory) {
         this.userService = userService;
         this.sessionFactory = sessionFactory;
         System.out.println("AdminServiceHibernateImpl-Autowire-C-userService+sessionFactory-"+userService+"-"+sessionFactory);

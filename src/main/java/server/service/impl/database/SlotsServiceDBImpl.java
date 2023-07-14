@@ -1,5 +1,6 @@
 package server.service.impl.database;
-import server.context.RepositoryContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.domain.Slot;
 import server.dao.impl.database.SlotRepoDbImpl;
 import server.domain.User;
@@ -8,11 +9,13 @@ import server.service.SlotService;
 
 import java.util.List;
 
+@Component
 public class SlotsServiceDBImpl implements SlotService {
     private final SlotRepoDbImpl slotRepoDb;
-    public SlotsServiceDBImpl()
-    {
-        slotRepoDb = RepositoryContext.getSlotRepoDb();
+
+    @Autowired
+    public SlotsServiceDBImpl(SlotRepoDbImpl slotRepoDb) {
+        this.slotRepoDb = slotRepoDb;
     }
 
     @Override

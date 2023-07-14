@@ -1,26 +1,21 @@
 package client;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import server.AppConfig;
-import server.context.ServiceContext;
-
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
 import server.service.*;
 import server.service.impl.database.*;
-
 import server.service.impl.hibernate.*;
 import server.service.version1.AppointmentServiceV1;
 import server.utilities.InitializeHibernateDb;
 import server.utilities.ScheduleCreationException;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class CLI {
-    private final Scanner scanner;
+    private Scanner scanner;
     private final PatientService patientService;
     private final DoctorService doctorService;
     private final UserService userService;
@@ -43,7 +38,6 @@ public class CLI {
         this.slotService = slotService;
 
         this.currentUser = null;
-        this.scanner = ServiceContext.getScanner();
     }
 
     public static CLI getInstance(UserService userService, AdminService adminService,
@@ -58,6 +52,7 @@ public class CLI {
         int choice;
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
+
         boolean loop = true;
         do {
             System.out.print("\nWelcome to Health Care System"
@@ -67,26 +62,26 @@ public class CLI {
                     + "\n\t3. Exit"
                     + "\n\tEnter your choice:");
             try {
-                choice = Integer.parseInt(ServiceContext.getScanner().nextLine());
+                choice = Integer.parseInt(context.getBean(Scanner.class).nextLine());
             } catch (InputMismatchException | NumberFormatException e) {
                 System.out.println("Invalid Input. Try again.");
                 continue;
             }
             switch (choice) {
                 case 1:
-                    UserService userServiceDB = new UserServiceDBImpl();
-                    AdminService adminServiceDB = new AdminServiceDBImpl();
-                    PatientService patientServiceDB = new PatientServiceDBImpl();
-                    DoctorService doctorServiceDB = new DoctorServiceDBImpl();
-                    AppointmentServiceV1 appointmentServiceDB = new AppointmentServiceV1DBImpl();
-                    SlotService slotService1 = new SlotsServiceDBImpl();
+                    UserService userServiceDB = context.getBean(UserServiceDBImpl.class);
+                    AdminService adminServiceDB = context.getBean(AdminServiceDBImpl.class);
+                    PatientService patientServiceDB = context.getBean(PatientServiceDBImpl.class);
+                    DoctorService doctorServiceDB = context.getBean(DoctorServiceDBImpl.class);
+                    AppointmentServiceV1 appointmentServiceDB = context.getBean(AppointmentServiceV1DBImpl.class);
+                    SlotService slotService1 = context.getBean(SlotsServiceDBImpl.class);
                     cli = CLI.getInstance(userServiceDB, adminServiceDB, patientServiceDB, doctorServiceDB,
                             appointmentServiceDB, slotService1);
                     loop = false;
                     break;
                 case 2:
                     UserService userServiceHibernate = context.getBean(UserServiceHibernateImpl.class);
-                    AdminService adminServiceHibernate = new AdminServiceHibernateImpl();
+                    AdminService adminServiceHibernate = context.getBean(AdminServiceHibernateImpl.class);
                     PatientService patientServiceHibernate = context.getBean(PatientServiceHibernateImpl.class);
                     DoctorService doctorServiceHibernate = context.getBean(DoctorServiceHibernateImpl.class);
                     AppointmentServiceV1 appointmentServiceHibernate =  context.getBean(AppointmentServiceV1HibernateImpl.class);
@@ -110,6 +105,7 @@ public class CLI {
                     break;
             }
         } while (loop);
+        cli.scanner = context.getBean(Scanner.class);
         cli.displayWelcomeMenu();
     }
 

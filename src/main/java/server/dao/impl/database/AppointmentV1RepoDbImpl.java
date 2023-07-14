@@ -1,5 +1,7 @@
 package server.dao.impl.database;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.context.ServiceContext;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
@@ -12,11 +14,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
     private final Connection dbConnection;
-    public AppointmentV1RepoDbImpl()
-    {
-        this.dbConnection= ServiceContext.getDatabaseConnection();
+    private final SlotRepoDbImpl slotRepoDb;
+
+
+    @Autowired
+    public AppointmentV1RepoDbImpl(Connection dbConnection, SlotRepoDbImpl slotRepoDb) {
+        this.dbConnection = dbConnection;
+        this.slotRepoDb = slotRepoDb;
     }
 
     public List<AppointmentV1> getAppointmentsByQuery(String query) {
@@ -138,7 +145,7 @@ public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
 
     @Override
     public boolean addAppointmentEntry(AppointmentV1 appointment) {
-        Slot slot = ServiceContext.getSlotService().getSlotBySlotId(appointment.getDoctorSlotId());
+        Slot slot = slotRepoDb.getSlotBySlotId(appointment.getDoctorSlotId());
         if(slot == null){
             System.out.println("No slot found against the provided id: "+appointment.getDoctorSlotId());
             return false;

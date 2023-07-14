@@ -1,5 +1,4 @@
 package server;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
@@ -12,12 +11,28 @@ import org.springframework.context.annotation.Scope;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
+import server.utilities.DatabaseConnection;
 
+import java.sql.Connection;
 import java.util.Properties;
+import java.util.Scanner;
 
 @Configuration
 @ComponentScan(basePackages = {"server"})
 public class AppConfig {
+
+
+    @Bean
+    public Scanner getScanner(){
+        return new Scanner(System.in);
+    }
+
+    @Bean
+    public Connection getConnection(){
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        return databaseConnection.getConnection();
+    }
+
 
     @Bean
     @Scope("singleton")
@@ -60,4 +75,6 @@ public class AppConfig {
         }
         return sessionFactory;
     }
+
+
 }

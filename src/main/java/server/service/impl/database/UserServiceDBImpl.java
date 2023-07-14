@@ -1,6 +1,7 @@
 package server.service.impl.database;
 
-import server.context.RepositoryContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.domain.User;
 import server.service.UserService;
 import server.dao.impl.database.UserRepoDbImpl;
@@ -8,11 +9,14 @@ import server.utilities.DisplayFormatting;
 
 import java.util.List;
 
+@Component
 public class UserServiceDBImpl implements UserService {
     UserRepoDbImpl userRepoDb;
 
-    public UserServiceDBImpl() {
-        userRepoDb = RepositoryContext.getUserRepoDb();
+
+    @Autowired
+    public UserServiceDBImpl(UserRepoDbImpl userRepoDb) {
+        this.userRepoDb = userRepoDb;
     }
 
     public List<User> getUsers() {

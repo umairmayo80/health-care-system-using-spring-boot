@@ -1,6 +1,7 @@
 package server.service.impl.database;
 
-import server.context.RepositoryContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.dao.impl.database.AppointmentV1RepoDbImpl;
 import server.domain.User;
 import server.domain.version1.AppointmentV1;
@@ -8,12 +9,14 @@ import server.service.version1.AppointmentServiceV1;
 
 import java.util.List;
 
+@Component
 public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {
     private final AppointmentV1RepoDbImpl appointmentV1RepoDb;
-    public AppointmentServiceV1DBImpl() {
-        appointmentV1RepoDb = RepositoryContext.getAppointmentV1RepoDb();
-    }
 
+    @Autowired
+    public AppointmentServiceV1DBImpl(AppointmentV1RepoDbImpl appointmentV1RepoDb) {
+        this.appointmentV1RepoDb = appointmentV1RepoDb;
+    }
 
     @Override
     public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {

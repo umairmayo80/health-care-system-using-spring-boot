@@ -1,4 +1,6 @@
 package server.dao.impl.database;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.context.ServiceContext;
 import server.domain.User;
 import server.dao.UserRepository;
@@ -9,11 +11,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserRepoDbImpl implements UserRepository {
     private final Connection connection;
 
-    public UserRepoDbImpl(){
-        connection = ServiceContext.getDatabaseConnection();
+
+    @Autowired
+    public UserRepoDbImpl(Connection connection) {
+        this.connection = connection;
     }
 
     public List<User> getUsers() {

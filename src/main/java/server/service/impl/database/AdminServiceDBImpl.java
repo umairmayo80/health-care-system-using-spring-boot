@@ -1,5 +1,7 @@
 package server.service.impl.database;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.context.ServiceContext;
 import server.domain.User;
 import server.service.AdminService;
@@ -9,10 +11,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@Component
 public class AdminServiceDBImpl implements AdminService {
     Connection connection;
-    public AdminServiceDBImpl(){
-        connection = ServiceContext.getDatabaseConnection();
+    UserServiceDBImpl userServiceDB;
+
+    @Autowired
+    public AdminServiceDBImpl(Connection connection, UserServiceDBImpl userServiceDB) {
+        this.connection = connection;
+        this.userServiceDB = userServiceDB;
     }
 
     public boolean isUsernameAvailable(String username) {
@@ -34,7 +41,7 @@ public class AdminServiceDBImpl implements AdminService {
     @Override
     public boolean addUser(User user) {
         if (isUsernameAvailable(user.getUsername())) {
-            return ServiceContext.getUserServiceDB().addUserEntry(user);
+            return userServiceDB.addUserEntry(user);
         } else {
             System.out.println("Error: Username '" + user.getUsername() + "' already exists. Please choose a different username.");
             return false;

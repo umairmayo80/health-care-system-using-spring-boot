@@ -1,23 +1,14 @@
 package server.service.impl.hibernate;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import server.context.RepositoryContext;
-import server.context.ServiceContext;
 import server.dao.impl.hibernate.UserRepoHibernateImpl;
-import server.domain.Slot;
 import server.domain.User;
-import server.domain.version1.AppointmentV1;
 import server.service.UserService;
 import server.utilities.DisplayFormatting;
-import javax.persistence.PersistenceException;
+
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Scope("singleton")

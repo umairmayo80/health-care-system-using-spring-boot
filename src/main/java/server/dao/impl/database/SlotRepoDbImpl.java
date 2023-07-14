@@ -1,5 +1,7 @@
 package server.dao.impl.database;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import server.context.ServiceContext;
 import server.domain.Slot;
 import server.dao.SlotRepository;
@@ -13,14 +15,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class SlotRepoDbImpl implements SlotRepository {
 
-    private Connection dbConnection;
-    public SlotRepoDbImpl()
-    {
-        this.dbConnection= ServiceContext.getDatabaseConnection();
-    }
+    private final Connection dbConnection;
 
+    @Autowired
+    public SlotRepoDbImpl(Connection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
 
     private Slot parseSlotDataFromResultSet(ResultSet resultSet) throws SQLException, ScheduleCreationException {
         int slotId = resultSet.getInt("slotId");

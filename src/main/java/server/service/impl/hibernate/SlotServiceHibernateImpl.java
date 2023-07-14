@@ -1,7 +1,6 @@
 package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import server.context.RepositoryContext;
 import server.dao.impl.hibernate.SlotRepoHibernateImpl;
 import server.domain.Slot;
 import server.domain.User;
