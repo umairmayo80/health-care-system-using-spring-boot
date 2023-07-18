@@ -1,8 +1,5 @@
 package server.domain;
 
-import org.hibernate.Hibernate;
-import server.domain.version1.AppointmentV1;
-
 import javax.persistence.*;
 import java.io.*;
 import java.util.*;
@@ -37,7 +34,7 @@ public class User {
 
 
     @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AppointmentV1> appointmentV1List = new ArrayList<>();
+    private List<Appointment> appointmentV1List = new ArrayList<>();
 
 
     static {
@@ -71,7 +68,7 @@ public class User {
 
 
 
-    public User(int userId, String name, String role, String username, String password, boolean accountLocked, Set<Slot> slots, List<AppointmentV1> appointmentV1List) {
+    public User(int userId, String name, String role, String username, String password, boolean accountLocked, Set<Slot> slots, List<Appointment> appointmentV1List) {
         this.userId = userId;
         this.name = name;
         this.role = role;
@@ -163,7 +160,7 @@ public class User {
 
 
 
-    public List<AppointmentV1> getAppointmentV1List(){
+    public List<Appointment> getAppointmentV1List(){
         return appointmentV1List;
     }
 
@@ -178,12 +175,12 @@ public class User {
         slot.setDoctor(null);
     }
 
-    public void addAppointmentV1(AppointmentV1 appointmentV1) {
+    public void addAppointmentV1(Appointment appointmentV1) {
         appointmentV1List.add(appointmentV1);
         appointmentV1.setPatient(this);
     }
 
-    public void removeAppointment(AppointmentV1 appointmentV1){
+    public void removeAppointment(Appointment appointmentV1){
         appointmentV1List.remove(appointmentV1);
         appointmentV1.setPatient(null);
     }

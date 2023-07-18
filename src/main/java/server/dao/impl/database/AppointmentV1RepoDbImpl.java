@@ -3,7 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,8 +23,8 @@ public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
         this.slotRepoDb = slotRepoDb;
     }
 
-    public List<AppointmentV1> getAppointmentsByQuery(String query) {
-        List<AppointmentV1> appointmentList = new ArrayList<>();
+    public List<Appointment> getAppointmentsByQuery(String query) {
+        List<Appointment> appointmentList = new ArrayList<>();
         try {
             Statement statement = dbConnection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -37,23 +37,23 @@ public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
         return appointmentList;
     }
 
-    private AppointmentV1 parseSlotDataFromResultSet(ResultSet resultSet) throws SQLException {
+    private Appointment parseSlotDataFromResultSet(ResultSet resultSet) throws SQLException {
         int appointmentId = resultSet.getInt("appointmentId");
         int patientId = resultSet.getInt("patientId");
         int doctorSlotId = resultSet.getInt("slotId");
-        return new AppointmentV1(appointmentId,patientId,doctorSlotId);
+        return new Appointment(appointmentId,patientId,doctorSlotId);
     }
 
 
     @Override
-    public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
-        for(AppointmentV1 appointment: appointmentList){
+    public void saveAppointmentsToStorage(List<Appointment> appointmentList) {
+        for(Appointment appointment: appointmentList){
             add(appointment);
         }
     }
 
     @Override
-    public List<AppointmentV1> getAll() {
+    public List<Appointment> getAll() {
         String query = "select * from appointment_table;";
         return getAppointmentsByQuery(query);
     }
@@ -141,7 +141,7 @@ public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
 
 
     @Override
-    public boolean add(AppointmentV1 appointment) {
+    public boolean add(Appointment appointment) {
         Slot slot = slotRepoDb.getById(appointment.getDoctorSlotId());
         if(slot == null){
             System.out.println("No slot found against the provided id: "+appointment.getDoctorSlotId());

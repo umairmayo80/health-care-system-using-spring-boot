@@ -3,7 +3,6 @@ package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.domain.Appointment;
-import server.domain.version1.AppointmentV1;
 import server.service.PatientService;
 
 @Component
@@ -21,13 +20,9 @@ public class PatientServiceHibernateImpl implements PatientService {
         appointmentServiceV1Hibernate.viewAppointmentsByPatientId(patient_id);
     }
 
-    @Override
-    public boolean addAppointment(Appointment appointment) {
-        return false;
-    }
 
     @Override
-    public boolean addAppointment(AppointmentV1 appointment) {
+    public boolean addAppointment(Appointment appointment) {
         return appointmentServiceV1Hibernate.addAppointmentEntry(appointment);
     }
 }

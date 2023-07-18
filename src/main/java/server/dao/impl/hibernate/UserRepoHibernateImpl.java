@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import server.dao.UserRepository;
 import server.domain.Slot;
 import server.domain.User;
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -108,9 +108,9 @@ public class UserRepoHibernateImpl implements UserRepository {
             }
 
             // Remove the association between AppointmentV1 and Slot entities
-            for (AppointmentV1 appointment : user.getAppointmentV1List()) {
+            for (Appointment appointment : user.getAppointmentV1List()) {
                 Slot slot = appointment.getSlot();
-                slot.removeAppointmentV1(); // If we don`t remove the child appointment from parent slot, hibernate will through exception Exception in thread "main" javax.persistence.EntityNotFoundException: deleted object would be re-saved by cascade (remove deleted object from associations): [server.domain.version1.AppointmentV1#1]
+                slot.removeAppointmentV1(); // If we don`t remove the child appointment from parent slot, hibernate will through exception Exception in thread "main" javax.persistence.EntityNotFoundException: deleted object would be re-saved by cascade (remove deleted object from associations): [server.domain.AppointmentV1#1]
             }
 
             // As we have already defined cascading to parent will automatically delete the children upon deletion, so no need

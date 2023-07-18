@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
 import java.util.List;
 @Component
 public class AppointmentRepoHibernate implements AppointmentV1Repository {
@@ -22,22 +22,22 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
 
 
     @Override
-    public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
+    public void saveAppointmentsToStorage(List<Appointment> appointmentList) {
         appointmentList.forEach(this::add);
     }
 
     @Override
-    public List<AppointmentV1> getAll() {
+    public List<Appointment> getAll() {
         Session session = sessionFactory.openSession();
-        List<AppointmentV1> appointmentList = session.createQuery("from AppointmentV1",AppointmentV1.class).list();
+        List<Appointment> appointmentList = session.createQuery("from Appointment", Appointment.class).list();
         initializeAssociations(appointmentList);
         session.close();
         return appointmentList;
     }
 
-    private void initializeAssociations(List<AppointmentV1> appointmentList) {
+    private void initializeAssociations(List<Appointment> appointmentList) {
         // Initialize associations before closing the session
-        for (AppointmentV1 appointmentV1 : appointmentList) {
+        for (Appointment appointmentV1 : appointmentList) {
             appointmentV1.getPatient().getName(); // Initialize the patient association
             appointmentV1.getSlot().getDoctor().getName(); // Initialize the slot and doctor associations
         }
@@ -45,16 +45,16 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
 
     @Override
     public void viewAllAppointments() {
-        List<AppointmentV1> appointmentV1List = getAll();
+        List<Appointment> appointmentV1List = getAll();
         displayAppointmentData(appointmentV1List);
     }
 
     // Method to display appointment data with patient and doctor names
-    public static void displayAppointmentData(List<AppointmentV1> appointmentV1List)  {
+    public static void displayAppointmentData(List<Appointment> appointmentV1List)  {
         System.out.println("+---------------+-----------+--------------+--------+----------+-----------------+-----------+----------+----------+-----------+");
         System.out.println("| appointmentId | patientId | patientName  | slotId | doctorId | doctorName      | date      | startTime | endTime  | occupied |");
         System.out.println("+---------------+-----------+--------------+--------+----------+-----------------+-----------+----------+----------+-----------+");
-        for(AppointmentV1 appointmentV1 : appointmentV1List) {
+        for(Appointment appointmentV1 : appointmentV1List) {
             int appointmentId = appointmentV1.getAppointmentId();
             int patientId = appointmentV1.getPatient().getUserId();
             String patientName = appointmentV1.getPatient().getName();
@@ -76,7 +76,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
     @Override
     public void viewAppointmentsByPatientId(int patientId) {
         Session session = sessionFactory.openSession();
-        List<AppointmentV1> appointmentList  = session.createQuery("from AppointmentV1 as a where a.patient.userId="+patientId,AppointmentV1.class).list();
+        List<Appointment> appointmentList  = session.createQuery("from Appointment as a where a.patient.userId="+patientId, Appointment.class).list();
         initializeAssociations(appointmentList);
         session.close();
         displayAppointmentData(appointmentList);
@@ -85,7 +85,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
     @Override
     public void viewAppointmentsByDoctorId(int doctorId) {
         Session session = sessionFactory.openSession();
-        List<AppointmentV1> appointmentList = session.createQuery("from AppointmentV1 a where a.slot.doctor.userId="+doctorId,AppointmentV1.class).list();
+        List<Appointment> appointmentList = session.createQuery("from Appointment a where a.slot.doctor.userId="+doctorId, Appointment.class).list();
         initializeAssociations(appointmentList);
         session.close();
         displayAppointmentData(appointmentList);
@@ -93,7 +93,7 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
     }
 
     @Override
-    public boolean add (AppointmentV1 appointment) {
+    public boolean add (Appointment appointment) {
         // check if the slot is available or not
         Slot slot = slotRepoHibernate.getById(appointment.getDoctorSlotId());
         if(slot == null){

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import server.AppConfig;
 import server.domain.Slot;
 import server.domain.User;
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
 import server.service.*;
 import server.service.impl.database.*;
 import server.service.impl.hibernate.*;
@@ -482,7 +482,7 @@ public class CLI {
             System.out.println("Invalid Input");
             return;
         }
-        AppointmentV1 newAppointment = new AppointmentV1(currentUser.getUserId(), selectedSlotId);
+        Appointment newAppointment = new Appointment(currentUser.getUserId(), selectedSlotId);
 
         if (appointmentServiceV1.addAppointment(newAppointment,currentUser))
             System.out.println("Appointment created successfully");

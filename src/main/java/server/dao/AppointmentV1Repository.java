@@ -1,14 +1,14 @@
 package server.dao;
 
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
 
 import java.util.List;
 
 public interface AppointmentV1Repository {
     // Save appointments to storage
-    void saveAppointmentsToStorage(List<AppointmentV1> appointmentList);
+    void saveAppointmentsToStorage(List<Appointment> appointmentList);
 
-    List<AppointmentV1> getAll();
+    List<Appointment> getAll();
 
     void viewAppointmentsByPatientId(int patientId);
 
@@ -16,5 +16,5 @@ public interface AppointmentV1Repository {
 
     void viewAllAppointments();
 
-    boolean add(AppointmentV1 appointment);
+    boolean add(Appointment appointment);
 }

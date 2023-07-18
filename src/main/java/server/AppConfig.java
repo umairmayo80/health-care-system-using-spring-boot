@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import server.domain.Slot;
 import server.domain.User;
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
 import server.utilities.DatabaseConnection;
 import java.sql.Connection;
 import java.util.Properties;
@@ -19,7 +19,6 @@ import java.util.Scanner;
 @Configuration
 @ComponentScan(basePackages = {"server"})
 public class AppConfig {
-
 
     @Bean
     public Scanner getScanner(){
@@ -31,7 +30,6 @@ public class AppConfig {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         return databaseConnection.getConnection();
     }
-
 
     @Bean
     @Scope("singleton")
@@ -60,7 +58,7 @@ public class AppConfig {
 
             configuration.addAnnotatedClass(User.class);
             configuration.addAnnotatedClass(Slot.class);
-            configuration.addAnnotatedClass(AppointmentV1.class);
+            configuration.addAnnotatedClass(Appointment.class);
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties())
                     .build();

@@ -3,7 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.domain.Slot;
 import server.domain.User;
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
 import server.service.impl.hibernate.AppointmentServiceV1HibernateImpl;
 import server.service.impl.hibernate.SlotServiceHibernateImpl;
 import server.service.impl.hibernate.UserServiceHibernateImpl;
@@ -68,8 +68,8 @@ public class InitializeHibernateDb {
 
 
             // insert slot data
-            AppointmentV1 appointmentV1 = new AppointmentV1(2, 3);
-            AppointmentV1 appointment2 = new AppointmentV1(4, 2);
+            Appointment appointmentV1 = new Appointment(2, 3);
+            Appointment appointment2 = new Appointment(4, 2);
 
             //associate the appointment with the target slot otherwise the relation will not be made with parent and foreign key will be null
             slot3.setAppointmentV1(appointmentV1);
