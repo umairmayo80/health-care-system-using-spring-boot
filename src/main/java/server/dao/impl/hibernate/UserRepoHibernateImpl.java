@@ -90,8 +90,6 @@ public class UserRepoHibernateImpl implements UserRepository {
         return doctorList;
     }
 
-
-
     @Override
     public boolean delete(String username) {
         Session session = sessionFactory.openSession();

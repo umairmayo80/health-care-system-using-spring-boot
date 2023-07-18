@@ -64,17 +64,17 @@ public class SlotServiceHibernateImpl implements SlotService {
 
     @Override
     public void viewBookedSlotsById(int userId) {
-        slotRepoHibernate.viewBookedSlotsById(userId);
+        displaySlots(slotRepoHibernate.getBookedSlotsById(userId));
     }
 
     @Override
     public void viewFreeSlots() {
-        slotRepoHibernate.viewFreeSlots();
+        displaySlots(slotRepoHibernate.getFreeSlots());
     }
 
     @Override
     public void viewFreeSlotsById(int userId) {
-       slotRepoHibernate.viewFreeSlotsById(userId);
+       displaySlots(slotRepoHibernate.getFreeSlotsById(userId));
     }
 
     @Override

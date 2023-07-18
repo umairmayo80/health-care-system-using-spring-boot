@@ -62,32 +62,6 @@ public class SlotRepoHibernateImpl implements SlotRepository {
     }
 
     @Override
-    public void viewAllSlots() {
-        List<Slot> slotList = getAll();
-        displaySlots(slotList);
-    }
-
-    public static void displaySlots(List<Slot> slotList){
-        // Display the data in a table format
-        System.out.println("+--------+----------+------------+-----------+----------+----------+");
-        System.out.println("| slotId | doctorId |    date    | startTime |  endTime | occupied |");
-        System.out.println("+--------+----------+------------+-----------+----------+----------+");
-
-        for(Slot slot : slotList){
-            System.out.format("|%-7d |%9d |%11s |%10s |%9s |%9s |\n", slot.getSlotId(), slot.getDoctor().getUserId(), slot.getDate(), slot.getStartTime(), slot.getEndTime(), slot.getOccupied());
-        }
-        System.out.println("+--------+----------+------------+-----------+----------+----------+");
-
-
-    }
-
-    @Override
-    public void viewSlotsById(int userId) {
-        displaySlots(getAllByUserId(userId));
-    }
-
-
-    @Override
     public List<Slot> getAllByUserId(int userId) {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
@@ -98,34 +72,33 @@ public class SlotRepoHibernateImpl implements SlotRepository {
     }
 
     @Override
-    public void viewBookedSlotsById(int userId) {
+    public List<Slot> getBookedSlotsById(int userId) {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
         slotList = session.createQuery("from Slot as s where s.doctor.userId="+userId
                 +" AND s.occupied=true", Slot.class).list();
         session.close();
-        displaySlots(slotList);
-
+        return slotList;
     }
 
     @Override
-    public void viewFreeSlots() {
+    public List<Slot> getFreeSlots() {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         // HQL
         slotList = session.createQuery("from Slot as s where s.occupied=false",Slot.class).list();
         session.close();
-        displaySlots(slotList);
+        return slotList;
     }
 
     @Override
-    public void viewFreeSlotsById(int userId) {
+    public List<Slot> getFreeSlotsById(int userId) {
         Session session = sessionFactory.openSession();
         List<Slot> slotList = null;
         slotList = session.createQuery("from Slot as s where s.doctor.userId="+userId
                 +" AND s.occupied=false", Slot.class).list();
         session.close();
-        displaySlots(slotList);
+        return slotList;
     }
 }
