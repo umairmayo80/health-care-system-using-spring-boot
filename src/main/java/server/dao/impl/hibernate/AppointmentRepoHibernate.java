@@ -8,6 +8,8 @@ import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
 import server.domain.Appointment;
 import java.util.List;
+
+
 @Component
 public class AppointmentRepoHibernate implements AppointmentV1Repository {
     SessionFactory sessionFactory;
@@ -43,53 +45,23 @@ public class AppointmentRepoHibernate implements AppointmentV1Repository {
         }
     }
 
-    @Override
-    public void viewAllAppointments() {
-        List<Appointment> appointmentV1List = getAll();
-        displayAppointmentData(appointmentV1List);
-    }
-
-    // Method to display appointment data with patient and doctor names
-    public static void displayAppointmentData(List<Appointment> appointmentV1List)  {
-        System.out.println("+---------------+-----------+--------------+--------+----------+-----------------+-----------+----------+----------+-----------+");
-        System.out.println("| appointmentId | patientId | patientName  | slotId | doctorId | doctorName      | date      | startTime | endTime  | occupied |");
-        System.out.println("+---------------+-----------+--------------+--------+----------+-----------------+-----------+----------+----------+-----------+");
-        for(Appointment appointmentV1 : appointmentV1List) {
-            int appointmentId = appointmentV1.getAppointmentId();
-            int patientId = appointmentV1.getPatient().getUserId();
-            String patientName = appointmentV1.getPatient().getName();
-            int slotId = appointmentV1.getSlot().getSlotId();
-            int doctorId = appointmentV1.getSlot().getDoctor().getUserId();
-            String doctorName = appointmentV1.getSlot().getDoctor().getName();
-            String date = appointmentV1.getSlot().getDate().toString();
-            String startTime = appointmentV1.getSlot().getStartTime().toString();
-            String endTime = appointmentV1.getSlot().getEndTime().toString();
-            boolean occupied = appointmentV1.getSlot().getOccupied();
-
-            System.out.printf("|%14d |%10d | %12s |%7d |%9d | %15s |%10s |%9s |%9s |%10s |\n",
-                    appointmentId, patientId, patientName, slotId, doctorId, doctorName, date, startTime, endTime, occupied);
-        }
-        System.out.println("+---------------+-----------+--------------+--------+----------+-----------------+-----------+----------+----------+-----------+");
-    }
-
 
     @Override
-    public void viewAppointmentsByPatientId(int patientId) {
+    public List<Appointment> getAppointmentsByPatientId(int patientId) {
         Session session = sessionFactory.openSession();
         List<Appointment> appointmentList  = session.createQuery("from Appointment as a where a.patient.userId="+patientId, Appointment.class).list();
         initializeAssociations(appointmentList);
         session.close();
-        displayAppointmentData(appointmentList);
+        return appointmentList;
     }
 
     @Override
-    public void viewAppointmentsByDoctorId(int doctorId) {
+    public List<Appointment> getAppointmentsByDoctorId(int doctorId) {
         Session session = sessionFactory.openSession();
         List<Appointment> appointmentList = session.createQuery("from Appointment a where a.slot.doctor.userId="+doctorId, Appointment.class).list();
         initializeAssociations(appointmentList);
         session.close();
-        displayAppointmentData(appointmentList);
-
+        return appointmentList;
     }
 
     @Override

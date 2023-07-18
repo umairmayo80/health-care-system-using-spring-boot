@@ -6,6 +6,7 @@ import server.dao.impl.hibernate.AppointmentRepoHibernate;
 import server.domain.User;
 import server.domain.Appointment;
 import server.service.version1.AppointmentServiceV1;
+import static server.utilities.DisplayFormatting.displayAppointmentData;
 
 
 import java.util.List;
@@ -32,17 +33,17 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
 
     @Override
     public void viewAllAppointments() {
-        appointmentRepoHibernate.viewAllAppointments();
+        displayAppointmentData(getAppointments());
     }
 
     @Override
     public void viewAppointmentsByPatientId(int patientId) {
-       appointmentRepoHibernate.viewAppointmentsByPatientId(patientId);
+       displayAppointmentData(appointmentRepoHibernate.getAppointmentsByPatientId(patientId));
     }
 
     @Override
     public void viewAppointmentsByDoctorId(int doctorId) {
-       appointmentRepoHibernate.viewAppointmentsByDoctorId(doctorId);
+       displayAppointmentData(appointmentRepoHibernate.getAppointmentsByDoctorId(doctorId));
     }
 
     @Override

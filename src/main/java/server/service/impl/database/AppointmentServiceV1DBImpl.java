@@ -1,11 +1,11 @@
 package server.service.impl.database;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.dao.impl.database.AppointmentV1RepoDbImpl;
 import server.domain.User;
 import server.domain.Appointment;
 import server.service.version1.AppointmentServiceV1;
+import static server.utilities.DisplayFormatting.displayAppointmentData;
 
 import java.util.List;
 
@@ -32,18 +32,18 @@ public class AppointmentServiceV1DBImpl implements AppointmentServiceV1 {
 
     @Override
     public void viewAllAppointments() {
-        appointmentV1RepoDb.viewAllAppointments();
+        displayAppointmentData(getAppointments());
     }
 
 
     @Override
     public void viewAppointmentsByPatientId(int patientId) {
-        appointmentV1RepoDb.viewAppointmentsByPatientId(patientId);
+        displayAppointmentData(appointmentV1RepoDb.getAppointmentsByPatientId(patientId));
     }
 
     @Override
     public void viewAppointmentsByDoctorId(int doctorId) {
-        appointmentV1RepoDb.viewAppointmentsByDoctorId(doctorId);
+        displayAppointmentData(appointmentV1RepoDb.getAppointmentsByDoctorId(doctorId));
     }
 
 

@@ -10,11 +10,10 @@ public interface AppointmentV1Repository {
 
     List<Appointment> getAll();
 
-    void viewAppointmentsByPatientId(int patientId);
+    List<Appointment> getAppointmentsByPatientId(int patientId);
 
-    void viewAppointmentsByDoctorId(int doctorId);
+    List<Appointment> getAppointmentsByDoctorId(int doctorId);
 
-    void viewAllAppointments();
 
     boolean add(Appointment appointment);
 }

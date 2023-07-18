@@ -97,6 +97,22 @@ public class UserRepoDbImpl implements UserRepository {
         return user;
     }
 
+    @Override
+    public User getById(int id) {
+        User user = null;
+        try {
+            Statement statement = connection.createStatement();
+            String query = "SELECT * FROM user_table WHERE userid ="+ id+";";
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                user = fetchUserDataFromQueryResult(resultSet);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error reading users from the Database: " + e.getMessage());
+        }
+        return user;
+    }
+
     public List<User> getPatients() {
         List<User> patientsList = new ArrayList<>();
         try {

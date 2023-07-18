@@ -137,4 +137,14 @@ public class UserRepoHibernateImpl implements UserRepository {
         session.close();
         return user;
     }
+
+    @Override
+    public User getById(int id) {
+        Session session = sessionFactory.openSession();
+        User user = session.createQuery("from User where userId=:userid", User.class)
+                .setParameter("userid",id)
+                .uniqueResult();
+        session.close();
+        return user;
+    }
 }

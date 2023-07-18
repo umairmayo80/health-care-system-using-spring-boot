@@ -12,4 +12,6 @@ public interface UserRepository {
     List<User> getDoctors();
     boolean delete(String username);
     User getByUsername(String username);
+
+    User getById(int id);
 }

@@ -25,7 +25,7 @@ public class Appointment {
     private int doctorSlotId;
 
     // default constructor
-    Appointment(){
+    public Appointment(){
 
     }
 
