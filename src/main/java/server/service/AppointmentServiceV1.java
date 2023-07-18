@@ -1,4 +1,4 @@
-package server.service.version1;
+package server.service;
 //import server.domain.Appointment;
 import server.domain.User;
 import server.domain.Appointment;

@@ -2,6 +2,7 @@ package server.service.impl.database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.domain.Slot;
+import server.domain.User;
 import server.service.DoctorService;
 
 import java.sql.Connection;
@@ -19,12 +20,12 @@ public class DoctorServiceDBImpl implements DoctorService {
 
     @Override
     public void viewAppointments(int userID) {
-        // covered by slotService
+        slotsServiceDB.viewSlotsById(userID);
     }
 
     @Override
-    public void addSlotsEntry(Slot slot) {
-        // covered by slotService
+    public boolean addSlotsEntry(Slot slot,User currentUser) {
+        return slotsServiceDB.addSlot(slot,currentUser);
     }
 
     @Override

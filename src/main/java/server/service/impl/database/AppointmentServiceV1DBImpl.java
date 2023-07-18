@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import server.dao.impl.database.AppointmentV1RepoDbImpl;
 import server.domain.User;
 import server.domain.Appointment;
-import server.service.version1.AppointmentServiceV1;
+import server.service.AppointmentServiceV1;
 import static server.utilities.DisplayFormatting.displayAppointmentData;
 
 import java.util.List;

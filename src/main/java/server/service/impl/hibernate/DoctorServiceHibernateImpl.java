@@ -2,6 +2,7 @@ package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.domain.Slot;
+import server.domain.User;
 import server.service.DoctorService;
 
 @Component
@@ -21,9 +22,10 @@ public class DoctorServiceHibernateImpl implements DoctorService {
         appointmentServiceV1Hibernate.viewAppointmentsByDoctorId(userID);
     }
 
+
     @Override
-    public void addSlotsEntry(Slot slot) {
-        slotServiceHibernate.addSlotEntry(slot);
+    public boolean addSlotsEntry(Slot slot, User currentUser) {
+        return slotServiceHibernate.addSlot(slot,currentUser);
     }
 
     @Override

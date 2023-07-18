@@ -1,11 +1,10 @@
 package server.service.impl.hibernate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.dao.impl.hibernate.AppointmentRepoHibernate;
 import server.domain.User;
 import server.domain.Appointment;
-import server.service.version1.AppointmentServiceV1;
+import server.service.AppointmentServiceV1;
 import static server.utilities.DisplayFormatting.displayAppointmentData;
 
 
