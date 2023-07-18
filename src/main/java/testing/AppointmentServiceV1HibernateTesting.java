@@ -5,13 +5,13 @@
 //import server.context.ServiceContext;
 //import server.domain.Slot;
 //import server.domain.User;
-//import server.domain.version1.AppointmentV1;
+//import server.domain.AppointmentV1;
 //import server.service.SlotService;
 //import server.service.UserService;
 //import server.service.impl.hibernate.AppointmentServiceV1HibernateImpl;
 //import server.service.impl.hibernate.SlotServiceHibernateImpl;
 //import server.service.impl.hibernate.UserServiceHibernateImpl;
-//import server.service.version1.AppointmentServiceV1;
+//import server.service.AppointmentServiceV1;
 //import server.utilities.ScheduleCreationException;
 //
 //public class AppointmentServiceV1HibernateTesting {

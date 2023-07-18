@@ -1,58 +1,111 @@
 package server.domain;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+import javax.persistence.*;
 
+@Entity
+@Table(name = "appointment_table")
 public class Appointment {
-    private int patientId;
-    private int doctorId;
-    private LocalDateTime dateTime;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "appointmentId")
+    private int appointmentId;
 
-    public Appointment(int patientId, int doctorId, LocalDateTime dateTime) {
-        this.patientId = patientId;
-        this.doctorId = doctorId;
-        this.dateTime = dateTime;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "patientId", referencedColumnName = "userid")
+    private User patient;
+
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "doctorSlotId", referencedColumnName = "slotId")
+    private Slot slot;
+
+    @Transient
+    private int patientId;
+    @Transient
+    private int doctorSlotId;
+
+    // default constructor
+    public Appointment(){
+
     }
 
-    // Getters and setters
+    // Constructor
+    public Appointment(int appointmentId, int patientId, int doctorSlotId) {
+        this.patientId = patientId;
+        this.doctorSlotId = doctorSlotId;
+        this.appointmentId = appointmentId;
+    }
 
+    public Appointment(int patientId, int doctorSlotId){
+        this.appointmentId = 0;
+        this.patientId = patientId;
+        this. doctorSlotId = doctorSlotId;
+    }
+
+    public Appointment(int appointmentId, User patient, Slot slot, int patientId, int doctorSlotId) {
+        this.appointmentId = appointmentId;
+        this.patient = patient;
+        this.slot = slot;
+        this.patientId = patientId;
+        this.doctorSlotId = doctorSlotId;
+    }
+
+
+
+    // Getter for patientId
     public int getPatientId() {
         return patientId;
     }
 
+    // Setter for patientId
     public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
 
-    public int getDoctorId() {
-        return doctorId;
+    // Getter for doctorSlotId
+    public int getDoctorSlotId() {
+        return doctorSlotId;
     }
 
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
+    // Setter for doctorSlotId
+    public void setDoctorSlotId(int doctorSlotId) {
+        this.doctorSlotId = doctorSlotId;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    // Getter for appointmentId
+    public int getAppointmentId() {
+        return appointmentId;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    // Setter for appointmentId
+    public void setAppointmentId(int appointmentId) {
+        this.appointmentId = appointmentId;
     }
 
-    // Helper methods
 
-    public String formatDateTime(DateTimeFormatter formatter) {
-        return dateTime.format(formatter);
+    public User getPatient() {
+        return patient;
     }
 
+    public void setPatient(User patient) {
+        this.patient = patient;
+    }
+
+    public Slot getSlot() {
+        return slot;
+    }
+
+    public void setSlot(Slot slot) {
+        this.slot = slot;
+    }
+
+    // toString method to represent the Appointment object as a string
     @Override
     public String toString() {
-        return "server.domain.Appointment{" +
+        return "Appointment{" +
                 "patientId=" + patientId +
-                ", doctorId=" + doctorId +
-                ", dateTime=" + dateTime +
+                ", doctorSlotId=" + doctorSlotId +
+                ", appointmentId=" + appointmentId +
                 '}';
     }
-
 }

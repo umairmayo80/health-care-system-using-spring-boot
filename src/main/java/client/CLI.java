@@ -4,11 +4,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import server.AppConfig;
 import server.domain.Slot;
 import server.domain.User;
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
 import server.service.*;
 import server.service.impl.database.*;
 import server.service.impl.hibernate.*;
-import server.service.version1.AppointmentServiceV1;
+import server.service.AppointmentServiceV1;
 import server.utilities.InitializeHibernateDb;
 import server.utilities.ScheduleCreationException;
 import java.util.InputMismatchException;
@@ -482,14 +482,14 @@ public class CLI {
             System.out.println("Invalid Input");
             return;
         }
-        AppointmentV1 newAppointment = new AppointmentV1(currentUser.getUserId(), selectedSlotId);
+        Appointment newAppointment = new Appointment(currentUser.getUserId(), selectedSlotId);
 
-        if (appointmentServiceV1.addAppointment(newAppointment,currentUser))
+        if (patientService.addAppointment(newAppointment,currentUser))
             System.out.println("Appointment created successfully");
     }
 
     public void viewPatientAppointments() {
-        appointmentServiceV1.viewAppointmentsByPatientId(currentUser.getUserId());
+        patientService.viewAppointments(currentUser.getUserId());
     }
 
     public void viewSchedule() {
@@ -519,7 +519,7 @@ public class CLI {
         try {
             Slot newSlot = new Slot(doctorId, date, startTime, endTime);
 
-            if (slotService.addSlot(newSlot, currentUser))
+            if (doctorService.addSlotsEntry(newSlot, currentUser))
                 System.out.println("Entry added successfully");
             else
                 System.out.println("Error, unable to add new slot");

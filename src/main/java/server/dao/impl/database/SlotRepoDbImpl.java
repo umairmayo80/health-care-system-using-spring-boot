@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.LongStream;
 
 @Component
 public class SlotRepoDbImpl implements SlotRepository {
@@ -63,79 +64,30 @@ public class SlotRepoDbImpl implements SlotRepository {
         return slotList;
     }
 
-
-    @Override
-    public void viewAllSlots() {
-        List<Slot> slotList = getAll();
-        DisplayFormatting.displaySlots(slotList);
-    }
-
-    @Override
-    public void viewSlotsById(int userId) {
-        DisplayFormatting.displaySlots(getAllByUserId(userId));
-    }
-
-
     public List<Slot> getAllByUserId(int userId){
         String query = "SELECT * FROM slot_table where doctorId = "+userId+";";
         return getSlotsByQuery(query);
     }
 
     @Override
-    public void viewBookedSlotsById(int userId) {
+    public List<Slot> getBookedSlotsById(int userId) {
         String query = "SELECT * FROM slot_table where doctorId = "+userId
                 +" AND occupied=true;";
-        List<Slot> slotList = getSlotsByQuery(query);
-        DisplayFormatting.displaySlots(slotList);
+        return getSlotsByQuery(query);
     }
 
     @Override
-    public void viewFreeSlots() {
+    public List<Slot> getFreeSlots() {
         // Execute the query to select free slots and join with the user_table to get the doctor's name
-        String query = "SELECT slot_table.slotId, user_table.name AS doctorName, slot_table.date, " +
-                "slot_table.startTime, slot_table.endTime " +
-                "FROM slot_table " +
-                "JOIN user_table ON slot_table.doctorId = user_table.userid " +
-                "WHERE slot_table.occupied = false";
-
-        try{
-            Statement statement = dbConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-
-            // Print the table header
-            System.out.println("+--------+----------------+------------+-----------+----------+");
-            System.out.println("| slotId | doctorName     | date       | startTime | endTime  |");
-            System.out.println("+--------+----------------+------------+-----------+----------+");
-
-            // Process the result set and display the free slots with all slot details
-            while (resultSet.next()) {
-                int slotId = resultSet.getInt("slotId");
-                String doctorName = resultSet.getString("doctorName");
-                String date = resultSet.getString("date");
-                String startTime = resultSet.getString("startTime");
-                String endTime = resultSet.getString("endTime");
-
-                // Print each row in the specified format
-                System.out.printf("| %6d | %-14s | %10s | %9s | %8s |%n", slotId, doctorName, date, startTime, endTime);
-            }
-
-            // Print the table footer
-            System.out.println("+--------+----------------+------------+-----------+----------+");
-
-            // Close the result set
-            resultSet.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String query = "SELECT * FROM slot_table where occupied=false";
+        return getSlotsByQuery(query);
     }
 
     @Override
-    public void viewFreeSlotsById(int userId) {
+    public List<Slot> getFreeSlotsById(int userId) {
         String query = "SELECT * FROM slot_table where doctorId = "+userId
                 +" AND occupied=false;";
-        List<Slot> slotList = getSlotsByQuery(query);
-        DisplayFormatting.displaySlots(slotList);
+        return getSlotsByQuery(query);
     }
 
     @Override

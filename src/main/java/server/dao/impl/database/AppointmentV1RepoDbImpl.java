@@ -3,7 +3,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.dao.AppointmentV1Repository;
 import server.domain.Slot;
-import server.domain.version1.AppointmentV1;
+import server.domain.Appointment;
+import server.domain.User;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,69 +17,34 @@ import java.util.List;
 public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
     private final Connection dbConnection;
     private final SlotRepoDbImpl slotRepoDb;
+    private final UserRepoDbImpl userRepoDb;
+
 
 
     @Autowired
-    public AppointmentV1RepoDbImpl(Connection dbConnection, SlotRepoDbImpl slotRepoDb) {
+    public AppointmentV1RepoDbImpl(Connection dbConnection, SlotRepoDbImpl slotRepoDb, UserRepoDbImpl userRepoDb) {
         this.dbConnection = dbConnection;
         this.slotRepoDb = slotRepoDb;
-    }
-
-    public List<AppointmentV1> getAppointmentsByQuery(String query) {
-        List<AppointmentV1> appointmentList = new ArrayList<>();
-        try {
-            Statement statement = dbConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                appointmentList.add(parseSlotDataFromResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error: Unable to retrieve data from the database: " + e.getMessage());
-        }
-        return appointmentList;
-    }
-
-    private AppointmentV1 parseSlotDataFromResultSet(ResultSet resultSet) throws SQLException {
-        int appointmentId = resultSet.getInt("appointmentId");
-        int patientId = resultSet.getInt("patientId");
-        int doctorSlotId = resultSet.getInt("slotId");
-        return new AppointmentV1(appointmentId,patientId,doctorSlotId);
+        this.userRepoDb = userRepoDb;
     }
 
 
     @Override
-    public void saveAppointmentsToStorage(List<AppointmentV1> appointmentList) {
-        for(AppointmentV1 appointment: appointmentList){
+    public void saveAppointmentsToStorage(List<Appointment> appointmentList) {
+        for(Appointment appointment: appointmentList){
             add(appointment);
         }
     }
 
     @Override
-    public List<AppointmentV1> getAll() {
+    public List<Appointment> getAll() {
         String query = "select * from appointment_table;";
         return getAppointmentsByQuery(query);
     }
 
-    @Override
-    public void viewAllAppointments() {
-        String query = "SELECT a.appointmentId, a.patientId, p.name AS patientName, a.slotId, s.doctorId, d.name AS doctorName, " +
-                "s.date, s.startTime, s.endTime, s.occupied " +
-                "FROM appointment_table a " +
-                "JOIN slot_table s ON a.slotId = s.slotId " +
-                "JOIN user_table p ON a.patientId = p.userid " +
-                "JOIN user_table d ON s.doctorId = d.userid ";
-        try {
-            Statement statement = dbConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            displayAppointmentData(resultSet);
-        } catch (SQLException e) {
-            System.out.println("Error: Unable to retrieve data from the database: " + e.getMessage());
-        }
-    }
-
 
     @Override
-    public void viewAppointmentsByPatientId(int patientId) {
+    public List<Appointment> getAppointmentsByPatientId(int patientId) {
         String query = "SELECT a.appointmentId, a.patientId, p.name AS patientName, a.slotId, s.doctorId, d.name AS doctorName, " +
                 "s.date, s.startTime, s.endTime, s.occupied " +
                 "FROM appointment_table a " +
@@ -85,17 +52,11 @@ public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
                 "JOIN user_table p ON a.patientId = p.userid " +
                 "JOIN user_table d ON s.doctorId = d.userid " +
                 "WHERE a.patientId = " + patientId;
-        try {
-            Statement statement = dbConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            displayAppointmentData(resultSet);
-        } catch (SQLException e) {
-            System.out.println("Error: Unable to retrieve data from the database: " + e.getMessage());
-        }
+        return getAppointmentsByQuery(query);
     }
 
     @Override
-    public void viewAppointmentsByDoctorId(int doctorId) {
+    public List<Appointment> getAppointmentsByDoctorId(int doctorId) {
         String query = "SELECT a.appointmentId, a.patientId, p.name AS patientName, a.slotId, s.doctorId, d.name AS doctorName, " +
                 "s.date, s.startTime, s.endTime, s.occupied " +
                 "FROM appointment_table a " +
@@ -103,45 +64,51 @@ public class AppointmentV1RepoDbImpl implements AppointmentV1Repository {
                 "JOIN user_table p ON a.patientId = p.userid " +
                 "JOIN user_table d ON s.doctorId = d.userid " +
                 "WHERE s.doctorId = " + doctorId;
+        return getAppointmentsByQuery(query);
+    }
+
+    private List<Appointment> getAppointmentsByQuery(String query) {
+        List<Appointment> appointmentList = new ArrayList<>();
         try {
             Statement statement = dbConnection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            displayAppointmentData(resultSet);
+            while (resultSet.next()){
+                appointmentList.add(parseAppointmentData(resultSet));
+            }
+
         } catch (SQLException e) {
             System.out.println("Error: Unable to retrieve data from the database: " + e.getMessage());
         }
+        return appointmentList;
     }
 
 
-    // Method to display appointment data with patient and doctor names
-    public static void displayAppointmentData(ResultSet resultSet) throws SQLException {
-        System.out.println("+---------------+-----------+--------------+--------+----------+-----------------+-----------+----------+----------+-----------+");
-        System.out.println("| appointmentId | patientId | patientName  | slotId | doctorId | doctorName      | date      | startTime | endTime  | occupied |");
-        System.out.println("+---------------+-----------+--------------+--------+----------+-----------------+-----------+----------+----------+-----------+");
+    public Appointment parseAppointmentData(ResultSet resultSet) throws SQLException {
 
-        while (resultSet.next()) {
+            Appointment appointment = new Appointment();
             int appointmentId = resultSet.getInt("appointmentId");
             int patientId = resultSet.getInt("patientId");
-            String patientName = resultSet.getString("patientName");
             int slotId = resultSet.getInt("slotId");
-            int doctorId = resultSet.getInt("doctorId");
-            String doctorName = resultSet.getString("doctorName");
-            String date = resultSet.getString("date");
-            String startTime = resultSet.getString("startTime");
-            String endTime = resultSet.getString("endTime");
-            boolean occupied = resultSet.getBoolean("occupied");
 
-            System.out.printf("|%14d |%10d | %12s |%7d |%9d | %15s |%10s |%9s |%9s |%10s |\n",
-                    appointmentId, patientId, patientName, slotId, doctorId, doctorName, date, startTime, endTime, occupied);
-        }
 
-        System.out.println("+---------------+-----------+--------------+--------+----------+-----------------+-----------+----------+----------+-----------+");
+            appointment.setAppointmentId(appointmentId);
+            User patient = userRepoDb.getById(patientId);
+            appointment.setPatient(patient);
+            Slot slot = slotRepoDb.getById(slotId);
+            User doctor = userRepoDb.getById(slot.getDoctorId());
+            slot.setDoctor(doctor);
+            appointment.setSlot(slot);
+
+            return appointment;
+
+
+
     }
 
 
 
     @Override
-    public boolean add(AppointmentV1 appointment) {
+    public boolean add(Appointment appointment) {
         Slot slot = slotRepoDb.getById(appointment.getDoctorSlotId());
         if(slot == null){
             System.out.println("No slot found against the provided id: "+appointment.getDoctorSlotId());

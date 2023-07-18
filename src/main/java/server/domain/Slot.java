@@ -1,5 +1,4 @@
 package server.domain;
-import server.domain.version1.AppointmentV1;
 import server.utilities.ScheduleCreationException;
 
 import javax.persistence.*;
@@ -40,7 +39,7 @@ public class Slot {
             orphanRemoval = true,
             fetch = FetchType.EAGER
     )
-    private AppointmentV1 appointmentV1;
+    private Appointment appointmentV1;
 
     public Slot()
     {
@@ -113,7 +112,7 @@ public class Slot {
     }
 
 
-    public Slot(int slotId, int doctorId, User doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean occupied, AppointmentV1 appointmentV1) {
+    public Slot(int slotId, int doctorId, User doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean occupied, Appointment appointmentV1) {
         this.slotId = slotId;
         this.doctorId = doctorId;
         this.doctor = doctor;
@@ -181,11 +180,11 @@ public class Slot {
     }
 
 
-    public AppointmentV1 getAppointmentV1() {
+    public Appointment getAppointmentV1() {
         return appointmentV1;
     }
 
-    public void setAppointmentV1(AppointmentV1 appointmentV1) {
+    public void setAppointmentV1(Appointment appointmentV1) {
         this.appointmentV1 = appointmentV1;
         appointmentV1.setSlot(this);
     }

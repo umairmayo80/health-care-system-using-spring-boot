@@ -10,7 +10,7 @@
 //import server.context.ServiceContext;
 //import server.domain.Slot;
 //import server.domain.User;
-//import server.domain.version1.AppointmentV1;
+//import server.domain.AppointmentV1;
 //import server.service.UserService;
 //import server.service.impl.hibernate.UserServiceHibernateImpl;
 //import server.utilities.InitializeHibernateDb;
@@ -87,7 +87,7 @@
 //        // Remove the association between AppointmentV1 and Slot entities
 //        for (AppointmentV1 appointment : user.getAppointmentV1List()) {
 //            Slot slot = appointment.getSlot();
-//            slot.removeAppointmentV1(); // If we don`t do that hibernate will through exception Exception in thread "main" javax.persistence.EntityNotFoundException: deleted object would be re-saved by cascade (remove deleted object from associations): [server.domain.version1.AppointmentV1#1]
+//            slot.removeAppointmentV1(); // If we don`t do that hibernate will through exception Exception in thread "main" javax.persistence.EntityNotFoundException: deleted object would be re-saved by cascade (remove deleted object from associations): [server.domain.AppointmentV1#1]
 //        }
 //
 //

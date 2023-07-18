@@ -47,17 +47,17 @@ public class SlotsServiceDBImpl implements SlotService {
 
     @Override
     public void viewBookedSlotsById(int userId) {
-        slotRepoDb.viewBookedSlotsById(userId);
+        DisplayFormatting.displaySlots(slotRepoDb.getBookedSlotsById(userId));
     }
 
     @Override
     public void viewFreeSlots() {
-        slotRepoDb.viewFreeSlots();
+        DisplayFormatting.displaySlots(slotRepoDb.getFreeSlots());
     }
 
     @Override
     public void viewFreeSlotsById(int userId) {
-        slotRepoDb.viewFreeSlotsById(userId);
+        DisplayFormatting.displaySlots(slotRepoDb.getFreeSlotsById(userId));
     }
 
     @Override
