@@ -6,7 +6,7 @@ public interface AdminService {
 
     boolean addUser(User user);
 
-    int setUserAccountStatus(String username,boolean status);
+    boolean setUserAccountStatus(String username,boolean status);
 
 
 }

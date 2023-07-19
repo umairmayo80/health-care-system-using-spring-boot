@@ -19,7 +19,8 @@ public class AdminServiceHibernateImpl implements AdminService {
     }
 
     @Override
-    public int setUserAccountStatus(String username, boolean status) {
-        return userService.setUserAccountStatus(username,status);
+    public boolean setUserAccountStatus(String username, boolean status) {
+        int rowsAffected = userService.setUserAccountStatus(username,status);
+        return rowsAffected > 0;
     }
 }
