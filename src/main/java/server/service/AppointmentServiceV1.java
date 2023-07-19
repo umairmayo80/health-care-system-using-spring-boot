@@ -7,10 +7,6 @@ import java.util.List;
 
 public interface AppointmentServiceV1 {
 
-
-    // Save appointments to storage
-    void saveAppointmentsToStorage(List<Appointment> appointmentList);
-
     List<Appointment> getAppointments();
 
     void viewAllAppointments();
@@ -19,9 +15,7 @@ public interface AppointmentServiceV1 {
 
     void viewAppointmentsByDoctorId(int doctorId);
 
-    boolean addAppointmentEntry(Appointment appointment);
-
-    boolean addAppointment(Appointment appointmentV1, User currentUser);
+    boolean addAppointment(int doctorSlotId, int patientId);
 
 
 }

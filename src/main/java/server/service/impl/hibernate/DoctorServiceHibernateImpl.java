@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import server.domain.Slot;
 import server.domain.User;
 import server.service.DoctorService;
+import server.utilities.ScheduleCreationException;
 
 @Component
 public class DoctorServiceHibernateImpl implements DoctorService {
@@ -24,8 +25,8 @@ public class DoctorServiceHibernateImpl implements DoctorService {
 
 
     @Override
-    public boolean addSlotsEntry(Slot slot, User currentUser) {
-        return slotServiceHibernate.addSlot(slot,currentUser);
+    public boolean createNewSlot(int doctorId, String date, String startTime, String endTime) throws ScheduleCreationException {
+        return  slotServiceHibernate.createNewSlot(doctorId,date,startTime,endTime);
     }
 
     @Override

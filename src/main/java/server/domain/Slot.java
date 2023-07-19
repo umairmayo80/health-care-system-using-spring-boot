@@ -14,9 +14,6 @@ public class Slot {
     @Column(name = "slotId")
     private int slotId;
 
-    @Transient
-    private int doctorId;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctorId", referencedColumnName = "userid")
     private User doctor;
@@ -43,77 +40,20 @@ public class Slot {
     public Slot()
     {
     }
-    public Slot(int doctorId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+
+
+    public Slot(User doctor, LocalDate date, LocalTime startTime, LocalTime endTime)  {
         this.slotId = 0;
-        this.doctorId = doctorId;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.occupied = false;
-    }
-
-    public Slot(int doctorId, String date, String startTime, String endTime) throws ScheduleCreationException {
-        this.slotId = 0;
-        this.occupied = false;
-        this.doctorId = doctorId;
-        try {
-            this.date = LocalDate.parse(date);
-        } catch (DateTimeParseException e) {
-            throw new ScheduleCreationException("Invalid date format. Please enter date in the format YYYY-MM-DD.", e);
-        }
-
-        try {
-            this.startTime = LocalTime.parse(startTime);
-        } catch (DateTimeParseException e) {
-            throw new ScheduleCreationException("Invalid start time format. Please enter time in the format HH:MM:SS.", e);
-        }
-
-        try {
-            this.endTime = LocalTime.parse(endTime);
-        } catch (DateTimeParseException e) {
-            throw new ScheduleCreationException("Invalid end time format. Please enter time in the format HH:MM:SS.", e);
-        }
-
-    }
-
-    public Slot(int slotId, int doctorId, String date, String startTime, String endTime, boolean occupied) throws ScheduleCreationException {
-        this.slotId = slotId;
-        this.occupied = occupied;
-        this.doctorId = doctorId;
-        try {
-            this.date = LocalDate.parse(date);
-        } catch (DateTimeParseException e) {
-            throw new ScheduleCreationException("Invalid date format. Please enter date in the format YYYY-MM-DD.", e);
-        }
-
-        try {
-            this.startTime = LocalTime.parse(startTime);
-        } catch (DateTimeParseException e) {
-            throw new ScheduleCreationException("Invalid start time format. Please enter time in the format HH:MM:SS.", e);
-        }
-
-        try {
-            this.endTime = LocalTime.parse(endTime);
-        } catch (DateTimeParseException e) {
-            throw new ScheduleCreationException("Invalid end time format. Please enter time in the format HH:MM:SS.", e);
-        }
-
-    }
-
-    public Slot(int slotId, int doctorId, User doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean occupied) {
-        this.slotId = slotId;
-        this.doctorId = doctorId;
         this.doctor = doctor;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.occupied = occupied;
+        this.occupied = false;
+
     }
 
-
-    public Slot(int slotId, int doctorId, User doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean occupied, Appointment appointmentV1) {
+    public Slot(int slotId, User doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean occupied, Appointment appointmentV1) {
         this.slotId = slotId;
-        this.doctorId = doctorId;
         this.doctor = doctor;
         this.date = date;
         this.startTime = startTime;
@@ -128,14 +68,6 @@ public class Slot {
 
     public void setSlotId(int slotId) {
         this.slotId = slotId;
-    }
-
-    public int getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
     }
 
     public LocalDate getDate() {
@@ -198,11 +130,12 @@ public class Slot {
     public String toString() {
         return "Slot{" +
                 "slotId=" + slotId +
-                ", doctorId=" + doctorId +
+                ", doctor=" + doctor +
                 ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", occupied=" + occupied +
+                ", appointmentV1=" + appointmentV1 +
                 '}';
     }
 }

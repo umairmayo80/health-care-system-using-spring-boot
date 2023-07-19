@@ -6,7 +6,6 @@ public interface UserService {
     List<User> getUsers();
 
     boolean addUserEntry(User user);
-    void addUsersListToStorage(List<User> userList);
 
     User validateUserLogin(String username, String password, String userRole);
 
@@ -18,6 +17,8 @@ public interface UserService {
     void viewDoctors();
 
     boolean deleteUser(String username);
+
+    int setUserAccountStatus(String username,boolean status);
 
 
 }

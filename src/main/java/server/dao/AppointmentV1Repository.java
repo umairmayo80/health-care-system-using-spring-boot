@@ -1,19 +1,13 @@
 package server.dao;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import server.domain.Appointment;
 
 import java.util.List;
 
-public interface AppointmentV1Repository {
-    // Save appointments to storage
-    void saveAppointmentsToStorage(List<Appointment> appointmentList);
+public interface AppointmentV1Repository extends JpaRepository<Appointment, Integer> {
 
-    List<Appointment> getAll();
+    List<Appointment> getAppointmentsByPatient_UserId(int patientId);
 
-    List<Appointment> getAppointmentsByPatientId(int patientId);
-
-    List<Appointment> getAppointmentsByDoctorId(int doctorId);
-
-
-    boolean add(Appointment appointment);
+    List<Appointment> getAppointmentsBySlot_Doctor_UserId(int doctorId);
 }

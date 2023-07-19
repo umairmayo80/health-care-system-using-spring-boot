@@ -6,7 +6,6 @@ import server.domain.Slot;
 import server.domain.User;
 import server.domain.Appointment;
 import server.service.*;
-import server.service.impl.database.*;
 import server.service.impl.hibernate.*;
 import server.service.AppointmentServiceV1;
 import server.utilities.InitializeHibernateDb;
@@ -69,14 +68,7 @@ public class CLI {
             }
             switch (choice) {
                 case 1:
-                    UserService userServiceDB = context.getBean(UserServiceDBImpl.class);
-                    AdminService adminServiceDB = context.getBean(AdminServiceDBImpl.class);
-                    PatientService patientServiceDB = context.getBean(PatientServiceDBImpl.class);
-                    DoctorService doctorServiceDB = context.getBean(DoctorServiceDBImpl.class);
-                    AppointmentServiceV1 appointmentServiceDB = context.getBean(AppointmentServiceV1DBImpl.class);
-                    SlotService slotService1 = context.getBean(SlotsServiceDBImpl.class);
-                    cli = CLI.getInstance(userServiceDB, adminServiceDB, patientServiceDB, doctorServiceDB,
-                            appointmentServiceDB, slotService1);
+                    System.out.println("db");
                     loop = false;
                     break;
                 case 2:
@@ -482,9 +474,8 @@ public class CLI {
             System.out.println("Invalid Input");
             return;
         }
-        Appointment newAppointment = new Appointment(currentUser.getUserId(), selectedSlotId);
 
-        if (patientService.addAppointment(newAppointment,currentUser))
+        if (patientService.addAppointment(selectedSlotId,currentUser.getUserId()))
             System.out.println("Appointment created successfully");
     }
 
@@ -517,9 +508,7 @@ public class CLI {
         System.out.print("Enter endTime (HH:MM): ");
         String endTime = scanner.nextLine().strip();
         try {
-            Slot newSlot = new Slot(doctorId, date, startTime, endTime);
-
-            if (doctorService.addSlotsEntry(newSlot, currentUser))
+            if (slotService.createNewSlot(currentUser.getUserId(),date,startTime,endTime))
                 System.out.println("Entry added successfully");
             else
                 System.out.println("Error, unable to add new slot");

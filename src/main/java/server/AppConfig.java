@@ -8,15 +8,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.bind.annotation.RestController;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.Appointment;
-import server.utilities.DatabaseConnection;
+
 import java.sql.Connection;
 import java.util.Properties;
 import java.util.Scanner;
 
 @Configuration
+@RestController
 @ComponentScan(basePackages = {"server"})
 public class AppConfig {
 
@@ -25,18 +27,14 @@ public class AppConfig {
         return new Scanner(System.in);
     }
 
-    @Bean
-    public Connection getConnection(){
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        return databaseConnection.getConnection();
-    }
+
 
     @Bean
     @Scope("singleton")
-    public SessionFactory getSessionFactory(DatabaseConnection databaseConnection){
-        String url = databaseConnection.getUrl();
-        String username = databaseConnection.getUsername();
-        String password = databaseConnection.getPassword();
+    public SessionFactory getSessionFactory(){
+        String url = "jdbc:mysql://localhost:3306/";
+        String username = "test";
+        String password = "password123!";
         String databaseName = "HealthCareDatabase";
         SessionFactory sessionFactory = null;
         try{

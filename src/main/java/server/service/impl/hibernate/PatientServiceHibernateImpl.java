@@ -23,7 +23,7 @@ public class PatientServiceHibernateImpl implements PatientService {
 
 
     @Override
-    public boolean addAppointment(Appointment appointment, User patient) {
-        return appointmentServiceV1Hibernate.addAppointment(appointment, patient);
+    public boolean addAppointment(int doctorSlotId, int patientId) {
+        return appointmentServiceV1Hibernate.addAppointment(doctorSlotId,patientId);
     }
 }

@@ -19,10 +19,7 @@ public class Appointment {
     @JoinColumn(name = "doctorSlotId", referencedColumnName = "slotId")
     private Slot slot;
 
-    @Transient
-    private int patientId;
-    @Transient
-    private int doctorSlotId;
+
 
     // default constructor
     public Appointment(){
@@ -30,46 +27,15 @@ public class Appointment {
     }
 
     // Constructor
-    public Appointment(int appointmentId, int patientId, int doctorSlotId) {
-        this.patientId = patientId;
-        this.doctorSlotId = doctorSlotId;
-        this.appointmentId = appointmentId;
-    }
-
-    public Appointment(int patientId, int doctorSlotId){
-        this.appointmentId = 0;
-        this.patientId = patientId;
-        this. doctorSlotId = doctorSlotId;
-    }
-
-    public Appointment(int appointmentId, User patient, Slot slot, int patientId, int doctorSlotId) {
+    public Appointment(int appointmentId, User patient, Slot slot) {
         this.appointmentId = appointmentId;
         this.patient = patient;
         this.slot = slot;
-        this.patientId = patientId;
-        this.doctorSlotId = doctorSlotId;
     }
 
-
-
-    // Getter for patientId
-    public int getPatientId() {
-        return patientId;
-    }
-
-    // Setter for patientId
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
-    }
-
-    // Getter for doctorSlotId
-    public int getDoctorSlotId() {
-        return doctorSlotId;
-    }
-
-    // Setter for doctorSlotId
-    public void setDoctorSlotId(int doctorSlotId) {
-        this.doctorSlotId = doctorSlotId;
+    public Appointment(User patient, Slot slot) {
+        this.patient = patient;
+        this.slot = slot;
     }
 
     // Getter for appointmentId
@@ -100,12 +66,13 @@ public class Appointment {
     }
 
     // toString method to represent the Appointment object as a string
+
     @Override
     public String toString() {
         return "Appointment{" +
-                "patientId=" + patientId +
-                ", doctorSlotId=" + doctorSlotId +
-                ", appointmentId=" + appointmentId +
+                "appointmentId=" + appointmentId +
+                ", patient=" + patient +
+                ", slot=" + slot +
                 '}';
     }
 }
