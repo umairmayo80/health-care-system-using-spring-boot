@@ -1,6 +1,5 @@
 package server.domain;
 import server.utilities.ScheduleCreationException;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;

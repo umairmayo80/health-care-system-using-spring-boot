@@ -1,18 +1,12 @@
 package server.domain;
 
 import javax.persistence.*;
-import java.io.*;
 import java.util.*;
 
 
 @Entity
 @Table(name = "user_table")
 public class User {
-    @Transient
-    private static final String ID_FILE_PATH = "lastAssignedId.txt";
-    @Transient
-    private static int lastAssignedId;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userid")
@@ -37,9 +31,6 @@ public class User {
     private List<Appointment> appointmentV1List = new ArrayList<>();
 
 
-    static {
-        loadLastAssignedId();
-    }
 
     public User() {
     }
@@ -50,7 +41,7 @@ public class User {
     }
 
     public User(String name, String role, String username, String password) {
-        this.userId = generateNewId();
+        this.userId = 0;
         this.name = name;
         this.role = role;
         this.username = username;
@@ -79,33 +70,6 @@ public class User {
         this.appointmentV1List = appointmentV1List;
     }
 
-    private static int generateNewId() {
-        lastAssignedId++;
-        saveLastAssignedId();
-        return lastAssignedId;
-    }
-
-    private static void saveLastAssignedId() {
-        try (FileWriter writer = new FileWriter(ID_FILE_PATH)) {
-            writer.write(String.valueOf(lastAssignedId));
-        } catch (IOException e) {
-            System.out.println("Error saving lastAssignedId to file: " + e.getMessage());
-        }
-    }
-
-    private static void loadLastAssignedId() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(ID_FILE_PATH))) {
-            String line = reader.readLine();
-            if (line != null) {
-                lastAssignedId = Integer.parseInt(line.trim());
-            }
-        } catch (FileNotFoundException e) {
-            // File does not exist yet, initialize lastAssignedId to 0
-            lastAssignedId = 0;
-        } catch (IOException e) {
-            System.out.println("Error loading lastAssignedId from file: " + e.getMessage());
-        }
-    }
 
     public void setUserId(int userId){
         this.userId = userId;
