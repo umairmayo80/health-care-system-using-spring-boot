@@ -20,7 +20,7 @@ public class CLI {
     private final DoctorService doctorService;
     private final UserService userService;
     private final AdminService adminService;
-    private User currentUser; // to hold the current user
+    private User currentUser;
     private final AppointmentServiceV1 appointmentServiceV1;
     private final SlotService slotService;
 
