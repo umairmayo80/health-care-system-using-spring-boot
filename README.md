@@ -1,6 +1,6 @@
-# CLI Health Care Management System
+# Health Care Management System Using Spring Boot
 
-This is a command-line-based Health Care Management System implemented in Java. It provides functionality for managing health care records, appointments, and patient information.
+This is a Health Care Management System implemented in Java. It provides functionality for managing health care records, appointments, and patient information.
 
 ## Usage Instructions
 
