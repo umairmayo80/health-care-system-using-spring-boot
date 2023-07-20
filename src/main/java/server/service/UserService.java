@@ -12,13 +12,13 @@ public interface UserService {
     List<User> getPatients();
     List<User> getDoctors();
 
-    void viewUsers();
-    void viewPatients();
-    void viewDoctors();
+    List<User> getByRole(String role);
 
     boolean deleteUser(String username);
 
     int setUserAccountStatus(String username,boolean status);
+
+    User getByUsername(String username);
 
 
 }

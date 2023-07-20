@@ -38,11 +38,6 @@ public class AppServer {
         return "Spring 2.7 Home";
     }
 
-    @GetMapping("/users")
-    public List<User>  getUsers(){
-        return userService.getUsers();
-    }
-
     @GetMapping("/appointments")
     public List<Appointment> getAppointments(){
         return appointmentServiceV1.getAppointments();

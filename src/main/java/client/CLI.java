@@ -307,20 +307,20 @@ public class CLI {
 
     public void viewAllUsers() {
         System.out.println("View All Users function called");
-        userService.viewUsers();
+//        userService.viewUsers();
     }
 
 
     public void viewPatients() {
         // Implementation for viewing patients
         System.out.println("View Patients function called");
-        userService.viewPatients();
+//        userService.viewPatients();
 
     }
 
     public void viewDoctors(){
         System.out.println("View Doctors function called");
-        userService.viewDoctors();
+//        userService.viewDoctors();
     }
 
     public void viewAvailableDoctorSlots() {

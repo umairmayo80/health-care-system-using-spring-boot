@@ -58,7 +58,15 @@ public class UserServiceHibernateImpl implements UserService {
 
     @Override
     public List<User> getDoctors() {
-        return userRepository.getUsersByRole("doctors");
+        return userRepository.getUsersByRole("doctor");
+    }
+
+    @Override
+    public List<User> getByRole(String role) {
+        if(role.equals("admin") || role.equals("patient") || role.equals("doctor")){
+            return userRepository.getUsersByRole(role);
+        }
+        throw new IllegalStateException("Invalid role.");
     }
 
     public void viewUsers() {
@@ -66,17 +74,6 @@ public class UserServiceHibernateImpl implements UserService {
         DisplayFormatting.displayUsers(users);
     }
 
-    @Override
-    public void viewPatients() {
-        List<User> patients = getPatients();
-        DisplayFormatting.displayUsers(patients);
-    }
-
-    @Override
-    public void viewDoctors() {
-        List<User> doctors = getDoctors();
-        DisplayFormatting.displayUsers(doctors);
-    }
 
     @Override
     public boolean deleteUser(String username) {
@@ -102,5 +99,10 @@ public class UserServiceHibernateImpl implements UserService {
     @Override
     public int setUserAccountStatus(String username, boolean status) {
         return userRepository.updateUserAccountStatus(username,status);
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        return userRepository.getUserByUsername(username);
     }
 }

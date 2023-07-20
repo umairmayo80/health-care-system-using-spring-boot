@@ -9,6 +9,9 @@ public class UserDTO {
     // Other relevant fields and their getters and setters
 
 
+    public UserDTO() {
+    }
+
     public UserDTO(int userId, String name, String role, String username, boolean accountLocked) {
         this.userId = userId;
         this.name = name;
