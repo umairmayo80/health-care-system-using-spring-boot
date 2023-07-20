@@ -1,9 +1,9 @@
 package server.domain;
-import server.utilities.ScheduleCreationException;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
+
 
 @Entity
 @Table(name = "slot_table",
@@ -52,15 +52,7 @@ public class Slot {
 
     }
 
-    public Slot(int slotId, User doctor, LocalDate date, LocalTime startTime, LocalTime endTime, boolean occupied, Appointment appointmentV1) {
-        this.slotId = slotId;
-        this.doctor = doctor;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.occupied = occupied;
-        this.appointmentV1 = appointmentV1;
-    }
+
 
     public int getSlotId() {
         return slotId;
