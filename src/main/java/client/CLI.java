@@ -295,7 +295,7 @@ public class CLI {
         String password = scanner.nextLine();
 
         // Create server.domain.User object with the entered information
-        User user = new User(name, roll, username, password);
+        User user = new User(name, roll, username, password,false);
 
         //Save the user to database
         if (adminService.addUser(user)) {

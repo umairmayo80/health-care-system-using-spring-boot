@@ -1,6 +1,7 @@
 package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import server.dao.AppointmentV1Repository;
 import server.dao.SlotRepository;
 import server.dao.UserRepository;
@@ -53,6 +54,7 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
     }
 
 
+    @Transactional //it will automatically commit all the changes made to all entities or rollback if error occurs
     @Override
     public boolean addAppointment(int doctorSlotId, int patientId) {
         // check if the slot is available or not
@@ -69,6 +71,7 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
         Appointment newAppointment = new Appointment(patient,slot);
         //associate the appointment with the slot
         slot.setAppointmentV1(newAppointment);
+        slot.setOccupied(true); //set the occupied status
         // now associate the new appointment with the parents
         patient.addAppointmentV1(newAppointment);
         appointmentV1Repository.save(newAppointment);

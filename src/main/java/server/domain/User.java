@@ -21,7 +21,7 @@ public class User {
     private String password;
 
     @Column(name = "accountLocked")
-    private boolean accountLocked;
+    private Boolean accountLocked;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Slot> slots = new HashSet<>();
@@ -36,17 +36,13 @@ public class User {
     }
 
 
-    public User(String name, String roll) {
-        this(name, roll, "", "");
-    }
-
-    public User(String name, String role, String username, String password) {
+    public User(String name, String role, String username, String password, boolean accountLocked) {
         this.userId = 0;
         this.name = name;
         this.role = role;
         this.username = username;
         this.password = password;
-        this.accountLocked = false;
+        this.accountLocked = accountLocked;
     }
     public User(int id, String name, String role, String username, String password, boolean accountLocked) {
         this.userId = id;

@@ -3,6 +3,7 @@ package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import server.dao.UserRepository;
 import server.domain.Appointment;
 import server.domain.Slot;
@@ -96,6 +97,7 @@ public class UserServiceHibernateImpl implements UserService {
         return true;
     }
 
+    @Transactional
     @Override
     public int setUserAccountStatus(String username, boolean status) {
         return userRepository.updateUserAccountStatus(username,status);

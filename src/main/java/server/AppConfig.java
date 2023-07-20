@@ -44,11 +44,11 @@ public class AppConfig {
     CommandLineRunner commandLineRunner(UserService userService, SlotService slotService, AppointmentServiceV1 appointmentServiceV1) {
         return args -> {
             try {
-                User user1 = new User("John Doe", "admin", "admin123", "password123");
-                User user2 = new User("Jane Smith", "patient", "patient123", "patient123");
-                User user3 = new User("Robert Johnson", "doctor", "doctor123", "doctor123");
+                User user1 = new User("John Doe", "admin", "admin123", "password123",false);
+                User user2 = new User("Jane Smith", "patient", "patient123", "patient123",false);
+                User user3 = new User("Robert Johnson", "doctor", "doctor123", "doctor123",false);
 
-                User user4 = new User("Alex", "patient", "patient2", "patient123");
+                User user4 = new User("Alex", "patient", "patient2", "patient123",true);
 
                 // persist the users
                 userService.addUserEntry(user1);

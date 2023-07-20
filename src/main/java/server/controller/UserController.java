@@ -1,10 +1,8 @@
 package server.controller;
 
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.domain.User;
 import server.dto.UserDTO;
 import server.mapper.UserMapper;
@@ -33,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String username){
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username){
         User user = userService.getByUsername(username);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -67,6 +65,29 @@ public class UserController {
         return ResponseEntity.ok(doctorsDTOList);
     }
 
+    @GetMapping("/roles/{role}")
+    public ResponseEntity<List<UserDTO>> getUserByRole(@PathVariable String role){
+        List<User> users = userService.getByRole(role);
+        if (users == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<UserDTO> userDTOList = users.stream()
+                .map(userMapper::toDTO)
+                .toList();
+        return ResponseEntity.ok(userDTOList);
+    }
+
+    @DeleteMapping(path = "/{username}")
+    public void deleteUserByUsername(@PathVariable String username){
+        userService.deleteUser(username);
+    }
+
+    @PutMapping(path = "set_account_status/{username}")
+    public void setUserAccountStatus(@PathVariable String username,
+                                     @RequestParam(required = true) boolean status){
+        userService.setUserAccountStatus(username,status);
+        // alternative solution is to get the username, set the username and make the method transaction
+    }
 
 
 
