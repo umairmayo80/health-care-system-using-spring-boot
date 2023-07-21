@@ -23,11 +23,9 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<List<UserDTO>> getUsers(){
         List<User> users = userService.getUsers();
-        System.out.println(users);
         List<UserDTO> userDTOList = users.stream()
                 .map(userMapper::toDTO)
                 .toList();
-        System.out.println(userDTOList);
         return ResponseEntity.ok(userDTOList);
     }
 

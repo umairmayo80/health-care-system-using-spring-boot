@@ -33,6 +33,7 @@ public class AppConfig {
         return new ModelMapper();
     }
 
+    //To Initialize the Database
     @Bean
     CommandLineRunner commandLineRunner(UserService userService, SlotService slotService, AppointmentServiceV1 appointmentServiceV1) {
         return args -> {

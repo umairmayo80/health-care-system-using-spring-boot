@@ -1,10 +1,11 @@
 package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import server.domain.User;
 import server.service.AdminService;
 
-@Component
+@Service
 public class AdminServiceHibernateImpl implements AdminService {
     private final UserServiceHibernateImpl userService;
 
