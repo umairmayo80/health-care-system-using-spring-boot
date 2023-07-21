@@ -326,7 +326,7 @@ public class CLI {
     public void viewAvailableDoctorSlots() {
         // Implementation for viewing doctors
         System.out.println("View Available Doctor Slots function called");
-        slotService.viewFreeSlots();
+//        slotService.viewFreeSlots();
     }
 
     public void viewAppointments() {
@@ -464,7 +464,7 @@ public class CLI {
         int selectedSlotId = 0;
         System.out.println("Create new Appointment function called");
         System.out.println("\t--------------List of available slots-----------");
-        slotService.viewFreeSlots();
+//        slotService.viewFreeSlots();
         System.out.print("\tEnter desired slot id:");
         try {
             selectedSlotId = Integer.parseInt(scanner.nextLine().strip());

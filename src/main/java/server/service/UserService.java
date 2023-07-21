@@ -20,5 +20,7 @@ public interface UserService {
 
     User getByUsername(String username);
 
+    User getByUserId(int userId);
+
 
 }

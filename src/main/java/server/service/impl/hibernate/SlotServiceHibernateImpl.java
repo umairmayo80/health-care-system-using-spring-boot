@@ -1,8 +1,10 @@
 package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import server.dao.SlotRepository;
 import server.dao.UserRepository;
+import server.domain.Appointment;
 import server.domain.Slot;
 import server.domain.User;
 import server.service.SlotService;
@@ -72,9 +74,8 @@ public class SlotServiceHibernateImpl implements SlotService {
         displaySlots(slotRepository.getSlotsByDoctor_UserIdAndOccupiedIs(userId,true));
     }
 
-    @Override
-    public void viewFreeSlots() {
-        displaySlots(slotRepository.getSlotsByOccupiedIs(false));
+    public List<Slot> getFreeSlots() {
+        return slotRepository.getSlotsByOccupiedIs(false);
     }
 
     @Override
@@ -87,6 +88,30 @@ public class SlotServiceHibernateImpl implements SlotService {
         //associate the slot with the parent
         currentUser.addSlot(newSlot);
         slotRepository.save(newSlot);
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean removeSlot(int slotId) {
+        Slot slot = slotRepository.getSlotBySlotId(slotId);
+        if(slot==null){
+            throw new IllegalStateException("No slot found against the slot-id:"+slotId);
+        }
+//        //First Remove the Association between user and slot
+//        slot.getDoctor().removeSlot(slot);
+//        //Remove the associated appointment
+//        slot.removeAppointmentV1();
+
+
+        // for not applying dirty solution
+        // It seems we had to delete the association from both parents then cascade worked
+        slot.getDoctor().removeSlot(slot);
+
+        slot.getAppointmentV1().getPatient().removeAppointment(slot.getAppointmentV1());
+        slot.removeAppointmentV1();
+
+        slotRepository.delete(slot);
         return true;
     }
 

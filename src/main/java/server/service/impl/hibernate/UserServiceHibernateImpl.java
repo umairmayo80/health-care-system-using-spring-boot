@@ -1,5 +1,4 @@
 package server.service.impl.hibernate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -110,5 +109,10 @@ public class UserServiceHibernateImpl implements UserService {
     @Override
     public User getByUsername(String username) {
         return userRepository.getUserByUsername(username);
+    }
+
+    @Override
+    public User getByUserId(int userId) {
+        return userRepository.getUserByUserId(userId);
     }
 }

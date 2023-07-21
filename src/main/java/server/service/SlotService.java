@@ -14,11 +14,12 @@ public interface SlotService {
     List<Slot> getSlotsById(int userId);
     void viewBookedSlotsById(int userId);
 
-    void viewFreeSlots();
-
+    List<Slot> getFreeSlots();
     void viewFreeSlotsById(int userId);
 
     boolean addSlot(Slot newSlot, User currentUser);
+
+    boolean removeSlot(int slotId);
 
     boolean createNewSlot(int doctorId, String date, String startTime, String endTime ) throws ScheduleCreationException;
 }
