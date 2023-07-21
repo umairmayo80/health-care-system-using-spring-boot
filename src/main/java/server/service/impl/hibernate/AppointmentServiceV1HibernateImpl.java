@@ -1,6 +1,7 @@
 package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.dao.AppointmentV1Repository;
 import server.dao.SlotRepository;
@@ -14,7 +15,7 @@ import server.service.AppointmentServiceV1;
 
 import java.util.List;
 
-@Component
+@Service
 public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
     private final AppointmentV1Repository appointmentV1Repository;
     private final SlotRepository slotRepository;

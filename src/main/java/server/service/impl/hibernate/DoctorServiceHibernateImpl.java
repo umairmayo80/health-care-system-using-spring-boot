@@ -1,13 +1,13 @@
 package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import server.domain.Appointment;
 import server.service.DoctorService;
 import server.utilities.ScheduleCreationException;
 
 import java.util.List;
 
-@Component
+@Service
 public class DoctorServiceHibernateImpl implements DoctorService {
     private final AppointmentServiceV1HibernateImpl appointmentServiceV1Hibernate;
     private final SlotServiceHibernateImpl slotServiceHibernate;
