@@ -35,6 +35,10 @@ public class UserServiceHibernateImpl implements UserService {
     @Override
     public boolean addUserEntry(User user) {
         // add logic to check if username already taken or not?
+        User existingUser = userRepository.getUserByUsername(user.getUsername());
+        if(existingUser!=null){
+            throw new IllegalStateException("Username '"+user.getUsername()+"' is not available");
+        }
         userRepository.save(user);
         return true;
     }
