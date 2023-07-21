@@ -6,7 +6,6 @@ public class UserDTO {
     private String role;
     private String username;
     private boolean accountLocked;
-    // Other relevant fields and their getters and setters
 
 
     public UserDTO() {

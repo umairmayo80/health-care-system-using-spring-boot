@@ -16,7 +16,7 @@ public class DisplayFormatting {
         // Print table rows
         for (User user : usersList) {
             System.out.format("%-5d %-15s %-10s %-15s %-15s %-10s%n",
-                    user.getUserId(), user.getName(), user.getRole(), user.getUsername(), user.getPassword(), user.getAccountStatus());
+                    user.getUserId(), user.getName(), user.getRole(), user.getUsername(), user.getPassword(), user.isAccountLocked());
         }
         System.out.println("+-----+---------------+----------+---------------+---------------+-----------+");
     }

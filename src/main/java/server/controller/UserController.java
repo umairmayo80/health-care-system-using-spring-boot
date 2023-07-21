@@ -24,9 +24,11 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<List<UserDTO>> getUsers(){
         List<User> users = userService.getUsers();
+        System.out.println(users);
         List<UserDTO> userDTOList = users.stream()
                 .map(userMapper::toDTO)
                 .toList();
+        System.out.println(userDTOList);
         return ResponseEntity.ok(userDTOList);
     }
 
@@ -87,6 +89,12 @@ public class UserController {
                                      @RequestParam(required = true) boolean status){
         userService.setUserAccountStatus(username,status);
         // alternative solution is to get the username, set the username and make the method transaction
+    }
+
+    @PostMapping()
+    public ResponseEntity<String> createUser(@RequestBody User newUser){
+        userService.addUserEntry(newUser);
+        return ResponseEntity.ok("User created Successfully");
     }
 
 

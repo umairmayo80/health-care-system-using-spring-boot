@@ -21,7 +21,7 @@ public class User {
     private String password;
 
     @Column(name = "accountLocked")
-    private Boolean accountLocked;
+    private boolean accountLocked;
 
     @OneToMany(mappedBy = "doctor", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Slot> slots = new HashSet<>();
@@ -43,27 +43,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.accountLocked = accountLocked;
-    }
-    public User(int id, String name, String role, String username, String password, boolean accountLocked) {
-        this.userId = id;
-        this.name = name;
-        this.role = role;
-        this.username = username;
-        this.password = password;
-        this.accountLocked = accountLocked;
-    }
-
-
-
-    public User(int userId, String name, String role, String username, String password, boolean accountLocked, Set<Slot> slots, List<Appointment> appointmentV1List) {
-        this.userId = userId;
-        this.name = name;
-        this.role = role;
-        this.username = username;
-        this.password = password;
-        this.accountLocked = accountLocked;
-        this.slots = slots;
-        this.appointmentV1List = appointmentV1List;
     }
 
 
@@ -106,13 +85,13 @@ public class User {
         this.password = password;
     }
 
-    public void setAccountStatus(boolean status){
-        this.accountLocked = status;
-    }
-    public boolean getAccountStatus(){
+    public boolean isAccountLocked() {
         return accountLocked;
     }
 
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
+    }
 
     public Set<Slot> getSlots() {
         return slots;
@@ -154,7 +133,7 @@ public class User {
                 ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", accountStatus='" + accountLocked + '\'' +
+                ", accountLocked='" + accountLocked + '\'' +
                 '}';
     }
 
