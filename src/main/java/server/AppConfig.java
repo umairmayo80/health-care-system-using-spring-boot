@@ -26,14 +26,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 @Configuration
-@RestController
-@ComponentScan(basePackages = {"server"})
 public class AppConfig {
-
-    @Bean
-    public Scanner getScanner(){
-        return new Scanner(System.in);
-    }
 
     @Bean
     public ModelMapper modelMapper() {

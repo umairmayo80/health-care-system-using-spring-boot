@@ -10,7 +10,6 @@ import server.domain.User;
 import server.domain.Appointment;
 import server.service.AppointmentServiceV1;
 
-import static server.utilities.DisplayFormatting.displayAppointmentData;
 
 
 import java.util.List;
@@ -39,19 +38,16 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
     }
 
     @Override
-    public void viewAllAppointments() {
-        displayAppointmentData(getAppointments());
+    public List<Appointment> getAppointmentsByPatientId(int patientId) {
+        return appointmentV1Repository.getAppointmentsByPatient_UserId(patientId);
     }
 
     @Override
-    public void viewAppointmentsByPatientId(int patientId) {
-       displayAppointmentData(appointmentV1Repository.getAppointmentsByPatient_UserId(patientId));
+    public List<Appointment> getAppointmentsByDoctorId(int doctorId) {
+        return appointmentV1Repository.getAppointmentsBySlot_Doctor_UserId(doctorId);
     }
 
-    @Override
-    public void viewAppointmentsByDoctorId(int doctorId) {
-       displayAppointmentData(appointmentV1Repository.getAppointmentsBySlot_Doctor_UserId(doctorId));
-    }
+
 
 
     @Transactional //it will automatically commit all the changes made to all entities or rollback if error occurs
@@ -75,6 +71,19 @@ public class AppointmentServiceV1HibernateImpl implements AppointmentServiceV1 {
         // now associate the new appointment with the parents
         patient.addAppointmentV1(newAppointment);
         appointmentV1Repository.save(newAppointment);
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteAppointment(int appointmentId) {
+        Appointment appointment = appointmentV1Repository.getReferenceById(appointmentId);
+        // remove the associations
+        appointment.getPatient().removeAppointment(appointment);
+        appointment.getSlot().removeAppointmentV1();
+
+        // now it will automatically this appointment as it`s associations are removed it has become orphan
+//        appointmentV1Repository.delete(appointment);
         return true;
     }
 }

@@ -9,13 +9,14 @@ public interface AppointmentServiceV1 {
 
     List<Appointment> getAppointments();
 
-    void viewAllAppointments();
+    List<Appointment> getAppointmentsByPatientId(int patientId);
+    List<Appointment> getAppointmentsByDoctorId(int doctorId);
 
-    void viewAppointmentsByPatientId(int patientId);
 
-    void viewAppointmentsByDoctorId(int doctorId);
 
     boolean addAppointment(int doctorSlotId, int patientId);
+
+    boolean deleteAppointment(int appointmentId);
 
 
 }

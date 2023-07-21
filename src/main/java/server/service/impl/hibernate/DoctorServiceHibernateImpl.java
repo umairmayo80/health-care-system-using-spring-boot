@@ -1,8 +1,11 @@
 package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import server.domain.Appointment;
 import server.service.DoctorService;
 import server.utilities.ScheduleCreationException;
+
+import java.util.List;
 
 @Component
 public class DoctorServiceHibernateImpl implements DoctorService {
@@ -17,8 +20,8 @@ public class DoctorServiceHibernateImpl implements DoctorService {
     }
 
     @Override
-    public void viewAppointments(int userID) {
-        appointmentServiceV1Hibernate.viewAppointmentsByDoctorId(userID);
+    public List<Appointment> viewAppointments(int userID) {
+        return appointmentServiceV1Hibernate.getAppointmentsByDoctorId(userID);
     }
 
 
