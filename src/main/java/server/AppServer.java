@@ -1,13 +1,10 @@
 package server;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.domain.Appointment;
 import server.domain.Slot;
-import server.domain.User;
 import server.service.AppointmentServiceV1;
 import server.service.SlotService;
 import server.service.UserService;

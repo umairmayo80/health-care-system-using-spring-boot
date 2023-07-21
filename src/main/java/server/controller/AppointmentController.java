@@ -6,12 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.domain.Appointment;
-import server.domain.Slot;
 import server.dto.AppointmentDTO;
-import server.dto.SlotDTO;
 import server.mapper.AppointmentMapper;
 import server.service.AppointmentServiceV1;
-
 import java.util.List;
 
 @RestController

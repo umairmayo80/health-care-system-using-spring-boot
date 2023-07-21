@@ -4,12 +4,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.dao.SlotRepository;
 import server.dao.UserRepository;
-import server.domain.Appointment;
 import server.domain.Slot;
 import server.domain.User;
 import server.service.SlotService;
 import server.utilities.ScheduleCreationException;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;

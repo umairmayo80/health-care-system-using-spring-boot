@@ -8,7 +8,6 @@ import server.domain.Appointment;
 import server.domain.Slot;
 import server.domain.User;
 import server.service.UserService;
-import server.utilities.DisplayFormatting;
 
 import java.util.List;
 
@@ -72,12 +71,6 @@ public class UserServiceHibernateImpl implements UserService {
         }
         throw new IllegalStateException("Invalid role.");
     }
-
-    public void viewUsers() {
-        List<User> users = getUsers();
-        DisplayFormatting.displayUsers(users);
-    }
-
 
     @Override
     public boolean deleteUser(String username) {
