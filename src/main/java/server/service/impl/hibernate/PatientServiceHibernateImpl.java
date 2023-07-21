@@ -3,8 +3,9 @@ package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import server.domain.Appointment;
-import server.domain.User;
 import server.service.PatientService;
+
+import java.util.List;
 
 @Component
 public class PatientServiceHibernateImpl implements PatientService {
@@ -17,13 +18,13 @@ public class PatientServiceHibernateImpl implements PatientService {
     }
 
     @Override
-    public void viewAppointments(int patient_id) {
-        appointmentServiceV1Hibernate.viewAppointmentsByPatientId(patient_id);
+    public List<Appointment> viewAppointments(int patient_id) {
+        return appointmentServiceV1Hibernate.getAppointmentsByPatientId(patient_id);
     }
 
 
     @Override
-    public boolean addAppointment(Appointment appointment, User patient) {
-        return appointmentServiceV1Hibernate.addAppointment(appointment, patient);
+    public boolean addAppointment(int doctorSlotId, int patientId) {
+        return appointmentServiceV1Hibernate.addAppointment(doctorSlotId,patientId);
     }
 }

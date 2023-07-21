@@ -6,18 +6,21 @@ public interface UserService {
     List<User> getUsers();
 
     boolean addUserEntry(User user);
-    void addUsersListToStorage(List<User> userList);
 
     User validateUserLogin(String username, String password, String userRole);
 
     List<User> getPatients();
     List<User> getDoctors();
 
-    void viewUsers();
-    void viewPatients();
-    void viewDoctors();
+    List<User> getByRole(String role);
 
     boolean deleteUser(String username);
+
+    int setUserAccountStatus(String username,boolean status);
+
+    User getByUsername(String username);
+
+    User getByUserId(int userId);
 
 
 }

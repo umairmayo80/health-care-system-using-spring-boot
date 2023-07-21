@@ -4,73 +4,68 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.spi.ServiceException;
+import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.bind.annotation.RestController;
+import server.dao.UserRepository;
 import server.domain.Slot;
 import server.domain.User;
 import server.domain.Appointment;
-import server.utilities.DatabaseConnection;
+import server.service.AppointmentServiceV1;
+import server.service.SlotService;
+import server.service.UserService;
+
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
 @Configuration
-@ComponentScan(basePackages = {"server"})
 public class AppConfig {
 
     @Bean
-    public Scanner getScanner(){
-        return new Scanner(System.in);
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
     @Bean
-    public Connection getConnection(){
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        return databaseConnection.getConnection();
+    CommandLineRunner commandLineRunner(UserService userService, SlotService slotService, AppointmentServiceV1 appointmentServiceV1) {
+        return args -> {
+            try {
+                User user1 = new User("John Doe", "admin", "admin123", "password123",false);
+                User user2 = new User("Jane Smith", "patient", "patient123", "patient123",false);
+                User user3 = new User("Robert Johnson", "doctor", "doctor123", "doctor123",false);
+
+                User user4 = new User("Alex", "patient", "patient2", "patient123",true);
+
+                // persist the users
+                userService.addUserEntry(user1);
+                userService.addUserEntry(user2);
+                userService.addUserEntry(user3);
+                userService.addUserEntry(user4);
+
+
+                slotService.createNewSlot(user3.getUserId(), "2023-12-12", "09:30:00", "10:30:00");
+                slotService.createNewSlot(user3.getUserId(), "2023-12-13", "09:30:00", "10:30:00");
+                slotService.createNewSlot(user3.getUserId(), "2023-12-14", "09:30:00", "10:30:00");
+
+
+                // it will fetch the slot, the user, create association and
+                appointmentServiceV1.addAppointment(2, user2.getUserId());
+                appointmentServiceV1.addAppointment(3, user2.getUserId());
+
+                System.out.println("Hibernate System Success initialized");
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Failed to Initialize hibernate System.\n Exiting");
+                System.exit(1);
+            }
+        };
     }
-
-    @Bean
-    @Scope("singleton")
-    public SessionFactory getSessionFactory(DatabaseConnection databaseConnection){
-        String url = databaseConnection.getUrl();
-        String username = databaseConnection.getUsername();
-        String password = databaseConnection.getPassword();
-        String databaseName = "HealthCareDatabase";
-        SessionFactory sessionFactory = null;
-        try{
-            org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
-
-            // Hibernate settings equivalent to hibernate.cfg.xml properties
-            Properties settings = new Properties();
-            settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-            settings.put(Environment.URL, url+databaseName+"?userSSL=false");
-            settings.put(Environment.USER,username);
-            settings.put(Environment.PASS,password);
-            settings.put(Environment.DIALECT,"org.hibernate.dialect.MySQL8Dialect");
-
-            settings.put(Environment.SHOW_SQL,"false");
-            settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS,"thread");
-            settings.put(Environment.HBM2DDL_AUTO,"create-drop");
-
-            configuration.setProperties(settings);
-
-            configuration.addAnnotatedClass(User.class);
-            configuration.addAnnotatedClass(Slot.class);
-            configuration.addAnnotatedClass(Appointment.class);
-
-            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties())
-                    .build();
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        } catch (ServiceException e){
-            System.out.println("Fail to connect to database:" +
-                    "\n Please check your username and password and ensure that the '"+databaseName+" database exits'\n"
-                    +e.getMessage());
-            System.exit(1);
-        }
-        return sessionFactory;
-    }
-
 
 }

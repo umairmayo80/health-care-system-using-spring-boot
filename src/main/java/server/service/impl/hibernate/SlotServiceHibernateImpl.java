@@ -1,36 +1,41 @@
 package server.service.impl.hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import server.dao.impl.hibernate.SlotRepoHibernateImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import server.dao.SlotRepository;
+import server.dao.UserRepository;
 import server.domain.Slot;
 import server.domain.User;
 import server.service.SlotService;
-
+import server.utilities.ScheduleCreationException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
-@Component
+@Service
 public class SlotServiceHibernateImpl implements SlotService {
-    private final SlotRepoHibernateImpl slotRepoHibernate;
+
+    private final SlotRepository slotRepository;
+    private final UserRepository userRepository;
+
 
     @Autowired
-    public SlotServiceHibernateImpl(SlotRepoHibernateImpl slotRepoHibernate) {
-        this.slotRepoHibernate = slotRepoHibernate;
+    public SlotServiceHibernateImpl(SlotRepository slotRepository, UserRepository userRepository) {
+        this.slotRepository = slotRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public List<Slot> getSlots() {
-        return slotRepoHibernate.getAll();
+        return slotRepository.findAll();
     }
 
     @Override
     public Slot getSlotBySlotId(int slotID) {
-       return slotRepoHibernate.getById(slotID);
+       return slotRepository.getSlotBySlotId(slotID);
     }
 
-    @Override
-    public boolean addSlotEntry(Slot slot) {
-        return slotRepoHibernate.add(slot);
-    }
 
     @Override
     public void viewAllSlots() {
@@ -59,28 +64,86 @@ public class SlotServiceHibernateImpl implements SlotService {
 
     @Override
     public List<Slot> getSlotsById(int userId) {
-       return slotRepoHibernate.getAllByUserId(userId);
+       return slotRepository.getSlotsByDoctor_UserId(userId);
     }
 
     @Override
     public void viewBookedSlotsById(int userId) {
-        displaySlots(slotRepoHibernate.getBookedSlotsById(userId));
+        displaySlots(slotRepository.getSlotsByDoctor_UserIdAndOccupiedIs(userId,true));
     }
 
-    @Override
-    public void viewFreeSlots() {
-        displaySlots(slotRepoHibernate.getFreeSlots());
+    public List<Slot> getFreeSlots() {
+        return slotRepository.getSlotsByOccupiedIs(false);
     }
 
     @Override
     public void viewFreeSlotsById(int userId) {
-       displaySlots(slotRepoHibernate.getFreeSlotsById(userId));
+       displaySlots(slotRepository.getSlotsByDoctor_UserIdAndOccupiedIs(userId,false));
     }
 
     @Override
     public boolean addSlot(Slot newSlot, User currentUser) {
         //associate the slot with the parent
         currentUser.addSlot(newSlot);
-        return addSlotEntry(newSlot);
+        slotRepository.save(newSlot);
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean removeSlot(int slotId) {
+        Slot slot = slotRepository.getSlotBySlotId(slotId);
+        if(slot==null){
+            throw new IllegalStateException("No slot found against the slot-id:"+slotId);
+        }
+//        //First Remove the Association between user and slot
+//        slot.getDoctor().removeSlot(slot);
+//        //Remove the associated appointment
+//        slot.removeAppointmentV1();
+
+
+        // for not applying dirty solution
+        // It seems we had to delete the association from both parents then cascade worked
+        slot.getDoctor().removeSlot(slot);
+
+        slot.getAppointmentV1().getPatient().removeAppointment(slot.getAppointmentV1());
+        slot.removeAppointmentV1();
+
+        slotRepository.delete(slot);
+        return true;
+    }
+
+    @Override
+    public boolean createNewSlot(int doctorId, String date, String startTime, String endTime) throws ScheduleCreationException {
+        User doctor = userRepository.getUserByUserId(doctorId);
+        if(doctor==null){
+            throw new IllegalStateException("No user found against provided userId:"+doctorId);
+        }
+
+        LocalDate dateParsed;
+        LocalTime startTimeParsed;
+        LocalTime endTimeParsed;
+
+        try {
+            dateParsed = LocalDate.parse(date);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid date format. Please enter date in the format YYYY-MM-DD.", e);
+        }
+
+        try {
+            startTimeParsed = LocalTime.parse(startTime);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid start time format. Please enter time in the format HH:MM:SS.", e);
+        }
+
+        try {
+            endTimeParsed = LocalTime.parse(endTime);
+        } catch (DateTimeParseException e) {
+            throw new ScheduleCreationException("Invalid end time format. Please enter time in the format HH:MM:SS.", e);
+        }
+
+        Slot newSlot = new Slot(doctor,dateParsed,startTimeParsed,endTimeParsed);
+        return addSlot(newSlot,doctor);
+
     }
 }
