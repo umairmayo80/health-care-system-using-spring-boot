@@ -5,10 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller("/")
 public class HomeController {
-    @GetMapping("jsp")
-    public String helloFromJspPage(){
-        return "home";
-    }
 
     @GetMapping("/thymeLeaf")
     public String helloFromThyMeLeafPage(Model model) {
