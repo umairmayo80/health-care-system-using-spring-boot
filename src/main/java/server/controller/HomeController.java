@@ -8,7 +8,6 @@ public class HomeController {
     @GetMapping("jsp")
     public String helloFromJspPage(){
         return "home";
-//        return "<h1>Spring 2.7 Home</h1>";
     }
 
     @GetMapping("/thymeLeaf")
