@@ -12,6 +12,6 @@ public class AppServer {
 
     @GetMapping("/")
     public String hello(){
-        return "Spring 2.7 Home";
+        return "<h1>Spring 2.7 Home</h1>";
     }
 }
